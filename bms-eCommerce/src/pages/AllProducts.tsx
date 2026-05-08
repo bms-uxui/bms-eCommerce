@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { Link } from "react-router";
 import { Checkbox } from "@heroui/react";
 import {
   ChevronLeft,
@@ -292,9 +293,9 @@ export default function AllProducts() {
           className="page-section-in flex items-center gap-1.5 text-[13px] text-[var(--color-neutral-600)]"
           style={{ animationDelay: "60ms" }}
         >
-          <a href="/" className="hover:text-[var(--color-primary)] transition-colors">
+          <Link to="/" className="hover:text-[var(--color-primary)] transition-colors">
             หน้าแรก
-          </a>
+          </Link>
           <ChevronRight size={12} />
           <span className="text-[var(--color-neutral-900)] font-medium">สินค้าทั้งหมด</span>
         </nav>

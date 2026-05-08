@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Input } from "@heroui/react";
 import Icon from "./Icon";
 import paracetamol from "../../assets/products/p02-paracetamol.jpg";
@@ -361,6 +361,7 @@ function CartButton() {
         aria-label="ตะกร้า"
         aria-haspopup="dialog"
         aria-expanded={open}
+        data-cart-target
         onClick={() => setOpen((v) => !v)}
         className={[
           "relative flex items-center justify-center shrink-0",
@@ -374,7 +375,7 @@ function CartButton() {
       >
         <Icon name="cart" size={22} />
         {CART_ITEMS.length > 0 && (
-          <span className="absolute -top-0.5 right-0 min-w-[16px] h-[16px] px-1 rounded-full bg-[var(--color-critical)] text-[9px] font-semibold text-white flex items-center justify-center leading-none ring-2 ring-white">
+          <span data-cart-badge className="absolute -top-0.5 right-0 min-w-[16px] h-[16px] px-1 rounded-full bg-[var(--color-critical)] text-[9px] font-semibold text-white flex items-center justify-center leading-none ring-2 ring-white">
             {CART_ITEMS.length}
           </span>
         )}
@@ -433,12 +434,12 @@ function CartButton() {
           </ul>
 
           <div className="border-t border-[var(--color-neutral-300)] px-4 py-3 text-center">
-            <a
-              href="#"
+            <Link
+              to="/cart"
               className="text-[14px] font-medium text-[var(--color-primary)] hover:underline"
             >
               ดูตะกร้าสินค้า
-            </a>
+            </Link>
           </div>
         </div>
       )}
@@ -960,8 +961,8 @@ export default function Header() {
           {/* Desktop row (lg+): logo | search | actions in one line */}
           <div className="hidden lg:flex items-center justify-between gap-6 h-9">
             {/* Logo block */}
-            <a
-              href="/"
+            <Link
+              to="/"
               className="flex items-center gap-2 shrink-0 w-[220px] h-9 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/30 transition-opacity hover:opacity-90"
             >
               <BrightifyLogo size={36} />
@@ -973,7 +974,7 @@ export default function Header() {
                   E-Commerce by BMS
                 </p>
               </div>
-            </a>
+            </Link>
 
             <SearchBar />
 
@@ -1012,12 +1013,12 @@ export default function Header() {
                 <Icon name={mobileMenuOpen ? "close" : "menu"} size={22} />
               </button>
 
-              <a href="/" className="flex items-center gap-2 shrink-0 min-w-0">
+              <Link to="/" className="flex items-center gap-2 shrink-0 min-w-0">
                 <BrightifyLogo size={32} />
                 <p className="text-[17px] sm:text-[18px] font-extrabold text-[var(--color-neutral-900)] leading-none truncate">
                   BRIGHTIFY
                 </p>
-              </a>
+              </Link>
 
               <div className="flex items-center gap-1 shrink-0">
                 <CartButton />

@@ -10,6 +10,7 @@ import AllProducts from "./pages/AllProducts.tsx";
 import ProductDetail from "./pages/ProductDetail.tsx";
 import StoreProfile from "./pages/StoreProfile.tsx";
 import UserSettings from "./pages/UserSettings.tsx";
+import Cart from "./pages/Cart.tsx";
 import Playground from "./pages/Playground.tsx";
 import DocsIndex from "./pages/docs/DocsIndex.tsx";
 import DocEmbed from "./pages/docs/DocEmbed.tsx";
@@ -79,6 +80,7 @@ createRoot(document.getElementById("root")!).render(
               <Route path="/products/:id" element={<ProductDetail />} />
               <Route path="/store/:id" element={<StoreProfile />} />
               <Route path="/settings" element={<UserSettings />} />
+              <Route path="/cart" element={<Cart />} />
               <Route path="/playground" element={<Playground />} />
               <Route path="/docs" element={<DocsIndex />} />
               {Object.keys(heroUIDocs).map((key) => (

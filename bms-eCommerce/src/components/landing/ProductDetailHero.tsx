@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { flyToCart } from "../../lib/flyToCart";
 import { Button } from "@heroui/react";
 import {
   Star,
@@ -128,6 +129,7 @@ export default function ProductDetailHero({
   product: ProductDetail;
 }) {
   const [activeImg, setActiveImg] = useState(0);
+  const mainImgRef = useRef<HTMLImageElement>(null);
   const [size, setSize] = useState(product.sizes?.[0] ?? "");
   const [variant, setVariant] = useState(product.variants?.[0] ?? "");
   const [qty, setQty] = useState(1);
@@ -139,6 +141,7 @@ export default function ProductDetailHero({
       <div className="flex flex-col gap-2.5 h-[568px]">
         <div className="flex-1 min-h-0 rounded-lg overflow-hidden bg-[var(--color-neutral-200)]">
           <img
+            ref={mainImgRef}
             src={product.gallery[activeImg]}
             alt={product.name}
             className="w-full h-full object-cover"
@@ -285,6 +288,7 @@ export default function ProductDetailHero({
           <Button
             radius="md"
             startContent={<ShoppingBag size={16} />}
+            onPress={() => flyToCart(mainImgRef.current)}
             className="flex-1 h-11 bg-[var(--color-primary-100)] border border-[var(--color-primary)] text-[var(--color-primary)] text-[16px] font-medium tracking-[-0.011em] hover:bg-[var(--color-primary-100)]/80 transition"
           >
             เพิ่มไปที่ตะกร้า
