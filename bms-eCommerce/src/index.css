@@ -1,0 +1,136 @@
+@import "tailwindcss";
+
+@plugin './hero.ts';
+@source '../node_modules/@heroui/theme/dist/**/*.{js,mjs}';
+
+@theme {
+  --font-sans: "Sarabun", "Noto Sans Thai", system-ui, sans-serif;
+
+  /* Brightify design tokens (from Figma) */
+  --color-primary-100: #eff9fe;
+  --color-primary-400: #21bdff;
+  --color-primary: #0485f7;
+  --color-primary-600: #036ac6;
+  --color-primary-700: #024d8f;
+
+  --color-neutral-0: #000000;
+  --color-neutral-200: #e9f0f4;
+  --color-neutral-300: #d3dfe7;
+  --color-neutral-500: #798aa3;
+  --color-neutral-600: #5a6478;
+  --color-neutral-800: #2e3748;
+  --color-neutral-900: #1d212d;
+  --color-neutral-999: #ffffff;
+
+  --color-critical: #f64669;
+  --color-flash-from: #ff0105;
+  --color-flash-to: #cd0004;
+
+  --color-positive-200: #d6fc92;
+  --color-positive-700: #235c04;
+  --color-promote-200: #f5ebfe;
+  --color-promote-700: #5824d4;
+  --color-warning-200: #fdefb0;
+  --color-warning-700: #863a00;
+
+  --color-bg: #f5f7fa;
+  --color-surface: #ffffff;
+  --color-text: #1d212d;
+  --color-text-muted: #798aa3;
+}
+
+html {
+  background-color: var(--color-bg);
+  overscroll-behavior: none;
+}
+
+@keyframes dropdownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-dropdown {
+  animation: dropdownIn 140ms ease-out both;
+  transform-origin: top center;
+}
+
+@keyframes loginBgIn {
+  from { opacity: 0; transform: scale(1.04); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes loginHeaderIn {
+  from { opacity: 0; transform: translateY(-12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes loginCardIn {
+  from { opacity: 0; transform: translateY(24px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes loginItemIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.login-bg-in     { animation: loginBgIn 800ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.login-header-in { animation: loginHeaderIn 500ms cubic-bezier(0.22, 1, 0.36, 1) 80ms both; }
+.login-card-in   { animation: loginCardIn 700ms cubic-bezier(0.22, 1, 0.36, 1) 200ms both; }
+.login-item-in   { animation: loginItemIn 500ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+@keyframes pageHeaderIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes pageSectionIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: none; }
+}
+.page-header-in  { animation: pageHeaderIn 500ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.page-section-in { animation: pageSectionIn 600ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  margin: 0;
+  overscroll-behavior: none;
+}
+
+#root {
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  overscroll-behavior: none;
+}
+
+*:not(.lni):not(.lni *),
+.radix-themes {
+  font-family: var(--font-sans) !important;
+}
+
+.lni {
+  font-family: 'lineicons' !important;
+}
+
+.scrollbar-none::-webkit-scrollbar { display: none; }
+.scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Pointer cursor for interactive elements (Tailwind v4 dropped this default) */
+button:not(:disabled),
+a,
+[role="button"]:not([aria-disabled="true"]),
+summary,
+label[for],
+select {
+  cursor: pointer;
+}
+
+button:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
+}
