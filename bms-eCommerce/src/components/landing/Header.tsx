@@ -77,14 +77,20 @@ function MenuLink({
   customIcon,
   children,
   trailingIcon,
+  onClick,
 }: {
   iconName?: string;
   customIcon?: React.ReactNode;
   children: React.ReactNode;
   trailingIcon?: string;
+  onClick?: () => void;
 }) {
   return (
-    <button className="flex items-center gap-1 px-1.5 py-1 rounded-lg text-white text-[13px] lg:text-[14px] font-medium leading-[18px] hover:bg-white/15 active:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 transition-colors whitespace-nowrap shrink-0">
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex items-center gap-1 px-1.5 py-1 rounded-lg text-white text-[13px] lg:text-[14px] font-medium leading-[18px] hover:bg-white/15 active:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 transition-colors whitespace-nowrap shrink-0"
+    >
       {customIcon ?? (iconName && <Icon name={iconName} size={16} />)}
       <span>{children}</span>
       {trailingIcon && <Icon name={trailingIcon} size={16} />}
@@ -1044,7 +1050,7 @@ export default function Header() {
         {/* Rich menu — desktop: full layout / tablet: scroll / mobile: collapsible */}
         <div className="hidden lg:flex items-center justify-between mt-2 h-[26px]">
           <div className="flex items-center gap-3">
-            <MenuLink customIcon={<StorefrontIcon size={16} />}>
+            <MenuLink customIcon={<StorefrontIcon size={16} />} onClick={() => navigate("/seller/login")}>
               สร้างร้านค้า
             </MenuLink>
             <VDivider />
@@ -1063,7 +1069,7 @@ export default function Header() {
 
         {/* Tablet rich menu (md - lg) — scrollable horizontal */}
         <div className="hidden md:flex lg:hidden items-center gap-3 mt-2 h-[26px] overflow-x-auto scrollbar-none">
-          <MenuLink customIcon={<StorefrontIcon size={16} />}>
+          <MenuLink customIcon={<StorefrontIcon size={16} />} onClick={() => navigate("/seller/login")}>
             สร้างร้านค้า
           </MenuLink>
           <VDivider />
@@ -1081,7 +1087,7 @@ export default function Header() {
         {/* Mobile rich menu — collapsible drawer */}
         {mobileMenuOpen && (
           <div className="md:hidden mt-2 flex flex-col gap-1 pb-2">
-            <MenuLink customIcon={<StorefrontIcon size={16} />}>
+            <MenuLink customIcon={<StorefrontIcon size={16} />} onClick={() => navigate("/seller/login")}>
               สร้างร้านค้า
             </MenuLink>
             <MenuLink iconName="users">สมัคร Affiliate</MenuLink>
