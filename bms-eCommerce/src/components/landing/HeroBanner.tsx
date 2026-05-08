@@ -145,7 +145,7 @@ export default function HeroBanner() {
       {/* Row 2 — 4 sub banners */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {subBanners.map((b) => (
-          <SubBanner key={b.label} banner={b} />
+          <SubBanner key={b.id} banner={b} />
         ))}
       </div>
     </section>
