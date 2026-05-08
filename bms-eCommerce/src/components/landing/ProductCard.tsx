@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import Icon from "./Icon";
 
 export type Product = {
@@ -51,8 +52,8 @@ export default function ProductCard({
   variant?: "default" | "quote";
 }) {
   return (
-    <a
-      href={`/products/${product.id}`}
+    <Link
+      to={`/products/${product.id}`}
       className="group flex flex-col bg-white border border-[var(--color-neutral-300)] rounded-lg overflow-hidden hover:shadow-md hover:border-[var(--color-primary-400)] transition-all"
     >
       {/* Image area */}
@@ -156,6 +157,6 @@ export default function ProductCard({
           </div>
         )}
       </div>
-    </a>
+    </Link>
   );
 }
