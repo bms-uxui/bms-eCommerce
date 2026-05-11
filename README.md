@@ -9,6 +9,7 @@
 ## สารบัญ
 
 - [ภาพรวมแอป](#ภาพรวมแอป)
+- [ความคืบหน้า (Work Progress)](#ความคืบหน้า-work-progress)
 - [Tech Stack](#tech-stack)
 - [การติดตั้งและรัน](#การติดตั้งและรัน)
 - [โครงสร้างโปรเจกต์](#โครงสร้างโปรเจกต์)
@@ -47,6 +48,46 @@
 ดูภาพรวมเส้นทางทั้งหมดได้ที่ไฟล์ [`sitemap.svg`](./bms-eCommerce/sitemap.svg)
 
 > โค้ดแอปทั้งหมดอยู่ในโฟลเดอร์ [`bms-eCommerce/`](./bms-eCommerce/) ของ repo นี้
+
+---
+
+## ความคืบหน้า (Work Progress)
+
+สถานะ: prototype ระดับ UI — flow คลิก/นำทาง/เปิด modal ทำงานครบ ข้อมูลยังเป็น mock data
+
+### หน้าที่ทำเสร็จแล้ว
+
+**ฝั่งลูกค้า (Storefront)**
+- หน้าแรก / Landing — hero, flash sale, หมวดหมู่, แนะนำสินค้า
+- รายการสินค้าทั้งหมด · รายละเอียดสินค้า (ทั่วไป + เวชภัณฑ์ที่มีปุ่ม “เสนอราคา”) · หน้าร้านค้า · เข้าสู่ระบบ
+- ตะกร้า (แยกตามร้าน) · Checkout — modal เลือก/เพิ่มที่อยู่ + บัตร/บัญชีธนาคาร, แถบสรุปยอด sticky
+- บัญชีของฉาน (`/settings`) — ข้อมูลส่วนตัว / บัญชีธนาคารและบัตร / ที่อยู่ + sub-panel วิธีการชำระเงิน + การตั้งค่าการแจ้งเตือน
+- การสั่งซื้อ (`/delivery`) — แท็บตามสถานะ + `OrderCard` 6 สถานะ, ปุ่มคัดลอกเลขพัสดุ
+- ใบเสนอราคา (`/quotation`) — ตารางแบบ paginate + รายละเอียด (`/quotation/:id`) ที่มี stepper 7 ขั้น (รองรับ 3 สถานะ) + อัปโหลด PDF ที่ลงนาม
+- BMS Member (`/bms-member`) — บัตรสมาชิก gradient ตรงดีไซน์ + เงื่อนไข + ประวัติ Point
+- การแจ้งเตือน / โค้ดส่วนลด / สิ่งที่ถูกใจ — แท็บหมวดหมู่ + การ์ดเฉพาะของแต่ละหน้า
+- Affiliate Registration (`/affiliate/register`) — ฟอร์มสมัคร (บุคคล/นิติบุคคล) + modal เพิ่มบัญชี Social + หน้า success
+
+**ฝั่งร้านค้า (Seller)**
+- ภาพรวมร้านค้า (`/seller/overview`) · คำสั่งซื้อ (`/seller/orders`) · เข้าสู่ระบบ / สมัครร้านค้า — *จากทีมอื่น*
+- ใบเสนอราคา (`/seller/quotes`) — ตารางใบเสนอราคา, แท็บสถานะ 8 แท็บ, pagination, เลือกหลายรายการ + dock bar ลอย (อัปเดตคำขอ / ยกเลิกคำขอ), drawer “การดำเนินการ” (timeline 7 ขั้น + ปุ่ม “ดำเนินการต่อ” เลื่อน stepper); “อัปเดตคำขอ” กดได้เฉพาะเมื่อรายการที่เลือกสถานะเดียวกัน
+- รายละเอียดใบเสนอราคา (`/seller/quotes/:id`) — รายละเอียดใบเสนอราคา / การจัดการ (แก้ราคาต่อชิ้น, สวิตช์ VAT, อายุใบเสนอราคา/เงื่อนไขการชำระเงิน/ระยะเวลาจัดส่ง) / การตั้งค่า PDF (ผู้เสนอราคา–ผู้อนุมัติ + เลือกรายชื่อ + เซ็นด้วยตนเอง) / timeline ด้านขวา; แถวในตารางคลิกแล้วมาหน้านี้
+
+### Flow ลายเซ็น (ใหม่)
+- `SignaturePad` — กล่องลายเซ็นที่ **วาดได้จริง** ด้วยเมาส์/นิ้ว (canvas, รองรับ device pixel ratio) + แท็บ “อัปโหลดรูปภาพ” (เลือกไฟล์ เก็บชื่อไฟล์); ปุ่ม “ล้างทั้งหมด” — เป็นคอมโพเนนต์ใช้ซ้ำ
+- `SelectNameModal` (“เลือกรายชื่อ” + ฟอร์ม “เพิ่มรายชื่อ”), `OwnSignatureModal` (“เซ็นด้วยตนเอง”)
+- ในการตั้งค่า PDF ของหน้ารายละเอียดใบเสนอราคา: ช่องผู้เสนอราคา/ผู้อนุมัติแสดงสถานะ “มีลายเซ็นแล้ว” (เมื่อเลือกรายชื่อที่มีลายเซ็น) หรือป้าย “เซ็นแล้ว” + แถวแนบลายเซ็น (วาด/อัปโหลด พร้อมปุ่มลบ); ลายเซ็นที่วาดจะแสดง preview เป็นรูปย่อ
+
+### แอนิเมชัน
+- `dock-bar-in` — แถบ dock เลื่อนขึ้น + จาง
+- `drawer-panel-in` / `drawer-overlay-in` — drawer สไลด์จากขวา + พื้นหลังจาง
+- `step-row-in` — timeline ทยอยเข้าทีละขั้น + จุด/เส้น/ข้อความเปลี่ยนสีนุ่ม ๆ ตอนเลื่อนขั้น
+- (keyframes ทั้งหมดอยู่ใน `src/index.css`)
+
+### ค้างไว้ / ยังไม่ทำ
+- หน้า Seller ส่วนอื่น (สินค้า / การตลาด / โลจิสติกส์ / รีวิว / แชท / การวิเคราะห์ / กระเป๋าเงิน / การตั้งค่าร้านค้า)
+- หน้าสมัครบัญชีลูกค้า / ลืมรหัสผ่าน, หน้าผลการค้นหา, Affiliate dashboard
+- การเชื่อมข้อมูลจริง (ทั้งหมดยังเป็น mock)
 
 ---
 
@@ -105,7 +146,9 @@ src/
 │   ├── UserSettings.tsx     # บัญชีของฉัน + sub-panels (payment / notification settings)
 │   ├── Delivery.tsx         Quotation.tsx       QuotationDetail.tsx
 │   ├── BmsMember.tsx        Notifications.tsx   Coupons.tsx        Favorites.tsx
-│   ├── SellerLogin.tsx      SellerRegister.tsx
+│   ├── AffiliateRegister.tsx
+│   ├── SellerLogin.tsx      SellerRegister.tsx  SellerOverview.tsx SellerOrders.tsx   # ฝั่งร้านค้า (บางส่วนจากทีมอื่น)
+│   ├── SellerQuotes.tsx     SellerQuoteDetail.tsx                                     # ใบเสนอราคา (ร้านค้า)
 │   ├── Playground.tsx       # sandbox สำหรับนักออกแบบ
 │   └── docs/                # DocsIndex.tsx + DocEmbed.tsx (ฝัง iframe doc ของ HeroUI)
 ├── components/landing/      # คอมโพเนนต์ที่ใช้ร่วมกันหลายหน้า
@@ -115,7 +158,8 @@ src/
 │   ├── ProductCard.tsx      ProductCarousel.tsx ProductGridSection.tsx
 │   ├── OrderCard.tsx        # การ์ดออเดอร์ — รองรับ 6 สถานะ + ปุ่มตามสถานะ
 │   ├── ProductDetailHero.tsx
-│   ├── QuoteRequestModal.tsx AddProductModal.tsx
+│   ├── QuoteRequestModal.tsx AddProductModal.tsx AddSocialLinkModal.tsx
+│   ├── SignaturePad.tsx     SelectNameModal.tsx OwnSignatureModal.tsx   # flow ลายเซ็น (วาด/อัปโหลด/เลือกรายชื่อ)
 │   ├── AddressModals.tsx    PaymentModals.tsx   AddressModal.tsx
 │   ├── HeroBanner.tsx PromoBanners.tsx CategoryGrid.tsx FlashSaleSection.tsx
 │   ├── CountdownTimer.tsx CartItemRow.tsx SectionHeader.tsx Icon.tsx
@@ -146,6 +190,9 @@ src/
 | `/coupons` | โค้ดส่วนลด |
 | `/favorites` | สิ่งที่ถูกใจ |
 | `/seller/login` · `/seller/register` | เข้าสู่ระบบ / สมัครร้านค้า (จากทีมอื่น) |
+| `/seller/overview` · `/seller/orders` | ภาพรวมร้านค้า · คำสั่งซื้อ (จากทีมอื่น) |
+| `/seller/quotes` · `/seller/quotes/:id` | ใบเสนอราคา (ร้านค้า) · รายละเอียดใบเสนอราคา (`?status=` เปลี่ยน stepper) |
+| `/affiliate/register` | สมัคร Affiliate |
 | `/playground` · `/docs` · `/docs/:component` | Sandbox · เอกสาร HeroUI |
 
 ---
@@ -183,6 +230,9 @@ src/
 | `ProductCard` | การ์ดสินค้า — `variant: "default" \| "quote"` (quote = ปุ่มตะกร้า + “ขอใบเสนอราคา” → เปิด `QuoteRequestModal`), prop `flashSale` (โชว์แบนเนอร์ FLASHSALE + countdown) | AllProducts, ProductDetail, StoreProfile, Favorites, carousels |
 | `QuoteRequestModal` + `AddProductModal` | flow ขอใบเสนอราคาสำหรับสินค้าเวชภัณฑ์ — รายการสินค้า + stepper จำนวน + ฟอร์มข้อมูลลูกค้า + ที่อยู่จัดส่ง + หมายเหตุ; ปุ่ม “+ เพิ่มสินค้า” เปิด modal เลือกจาก catalog | ProductDetailHero, ProductCard |
 | `AddressModals` (`SelectAddressModal` / `AddAddressModal`), `PaymentModals` (`SelectCardModal` / `AddCardModal` / `SelectBankModal` / `AddBankModal`) | modal เลือก/เพิ่มที่อยู่และวิธีชำระเงิน | Checkout, UserSettings |
+| `SignaturePad` | กล่องลายเซ็นวาดได้จริง (canvas + pointer events, รองรับ DPR, `touch-none`) + แท็บอัปโหลดรูป + ปุ่มล้าง; รายงานผลผ่าน `onChange(SignatureResult \| null)` | `SelectNameModal`, `OwnSignatureModal` |
+| `SelectNameModal` / `OwnSignatureModal` | modal “เลือกรายชื่อ” (+ ฟอร์ม “เพิ่มรายชื่อ” พร้อม `SignaturePad`) / “เซ็นด้วยตนเอง” | SellerQuoteDetail (การตั้งค่า PDF) |
+| `AddSocialLinkModal` | modal เพิ่มลิงก์บัญชี Social ตอนสมัคร Affiliate | AffiliateRegister |
 
 ### 4. ระบบ Routing และการรักษา Scroll
 
