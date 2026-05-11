@@ -962,6 +962,10 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isLoggedIn =
     typeof window !== "undefined" && sessionStorage.getItem("loggedIn") === "1";
+  const sellerLoggedIn =
+    typeof window !== "undefined" && sessionStorage.getItem("sellerLoggedIn") === "1";
+  const goToSeller = () =>
+    navigate(sellerLoggedIn ? "/seller/overview" : "/seller/login");
 
   return (
     <header className="sticky top-0 z-50 isolate bg-[var(--color-primary)] pb-2">
@@ -1035,7 +1039,7 @@ export default function Header() {
         {/* Rich menu — desktop: full layout / tablet: scroll / mobile: collapsible */}
         <div className="hidden lg:flex items-center justify-between mt-2 h-[26px]">
           <div className="flex items-center gap-3">
-            <MenuLink customIcon={<StorefrontIcon size={16} />} onClick={() => navigate("/seller/login")}>
+            <MenuLink customIcon={<StorefrontIcon size={16} />} onClick={goToSeller}>
               สร้างร้านค้า
             </MenuLink>
             <VDivider />
@@ -1054,7 +1058,7 @@ export default function Header() {
 
         {/* Tablet rich menu (md - lg) — scrollable horizontal */}
         <div className="hidden md:flex lg:hidden items-center gap-3 mt-2 h-[26px] overflow-x-auto scrollbar-none">
-          <MenuLink customIcon={<StorefrontIcon size={16} />} onClick={() => navigate("/seller/login")}>
+          <MenuLink customIcon={<StorefrontIcon size={16} />} onClick={goToSeller}>
             สร้างร้านค้า
           </MenuLink>
           <VDivider />
@@ -1072,7 +1076,7 @@ export default function Header() {
         {/* Mobile rich menu — collapsible drawer */}
         {mobileMenuOpen && (
           <div className="md:hidden mt-2 flex flex-col gap-1 pb-2">
-            <MenuLink customIcon={<StorefrontIcon size={16} />} onClick={() => navigate("/seller/login")}>
+            <MenuLink customIcon={<StorefrontIcon size={16} />} onClick={goToSeller}>
               สร้างร้านค้า
             </MenuLink>
             <MenuLink iconName="users" to="/affiliate/register">สมัคร Affiliate</MenuLink>

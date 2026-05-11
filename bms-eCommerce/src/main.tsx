@@ -12,6 +12,8 @@ import SellerOverview from "./pages/SellerOverview.tsx";
 import SellerOrders from "./pages/SellerOrders.tsx";
 import SellerOrderDetail from "./pages/SellerOrderDetail.tsx";
 import SellerProducts from "./pages/SellerProducts.tsx";
+import SellerQuotes from "./pages/SellerQuotes.tsx";
+import SellerQuoteDetail from "./pages/SellerQuoteDetail.tsx";
 import AffiliateRegister from "./pages/AffiliateRegister.tsx";
 import AllProducts from "./pages/AllProducts.tsx";
 import ProductDetail from "./pages/ProductDetail.tsx";
@@ -104,6 +106,8 @@ createRoot(document.getElementById("root")!).render(
               <Route path="/seller/orders" element={<SellerOrders />} />
               <Route path="/seller/orders/detail" element={<SellerOrderDetail />} />
               <Route path="/seller/shop" element={<SellerProducts />} />
+              <Route path="/seller/quotes" element={<SellerQuotes />} />
+              <Route path="/seller/quotes/:id" element={<SellerQuoteDetail />} />
               <Route path="/affiliate/register" element={<AffiliateRegister />} />
               <Route path="/products" element={<AllProducts />} />
               <Route path="/products/:id" element={<ProductDetail />} />
