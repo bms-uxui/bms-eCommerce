@@ -6,6 +6,8 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Theme as RadixTheme } from "@radix-ui/themes";
 import App from "./App.tsx";
 import Login from "./pages/Login.tsx";
+import SellerLogin from "./pages/SellerLogin.tsx";
+import SellerRegister from "./pages/SellerRegister.tsx";
 import AllProducts from "./pages/AllProducts.tsx";
 import ProductDetail from "./pages/ProductDetail.tsx";
 import StoreProfile from "./pages/StoreProfile.tsx";
@@ -91,6 +93,8 @@ createRoot(document.getElementById("root")!).render(
             <Routes>
               <Route path="/" element={<App />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/seller/login" element={<SellerLogin />} />
+              <Route path="/seller/register" element={<SellerRegister />} />
               <Route path="/products" element={<AllProducts />} />
               <Route path="/products/:id" element={<ProductDetail />} />
               <Route path="/store/:id" element={<StoreProfile />} />
