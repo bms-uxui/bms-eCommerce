@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import Icon from "../components/landing/Icon";
 import { SellerHeader, SellerSidebar } from "../components/SellerChrome";
 
@@ -49,6 +50,168 @@ const ORDERS: OrderRow[] = [
 
 const COLS = "grid-cols-[48px_1fr_1fr_1fr_1fr_1fr_1fr_1fr]";
 
+function CheckBox({ checked, onChange }: { checked: boolean; onChange: () => void }) {
+  return (
+    <button
+      type="button"
+      role="checkbox"
+      aria-checked={checked}
+      onClick={(e) => {
+        e.stopPropagation();
+        onChange();
+      }}
+      className={[
+        "w-4 h-4 rounded shrink-0 flex items-center justify-center transition-colors",
+        checked
+          ? "bg-[var(--color-primary)]"
+          : "bg-white border border-[var(--color-neutral-300)] hover:border-[var(--color-primary-400)]",
+      ].join(" ")}
+    >
+      {checked && (
+        <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden>
+          <path d="M2.5 6.2 4.8 8.5 9.5 3.5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      )}
+    </button>
+  );
+}
+
+const BULK_ACTIONS = [
+  { id: "update", icon: "download", label: "อัปเดตคำสั่งซื้อ" },
+  { id: "cancel", icon: "package", label: "ยกเลิกคำสั่งซื้อ" },
+  { id: "receipt", icon: "files", label: "พิมพ์ใบเสร็จคำสั่งซื้อ" },
+  { id: "label", icon: "printer", label: "พิมพ์ใบปะหน้าสินค้า" },
+] as const;
+
+function BulkActionBar({
+  count,
+  onClose,
+  onUpdate,
+}: {
+  count: number;
+  onClose: () => void;
+  onUpdate: () => void;
+}) {
+  return (
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 pointer-events-none">
+      <div className="pointer-events-auto bg-[var(--color-primary)] text-white rounded-xl p-4 flex items-center gap-6 shadow-[0_0_12px_rgba(104,182,250,0.55),0_8px_24px_rgba(4,133,247,0.3)]">
+        <p className="text-[16px] font-medium whitespace-nowrap">{count} รายการ</p>
+        <span className="self-stretch w-px bg-white/40" />
+        {BULK_ACTIONS.map((a) => (
+          <button
+            key={a.id}
+            type="button"
+            onClick={a.id === "update" ? onUpdate : undefined}
+            className="flex flex-col items-center gap-1 px-2 py-1 rounded-lg hover:bg-white/10 active:bg-white/15 transition-colors"
+          >
+            <Icon name={a.icon} size={20} />
+            <span className="text-[12px] leading-tight whitespace-nowrap">{a.label}</span>
+          </button>
+        ))}
+        <span className="self-stretch w-px bg-white/40" />
+        <button
+          type="button"
+          aria-label="ยกเลิกการเลือก"
+          onClick={onClose}
+          className="w-6 h-6 flex items-center justify-center rounded hover:bg-white/10 transition-colors"
+        >
+          <Icon name="close" size={18} />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+const ORDER_STEPS = [
+  "คำสั่งซื้อ",
+  "รอการชำระ",
+  "ชำระแล้ว",
+  "กำลังจัดเตรียม",
+  "จัดเตรียมเสร็จสิ้น",
+  "กำลังจัดส่ง",
+  "จัดส่งสำเร็จ",
+  "ยกเลิกคำสั่งซื้อ",
+];
+
+function UpdateOrderDrawer({ count, onClose }: { count: number; onClose: () => void }) {
+  const current = 3; // index of the "next" step
+  return (
+    <div className="fixed inset-0 z-50 flex justify-end">
+      <button
+        type="button"
+        aria-label="ปิด"
+        onClick={onClose}
+        className="absolute inset-0 bg-black/25"
+      />
+      <aside className="relative w-[364px] max-w-full h-full bg-white rounded-l-2xl shadow-[0_2px_4px_rgba(29,33,45,0.08),0_0_2px_rgba(29,33,45,0.08),0_0_1px_rgba(29,33,45,0.2)] flex flex-col animate-dropdown">
+        {/* Header */}
+        <div className="flex items-center gap-2 px-6 pt-6 pb-4 border-b border-[var(--color-neutral-200)]">
+          <p className="flex-1 text-[18px] font-bold text-black">การดำเนินการ</p>
+          <button
+            type="button"
+            aria-label="ปิด"
+            onClick={onClose}
+            className="w-7 h-7 rounded-full bg-[var(--color-neutral-200)] flex items-center justify-center text-[var(--color-neutral-700)] hover:bg-[var(--color-neutral-300)] transition-colors"
+          >
+            <Icon name="close" size={14} />
+          </button>
+        </div>
+
+        {/* Steps */}
+        <div className="flex-1 overflow-y-auto px-8 py-6">
+          {ORDER_STEPS.map((label, i) => {
+            const isLast = i === ORDER_STEPS.length - 1;
+            const done = i < current;
+            const isCurrent = i === current;
+            const dotClass = done
+              ? "bg-[var(--color-primary)] text-white"
+              : isCurrent
+              ? "bg-white border-2 border-[var(--color-primary)] text-[var(--color-primary)]"
+              : "bg-white border-2 border-[var(--color-neutral-500)] text-[var(--color-neutral-500)]";
+            const lineClass = i < current ? "bg-[var(--color-primary)]" : "bg-[var(--color-neutral-300)]";
+            const labelClass = done || isCurrent ? "text-[var(--color-primary)]" : "text-[var(--color-neutral-900)]";
+            const dateClass = done || isCurrent ? "text-[var(--color-neutral-900)]" : "text-[var(--color-neutral-500)]";
+            return (
+              <div key={label} className="flex gap-6 items-stretch">
+                <div className="flex flex-col items-center w-6 shrink-0">
+                  <span
+                    className={`w-6 h-6 rounded-full flex items-center justify-center text-[12px] font-bold shrink-0 ${dotClass}`}
+                  >
+                    {i + 1}
+                  </span>
+                  {!isLast && <span className={`w-0.5 flex-1 my-1 rounded-full ${lineClass}`} />}
+                </div>
+                <div className={`flex-1 ${isLast ? "" : "pb-6"}`}>
+                  <p className={`text-[14px] font-medium ${labelClass}`}>{label}</p>
+                  <p className={`text-[12px] mt-1.5 ${dateClass}`}>วันที่ 24 ส.ค. 2569</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Footer */}
+        <div className="border-t border-[var(--color-neutral-200)] p-6 flex gap-3">
+          <button
+            type="button"
+            className="flex-1 h-10 rounded-lg border border-[var(--color-neutral-300)] text-[14px] font-medium text-[var(--color-neutral-900)] flex items-center justify-center gap-2 hover:bg-[var(--color-neutral-100,#f5f8fa)] transition-colors"
+          >
+            <Icon name="comments" size={18} />
+            แชทลูกค้า
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex-1 h-10 rounded-lg bg-[var(--color-primary)] text-white text-[14px] font-medium hover:bg-[var(--color-primary-600)] transition-colors"
+          >
+            ดำเนินการต่อ{count > 1 ? ` (${count})` : ""}
+          </button>
+        </div>
+      </aside>
+    </div>
+  );
+}
+
 function StatusBadge({ status }: { status: StatusKey }) {
   const s = STATUS[status];
   return (
@@ -66,18 +229,32 @@ function fmtMoney(n: number) {
 }
 
 export default function SellerOrders() {
+  const navigate = useNavigate();
   const [tab, setTab] = useState<(typeof TABS)[number]["key"]>("all");
   const [page, setPage] = useState(2);
+  const [selected, setSelected] = useState<Set<number>>(new Set());
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const rows = tab === "all" ? ORDERS : ORDERS.filter((o) => o.status === tab);
   const pages = [1, 2, 3, 4, 5, "…", 12] as const;
+
+  const toggleRow = (i: number) =>
+    setSelected((prev) => {
+      const next = new Set(prev);
+      next.has(i) ? next.delete(i) : next.add(i);
+      return next;
+    });
+  const allSelected = rows.length > 0 && rows.every((_, i) => selected.has(i));
+  const toggleAll = () =>
+    setSelected(allSelected ? new Set() : new Set(rows.map((_, i) => i)));
+  const resetSelection = () => setSelected(new Set());
 
   return (
     <div className="min-h-screen bg-[#f5f8fa]">
       <SellerHeader />
       <div className="flex">
         <SellerSidebar active="คำสั่งซื้อ" />
-        <main className="flex-1 min-w-0 px-8 py-6 max-w-[1208px] flex flex-col gap-4 min-h-[calc(100vh-72px)]">
+        <main className="flex-1 min-w-0 px-8 py-6 flex flex-col gap-4 min-h-[calc(100vh-72px)]">
           {/* Title + search */}
           <div className="flex items-center justify-between gap-4">
             <h1 className="text-[20px] font-semibold text-[var(--color-primary-700)]">
@@ -110,6 +287,7 @@ export default function SellerOrders() {
                   onClick={() => {
                     setTab(t.key);
                     setPage(1);
+                    resetSelection();
                   }}
                   className={[
                     "flex-1 h-8 px-4 flex items-center justify-center gap-2 rounded text-[14px] font-medium tracking-[-0.006em] transition-colors whitespace-nowrap",
@@ -134,7 +312,7 @@ export default function SellerOrders() {
               className={`grid ${COLS} bg-[var(--color-primary-100)] border-b border-[var(--color-neutral-200)] text-[12px] font-medium uppercase text-[var(--color-neutral-600)]`}
             >
               <div className="flex items-center justify-center h-8">
-                <span className="w-4 h-4 rounded border border-[var(--color-neutral-300)] bg-white" />
+                <CheckBox checked={allSelected} onChange={toggleAll} />
               </div>
               <div className="flex items-center h-8 pr-4">หมายเลขคำสั่งซื้อ</div>
               <div className="flex items-center h-8 pr-4">ลูกค้า</div>
@@ -147,13 +325,21 @@ export default function SellerOrders() {
 
             {/* Rows */}
             <div className="flex-1 min-h-0 overflow-y-auto">
-              {rows.map((o, i) => (
+              {rows.map((o, i) => {
+                const isSel = selected.has(i);
+                return (
                 <div
                   key={i}
-                  className={`grid ${COLS} items-center border-b border-[var(--color-neutral-200)] last:border-b-0 py-3 hover:bg-[var(--color-primary-100)]/40 transition-colors`}
+                  onClick={() => navigate("/seller/orders/detail")}
+                  className={[
+                    "grid cursor-pointer",
+                    COLS,
+                    "items-center border-b border-[var(--color-neutral-200)] last:border-b-0 py-3 transition-colors",
+                    isSel ? "bg-[#f7fcfe]" : "hover:bg-[var(--color-primary-100)]/40",
+                  ].join(" ")}
                 >
                   <div className="flex items-center justify-center">
-                    <span className="w-4 h-4 rounded border border-[var(--color-neutral-300)] bg-white" />
+                    <CheckBox checked={isSel} onChange={() => toggleRow(i)} />
                   </div>
                   <div className="text-[14px] text-[var(--color-neutral-900)] pr-4">{o.id}</div>
                   <div className="text-[14px] text-[var(--color-neutral-900)] pr-4 truncate">{o.customer}</div>
@@ -164,12 +350,17 @@ export default function SellerOrders() {
                     <StatusBadge status={o.status} />
                   </div>
                   <div className="px-4 text-center">
-                    <button type="button" className="text-[14px] text-[var(--color-primary)] hover:underline">
+                    <button
+                      type="button"
+                      onClick={() => navigate("/seller/orders/detail")}
+                      className="text-[14px] text-[var(--color-primary)] hover:underline"
+                    >
                       ดูรายละเอียด
                     </button>
                   </div>
                 </div>
-              ))}
+                );
+              })}
               {rows.length === 0 && (
                 <div className="py-16 text-center text-[14px] text-[var(--color-neutral-500)]">
                   ไม่มีรายการ
@@ -239,6 +430,16 @@ export default function SellerOrders() {
           </div>
         </main>
       </div>
+      {selected.size > 0 && (
+        <BulkActionBar
+          count={selected.size}
+          onClose={resetSelection}
+          onUpdate={() => setDrawerOpen(true)}
+        />
+      )}
+      {drawerOpen && (
+        <UpdateOrderDrawer count={selected.size} onClose={() => setDrawerOpen(false)} />
+      )}
     </div>
   );
 }

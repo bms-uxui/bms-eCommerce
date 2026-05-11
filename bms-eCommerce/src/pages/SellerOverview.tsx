@@ -462,7 +462,7 @@ export default function SellerOverview() {
       <SellerHeader />
       <div className="flex">
         <SellerSidebar active="ภาพรวมร้านค้า" />
-        <main className="flex-1 min-w-0 px-8 py-6 max-w-[1208px]">
+        <main className="flex-1 min-w-0 px-8 py-6">
           <h1 className="text-[20px] font-bold text-[var(--color-neutral-900)] mb-6">
             ภาพรวมร้านค้า
           </h1>

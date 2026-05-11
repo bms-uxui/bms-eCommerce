@@ -10,6 +10,8 @@ import SellerLogin from "./pages/SellerLogin.tsx";
 import SellerRegister from "./pages/SellerRegister.tsx";
 import SellerOverview from "./pages/SellerOverview.tsx";
 import SellerOrders from "./pages/SellerOrders.tsx";
+import SellerOrderDetail from "./pages/SellerOrderDetail.tsx";
+import SellerProducts from "./pages/SellerProducts.tsx";
 import AffiliateRegister from "./pages/AffiliateRegister.tsx";
 import AllProducts from "./pages/AllProducts.tsx";
 import ProductDetail from "./pages/ProductDetail.tsx";
@@ -100,6 +102,8 @@ createRoot(document.getElementById("root")!).render(
               <Route path="/seller/register" element={<SellerRegister />} />
               <Route path="/seller/overview" element={<SellerOverview />} />
               <Route path="/seller/orders" element={<SellerOrders />} />
+              <Route path="/seller/orders/detail" element={<SellerOrderDetail />} />
+              <Route path="/seller/shop" element={<SellerProducts />} />
               <Route path="/affiliate/register" element={<AffiliateRegister />} />
               <Route path="/products" element={<AllProducts />} />
               <Route path="/products/:id" element={<ProductDetail />} />
