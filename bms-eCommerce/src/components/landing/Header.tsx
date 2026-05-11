@@ -1078,7 +1078,7 @@ export default function Header() {
               สร้างร้านค้า
             </MenuLink>
             <VDivider />
-            <MenuLink iconName="users">สมัคร Affiliate</MenuLink>
+            <MenuLink iconName="users" to="/affiliate/register">สมัคร Affiliate</MenuLink>
             <VDivider />
             <MenuLink iconName="coin" to="/bms-member">สมัครสมาชิก BMS Member</MenuLink>
           </div>
@@ -1097,7 +1097,7 @@ export default function Header() {
             สร้างร้านค้า
           </MenuLink>
           <VDivider />
-          <MenuLink iconName="users">สมัคร Affiliate</MenuLink>
+          <MenuLink iconName="users" to="/affiliate/register">สมัคร Affiliate</MenuLink>
           <VDivider />
           <MenuLink iconName="coin" to="/bms-member">BMS Member</MenuLink>
           <VDivider />
@@ -1114,7 +1114,7 @@ export default function Header() {
             <MenuLink customIcon={<StorefrontIcon size={16} />} onClick={() => navigate("/seller/login")}>
               สร้างร้านค้า
             </MenuLink>
-            <MenuLink iconName="users">สมัคร Affiliate</MenuLink>
+            <MenuLink iconName="users" to="/affiliate/register">สมัคร Affiliate</MenuLink>
             <MenuLink iconName="coin" to="/bms-member">สมัครสมาชิก BMS Member</MenuLink>
             {!isLoggedIn && <MenuLink iconName="user">สร้างบัญชีใหม่</MenuLink>}
             <LanguageSwitcher />
