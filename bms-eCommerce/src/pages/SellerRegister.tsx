@@ -2,7 +2,13 @@ import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { Button, Input, Textarea, Select, SelectItem } from "@heroui/react";
 import Icon from "../components/landing/Icon";
-import storeAvatar from "../assets/store-avatar.png";
+import LanguageSelect from "../components/LanguageSelect";
+import HelpSelect from "../components/HelpSelect";
+import GuestProfile from "../components/GuestProfile";
+import SellerProfile from "../components/SellerProfile";
+import BirthdayPicker, { type BirthdayValue } from "../components/BirthdayPicker";
+import cidExam from "../assets/cid-exam.png";
+import docExam from "../assets/doc-exam.png";
 
 function BrightifyLogo({ size = 36 }: { size?: number }) {
   return (
@@ -63,17 +69,9 @@ type Step2Data = {
   // legal — board members (using same fields above; design shows one entry)
 };
 
-const ID_CARD_SAMPLE =
-  "data:image/svg+xml;utf8," +
-  encodeURIComponent(
-    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 180'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23e0f2fe'/><stop offset='1' stop-color='%23bae6fd'/></linearGradient></defs><rect width='280' height='180' rx='8' fill='url(%23g)'/><circle cx='220' cy='90' r='38' fill='%23ffffff' stroke='%2394a3b8'/><rect x='16' y='20' width='150' height='10' rx='3' fill='%23475569'/><rect x='16' y='40' width='110' height='8' rx='3' fill='%2394a3b8'/><rect x='16' y='60' width='160' height='8' rx='3' fill='%2394a3b8'/><rect x='16' y='80' width='160' height='8' rx='3' fill='%2394a3b8'/><rect x='16' y='100' width='130' height='8' rx='3' fill='%2394a3b8'/><rect x='16' y='130' width='100' height='8' rx='3' fill='%23ef4444'/></svg>`
-  );
+const ID_CARD_SAMPLE = cidExam;
 
-const COMPANY_CERT_SAMPLE =
-  "data:image/svg+xml;utf8," +
-  encodeURIComponent(
-    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 200'><rect width='320' height='200' fill='%23ffffff' stroke='%23cbd5e1'/><rect x='130' y='12' width='60' height='60' rx='30' fill='%23fef3c7' stroke='%23f59e0b'/><rect x='40' y='84' width='240' height='8' fill='%23475569'/><rect x='40' y='100' width='200' height='6' fill='%2394a3b8'/><rect x='40' y='114' width='240' height='6' fill='%2394a3b8'/><rect x='40' y='128' width='220' height='6' fill='%2394a3b8'/><rect x='40' y='142' width='240' height='6' fill='%2394a3b8'/><rect x='40' y='156' width='180' height='6' fill='%2394a3b8'/><rect x='200' y='170' width='90' height='8' fill='%23475569'/></svg>`
-  );
+const COMPANY_CERT_SAMPLE = docExam;
 
 function StepIndicator({ current }: { current: 1 | 2 }) {
   const dot = (n: 1 | 2, active: boolean, filled: boolean) => (
@@ -92,9 +90,13 @@ function StepIndicator({ current }: { current: 1 | 2 }) {
 
   return (
     <aside className="login-card-in bg-white rounded-2xl shadow-[0_2px_4px_rgba(29,33,45,0.08),0_0_2px_rgba(29,33,45,0.08),0_0_1px_rgba(29,33,45,0.2)] p-6 flex gap-4 self-start sticky top-[96px]">
-      <div className="flex flex-col items-center gap-1 pt-1">
+      <div className="flex flex-col items-center pt-1">
         {dot(1, current === 1, current === 2)}
-        <span className="w-px flex-1 min-h-[40px] bg-[#a8b9ca]" />
+        <span
+          className={`w-px flex-1 min-h-[40px] transition-colors ${
+            current === 2 ? "bg-[var(--color-primary)]" : "bg-[#a8b9ca]"
+          }`}
+        />
         {dot(2, current === 2, false)}
       </div>
       <div className="flex flex-col gap-[50px] text-[16px]">
@@ -234,7 +236,7 @@ function UploadExample({
       <img
         src={imgSrc}
         alt=""
-        className={`rounded-md shadow-[0_16px_32px_rgba(29,33,45,0.1),0_1px_4px_rgba(29,33,45,0.15),0_0_1px_rgba(29,33,45,0.2)] ${
+        className={`rounded-[7px] shadow-[0_16px_32px_rgba(29,33,45,0.1),0_1px_4px_rgba(29,33,45,0.15),0_0_1px_rgba(29,33,45,0.2)] ${
           imgClassName ?? "w-[140px] h-[91px] object-cover"
         }`}
       />
@@ -255,6 +257,8 @@ function UploadExample({
 }
 
 function SellerHeader() {
+  const sellerLoggedIn =
+    typeof window !== "undefined" && sessionStorage.getItem("sellerLoggedIn") === "1";
   return (
     <header className="relative z-10 bg-white border-b border-[var(--color-neutral-300)]">
       <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-6 px-6 py-[18px]">
@@ -272,16 +276,8 @@ function SellerHeader() {
           </p>
         </div>
         <div className="flex items-center gap-4">
-          <button className="flex items-center gap-1 text-[14px] font-medium text-[var(--color-neutral-900)] hover:text-[var(--color-primary)] transition-colors">
-            <Icon name="world" size={16} />
-            <span>ภาษาไทย</span>
-            <Icon name="chevron-down" size={16} />
-          </button>
-          <button className="flex items-center gap-1 text-[14px] font-medium text-[var(--color-neutral-900)] hover:text-[var(--color-primary)] transition-colors">
-            <Icon name="question-circle" size={16} />
-            <span>ช่วยเหลือ</span>
-            <Icon name="chevron-down" size={16} />
-          </button>
+          <LanguageSelect />
+          <HelpSelect />
           <span className="w-px h-[18px] bg-[var(--color-neutral-300)]" />
           <button
             type="button"
@@ -293,10 +289,7 @@ function SellerHeader() {
               10
             </span>
           </button>
-          <button type="button" className="flex items-center gap-3 pr-2">
-            <img src={storeAvatar} alt="" className="w-9 h-9 rounded-full object-cover" />
-            <Icon name="chevron-down" size={20} />
-          </button>
+          {sellerLoggedIn ? <SellerProfile /> : <GuestProfile compact to="/seller/login" />}
         </div>
       </div>
     </header>
@@ -699,20 +692,20 @@ function Step2Form({
         </div>
         <div className="flex-1 flex flex-col gap-2">
           <FieldLabel>วันเกิด</FieldLabel>
-          <div className="relative">
-            <input
-              type="date"
-              aria-label="วันเกิด"
-              value={data.birthday}
-              onChange={(e) => setData({ ...data, birthday: e.target.value })}
-              className="w-full h-10 rounded-lg bg-white border border-[var(--color-neutral-300)] px-3 pr-10 text-[16px] text-[var(--color-neutral-900)] placeholder:text-[var(--color-neutral-500)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 transition-all"
-            />
-            <Icon
-              name="calendar"
-              size={20}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-neutral-500)] pointer-events-none"
-            />
-          </div>
+          <BirthdayPicker
+            value={(() => {
+              if (!data.birthday) return null;
+              const [y, m, d] = data.birthday.split("-").map(Number);
+              if (!y || !m || !d) return null;
+              return { day: d, month: m, year: y + 543 } as BirthdayValue;
+            })()}
+            onChange={(v) =>
+              setData({
+                ...data,
+                birthday: `${v.year - 543}-${String(v.month).padStart(2, "0")}-${String(v.day).padStart(2, "0")}`,
+              })
+            }
+          />
         </div>
       </div>
 
@@ -784,7 +777,7 @@ function SuccessView() {
       <div className="flex flex-col items-center gap-[18px] w-[412px] max-w-full">
         <Button
           radius="sm"
-          onPress={() => navigate("/")}
+          onPress={() => navigate("/seller/overview")}
           className="h-10 px-4 bg-[var(--color-primary)] text-white text-[16px] font-medium hover:brightness-110 transition"
         >
           ดูรายละเอียดเพิ่มเติม

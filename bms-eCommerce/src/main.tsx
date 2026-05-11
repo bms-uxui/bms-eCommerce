@@ -8,6 +8,8 @@ import App from "./App.tsx";
 import Login from "./pages/Login.tsx";
 import SellerLogin from "./pages/SellerLogin.tsx";
 import SellerRegister from "./pages/SellerRegister.tsx";
+import SellerOverview from "./pages/SellerOverview.tsx";
+import SellerOrders from "./pages/SellerOrders.tsx";
 import AllProducts from "./pages/AllProducts.tsx";
 import ProductDetail from "./pages/ProductDetail.tsx";
 import StoreProfile from "./pages/StoreProfile.tsx";
@@ -79,6 +81,8 @@ createRoot(document.getElementById("root")!).render(
               <Route path="/login" element={<Login />} />
               <Route path="/seller/login" element={<SellerLogin />} />
               <Route path="/seller/register" element={<SellerRegister />} />
+              <Route path="/seller/overview" element={<SellerOverview />} />
+              <Route path="/seller/orders" element={<SellerOrders />} />
               <Route path="/products" element={<AllProducts />} />
               <Route path="/products/:id" element={<ProductDetail />} />
               <Route path="/store/:id" element={<StoreProfile />} />

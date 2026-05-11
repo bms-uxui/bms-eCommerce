@@ -2,7 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { Input, Button } from "@heroui/react";
 import Icon from "../components/landing/Icon";
-import storeAvatar from "../assets/store-avatar.png";
+import LanguageSelect from "../components/LanguageSelect";
+import HelpSelect from "../components/HelpSelect";
+import GuestProfile from "../components/GuestProfile";
+import SellerProfile from "../components/SellerProfile";
 
 function BrightifyLogo({ size = 36 }: { size?: number }) {
   return (
@@ -228,6 +231,8 @@ export default function SellerLogin() {
   const [phoneTouched, setPhoneTouched] = useState(false);
   const [step, setStep] = useState<"phone" | "otp">("phone");
   const phoneValid = /^0\d{9}$/.test(phone);
+  const sellerLoggedIn =
+    typeof window !== "undefined" && sessionStorage.getItem("sellerLoggedIn") === "1";
 
   return (
     <div
@@ -266,16 +271,8 @@ export default function SellerLogin() {
 
           {/* Right cluster */}
           <div className="flex items-center gap-4">
-            <button className="flex items-center gap-1 text-[14px] font-medium text-[var(--color-neutral-900)] hover:text-[var(--color-primary)] transition-colors">
-              <Icon name="world" size={16} />
-              <span>ภาษาไทย</span>
-              <Icon name="chevron-down" size={16} />
-            </button>
-            <button className="flex items-center gap-1 text-[14px] font-medium text-[var(--color-neutral-900)] hover:text-[var(--color-primary)] transition-colors">
-              <Icon name="question-circle" size={16} />
-              <span>ช่วยเหลือ</span>
-              <Icon name="chevron-down" size={16} />
-            </button>
+            <LanguageSelect />
+            <HelpSelect />
             <span className="w-px h-[18px] bg-[var(--color-neutral-300)]" />
             <button
               type="button"
@@ -287,14 +284,7 @@ export default function SellerLogin() {
                 10
               </span>
             </button>
-            <button type="button" className="flex items-center gap-3 pr-2">
-              <img
-                src={storeAvatar}
-                alt=""
-                className="w-9 h-9 rounded-full object-cover"
-              />
-              <Icon name="chevron-down" size={20} />
-            </button>
+            {sellerLoggedIn ? <SellerProfile /> : <GuestProfile compact to="/seller/login" />}
           </div>
         </div>
       </header>

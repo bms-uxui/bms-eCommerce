@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import { Input, Button, Select, SelectItem } from "@heroui/react";
+import BirthdayPicker, { type BirthdayValue } from "../components/BirthdayPicker";
 import {
   User as UserIcon,
   Package,
@@ -86,6 +87,14 @@ function ProfileForm() {
   const [email, setEmail] = useState("okinowa@example.com");
   const [phone, setPhone] = useState("093-695-5932");
   const [dob, setDob] = useState("1995-06-15");
+  const dobValue = useMemo<BirthdayValue | null>(() => {
+    if (!dob) return null;
+    const [y, m, d] = dob.split("-").map(Number);
+    if (!y || !m || !d) return null;
+    return { day: d, month: m, year: y + 543 };
+  }, [dob]);
+  const toIsoDate = (v: BirthdayValue) =>
+    `${v.year - 543}-${String(v.month).padStart(2, "0")}-${String(v.day).padStart(2, "0")}`;
   const [gender, setGender] = useState<string>("male");
   const [nationality, setNationality] = useState<string>("th");
 
@@ -191,12 +200,9 @@ function ProfileForm() {
           />
         </Field>
         <Field label="วันเกิด">
-          <Input
-            type="date"
-            value={dob}
-            onValueChange={setDob}
-            radius="sm"
-            classNames={inputClassNames}
+          <BirthdayPicker
+            value={dobValue}
+            onChange={(v) => setDob(toIsoDate(v))}
           />
         </Field>
         <Field label="เพศ">

@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { Input, Button } from "@heroui/react";
-import Icon from "../components/landing/Icon";
+import LanguageSelect from "../components/LanguageSelect";
+import HelpSelect from "../components/HelpSelect";
 import loginBg from "../assets/banners/login-bg.png";
 
 function BrightifyLogo({ size = 36 }: { size?: number }) {
@@ -242,17 +243,9 @@ export default function Login() {
             เข้าสู่ระบบ/สมัครสมาชิก BMS Member
           </p>
           <div className="flex items-center gap-4 ml-auto">
-            <button className="flex items-center gap-1 text-[14px] font-medium text-[var(--color-neutral-900)] hover:text-[var(--color-primary)] transition-colors">
-              <Icon name="world" size={16} />
-              <span>ภาษาไทย</span>
-              <Icon name="chevron-down" size={16} />
-            </button>
+            <LanguageSelect />
             <span className="w-px h-[18px] bg-[var(--color-neutral-300)]" />
-            <button className="flex items-center gap-1 text-[14px] font-medium text-[var(--color-neutral-900)] hover:text-[var(--color-primary)] transition-colors">
-              <Icon name="question-circle" size={16} />
-              <span>ช่วยเหลือ</span>
-              <Icon name="chevron-down" size={16} />
-            </button>
+            <HelpSelect />
           </div>
         </div>
       </header>

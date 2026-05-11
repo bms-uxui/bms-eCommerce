@@ -3,28 +3,9 @@ import { createPortal } from "react-dom";
 import { useNavigate } from "react-router";
 import { Input } from "@heroui/react";
 import Icon from "./Icon";
+import GuestProfile from "../GuestProfile";
 import paracetamol from "../../assets/products/p02-paracetamol.jpg";
 import avatar from "../../assets/avatar.jpg";
-
-function LoginIcon({ size = 14 }: { size?: number }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      style={{ flexShrink: 0 }}
-    >
-      <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-      <polyline points="10 17 15 12 10 7" />
-      <line x1="15" y1="12" x2="3" y2="12" />
-    </svg>
-  );
-}
 
 function StorefrontIcon({ size = 16 }: { size?: number }) {
   return (
@@ -990,19 +971,9 @@ export default function Header() {
                 <HeaderIcon iconName="heart" label="รายการโปรด" />
                 <NotificationButton />
               </div>
-              {isLoggedIn ? (
-                <div className="ml-3">
-                  <ProfileMenu />
-                </div>
-              ) : (
-                <button
-                  onClick={() => navigate("/login")}
-                  className="ml-3 bg-[var(--color-primary)] text-white text-[14px] font-semibold rounded-lg h-9 px-3 flex items-center justify-center gap-1.5 hover:bg-[var(--color-primary-600)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/40 focus-visible:ring-offset-1 transition-all whitespace-nowrap"
-                >
-                  <LoginIcon size={14} />
-                  <span>เข้าสู่ระบบ</span>
-                </button>
-              )}
+              <div className="ml-3">
+                {isLoggedIn ? <ProfileMenu /> : <GuestProfile />}
+              </div>
             </div>
           </div>
 
@@ -1028,17 +999,7 @@ export default function Header() {
               <div className="flex items-center gap-1 shrink-0">
                 <CartButton />
                 <NotificationButton />
-                {isLoggedIn ? (
-                  <ProfileMenu />
-                ) : (
-                  <button
-                    aria-label="เข้าสู่ระบบ"
-                    onClick={() => navigate("/login")}
-                    className="w-9 h-9 flex items-center justify-center rounded-full bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-600)] active:scale-95 transition-all"
-                  >
-                    <LoginIcon size={16} />
-                  </button>
-                )}
+                {isLoggedIn ? <ProfileMenu /> : <GuestProfile compact />}
               </div>
             </div>
 
