@@ -17,6 +17,10 @@ import Checkout from "./pages/Checkout.tsx";
 import Delivery from "./pages/Delivery.tsx";
 import Quotation from "./pages/Quotation.tsx";
 import QuotationDetail from "./pages/QuotationDetail.tsx";
+import BmsMember from "./pages/BmsMember.tsx";
+import Notifications from "./pages/Notifications.tsx";
+import Coupons from "./pages/Coupons.tsx";
+import Favorites from "./pages/Favorites.tsx";
 import Playground from "./pages/Playground.tsx";
 import DocsIndex from "./pages/docs/DocsIndex.tsx";
 import DocEmbed from "./pages/docs/DocEmbed.tsx";
@@ -64,7 +68,7 @@ function DocPage({ component }: { component: string }) {
   return <DocEmbed title={`${doc.title} — HeroUI`} url={doc.url} />;
 }
 
-const PROFILE_PATHS = ["/settings", "/delivery", "/quotation"];
+const PROFILE_PATHS = ["/settings", "/delivery", "/quotation", "/bms-member", "/notifications", "/coupons", "/favorites"];
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -100,6 +104,10 @@ createRoot(document.getElementById("root")!).render(
               <Route path="/delivery" element={<Delivery />} />
               <Route path="/quotation" element={<Quotation />} />
               <Route path="/quotation/:id" element={<QuotationDetail />} />
+              <Route path="/bms-member" element={<BmsMember />} />
+              <Route path="/notifications" element={<Notifications />} />
+              <Route path="/coupons" element={<Coupons />} />
+              <Route path="/favorites" element={<Favorites />} />
               <Route path="/playground" element={<Playground />} />
               <Route path="/docs" element={<DocsIndex />} />
               {Object.keys(heroUIDocs).map((key) => (
