@@ -602,8 +602,8 @@ function NotificationButton() {
 
 const PROFILE_ITEMS = [
   { icon: "user", label: "บัญชีของฉัน", href: "/settings" },
-  { icon: "package", label: "การสั่งซื้อของฉัน", href: "/settings" },
-  { icon: "clipboard", label: "ใบเสนอราคาของฉัน", href: "/settings" },
+  { icon: "package", label: "การสั่งซื้อของฉัน", href: "/delivery" },
+  { icon: "clipboard", label: "ใบเสนอราคาของฉัน", href: "/quotation" },
   { icon: "crown", label: "BMS Member", href: "/settings" },
   { icon: "alarm", label: "การแจ้งเตือน", href: "/settings" },
   { icon: "tag", label: "โค้ดส่วนลด", href: "/settings" },

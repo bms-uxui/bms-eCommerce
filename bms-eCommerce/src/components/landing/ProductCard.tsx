@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Link } from "react-router";
 import Icon from "./Icon";
+import QuoteRequestModal from "./QuoteRequestModal";
 
 export type Product = {
   id: string | number;
@@ -51,7 +53,9 @@ export default function ProductCard({
   flashSale?: boolean;
   variant?: "default" | "quote";
 }) {
+  const [quoteOpen, setQuoteOpen] = useState(false);
   return (
+    <>
     <Link
       to={`/products/${product.id}`}
       className="group flex flex-col bg-white border border-[var(--color-neutral-300)] rounded-lg overflow-hidden hover:shadow-md hover:border-[var(--color-primary-400)] transition-all"
@@ -142,7 +146,11 @@ export default function ProductCard({
             </button>
             <button
               type="button"
-              onClick={(e) => e.preventDefault()}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setQuoteOpen(true);
+              }}
               className="flex-1 min-w-0 px-4 rounded bg-[var(--color-primary)] text-white text-[14px] font-medium tracking-[-0.011em] hover:brightness-110 active:scale-[0.98] transition"
             >
               ขอใบเสนอราคา
@@ -158,5 +166,23 @@ export default function ProductCard({
         )}
       </div>
     </Link>
+    {variant === "quote" && (
+      <QuoteRequestModal
+        isOpen={quoteOpen}
+        onClose={() => setQuoteOpen(false)}
+        initialProducts={[
+          {
+            id: String(product.id),
+            image: product.image,
+            name: product.name,
+            unitPrice: product.price,
+            qty: 100,
+            minOrderQty: 100,
+          },
+        ]}
+        discountPercent={product.discount ?? 10}
+      />
+    )}
+    </>
   );
 }
