@@ -365,6 +365,7 @@ export default function ProductDetail() {
               stock: 10,
               likes: 100,
               gallery: Array.from({ length: 10 }, () => paracetamol),
+              isMedical: true,
             }}
           />
         </div>

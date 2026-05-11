@@ -1,4 +1,4 @@
-import { StrictMode, useEffect } from "react";
+import { StrictMode, useEffect, useRef } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router";
 import { HeroUIProvider } from "@heroui/react";
@@ -13,6 +13,10 @@ import ProductDetail from "./pages/ProductDetail.tsx";
 import StoreProfile from "./pages/StoreProfile.tsx";
 import UserSettings from "./pages/UserSettings.tsx";
 import Cart from "./pages/Cart.tsx";
+import Checkout from "./pages/Checkout.tsx";
+import Delivery from "./pages/Delivery.tsx";
+import Quotation from "./pages/Quotation.tsx";
+import QuotationDetail from "./pages/QuotationDetail.tsx";
 import Playground from "./pages/Playground.tsx";
 import DocsIndex from "./pages/docs/DocsIndex.tsx";
 import DocEmbed from "./pages/docs/DocEmbed.tsx";
@@ -60,9 +64,16 @@ function DocPage({ component }: { component: string }) {
   return <DocEmbed title={`${doc.title} — HeroUI`} url={doc.url} />;
 }
 
+const PROFILE_PATHS = ["/settings", "/delivery", "/quotation"];
+
 function ScrollToTop() {
   const { pathname } = useLocation();
+  const prevPath = useRef(pathname);
   useEffect(() => {
+    const fromProfile = PROFILE_PATHS.includes(prevPath.current);
+    const toProfile = PROFILE_PATHS.includes(pathname);
+    prevPath.current = pathname;
+    if (fromProfile && toProfile) return;
     window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
   }, [pathname]);
   return null;
@@ -85,6 +96,10 @@ createRoot(document.getElementById("root")!).render(
               <Route path="/store/:id" element={<StoreProfile />} />
               <Route path="/settings" element={<UserSettings />} />
               <Route path="/cart" element={<Cart />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/delivery" element={<Delivery />} />
+              <Route path="/quotation" element={<Quotation />} />
+              <Route path="/quotation/:id" element={<QuotationDetail />} />
               <Route path="/playground" element={<Playground />} />
               <Route path="/docs" element={<DocsIndex />} />
               {Object.keys(heroUIDocs).map((key) => (

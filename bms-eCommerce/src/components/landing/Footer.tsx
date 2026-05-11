@@ -43,25 +43,33 @@ const socials = [
   { icon: Youtube, label: "Brightify Thailand" },
 ];
 
-const payments: { src: string; alt: string }[] = [
-  { src: visa, alt: "Visa" },
-  { src: mastercard, alt: "Mastercard" },
-  { src: amex, alt: "American Express" },
-  { src: cod, alt: "COD" },
-  { src: krungthai, alt: "Krungthai Bank" },
-  { src: kasikorn, alt: "Kasikorn Bank" },
-  { src: scb, alt: "SCB" },
-  { src: krungsri, alt: "Krungsri" },
-  { src: gsb, alt: "Government Savings Bank" },
-  { src: bbl, alt: "Bangkok Bank" },
+type LogoItem = { src: string; alt: string; pad?: "sm" | "md" | "lg" };
+
+const payments: LogoItem[] = [
+  { src: visa, alt: "Visa", pad: "md" },
+  { src: mastercard, alt: "Mastercard", pad: "md" },
+  { src: amex, alt: "American Express", pad: "md" },
+  { src: cod, alt: "COD", pad: "sm" },
+  { src: krungthai, alt: "Krungthai Bank", pad: "sm" },
+  { src: kasikorn, alt: "Kasikorn Bank", pad: "sm" },
+  { src: scb, alt: "SCB", pad: "sm" },
+  { src: krungsri, alt: "Krungsri", pad: "sm" },
+  { src: gsb, alt: "Government Savings Bank", pad: "sm" },
+  { src: bbl, alt: "Bangkok Bank", pad: "sm" },
 ];
 
-const shippingLogos: { src: string; alt: string }[] = [
-  { src: kerry, alt: "Kerry Express" },
-  { src: flash, alt: "Flash Express" },
-  { src: thaipost, alt: "Thailand Post" },
-  { src: jt, alt: "J&T Express" },
+const shippingLogos: LogoItem[] = [
+  { src: kerry, alt: "Kerry Express", pad: "sm" },
+  { src: flash, alt: "Flash Express", pad: "sm" },
+  { src: thaipost, alt: "Thailand Post", pad: "sm" },
+  { src: jt, alt: "J&T Express", pad: "sm" },
 ];
+
+const PAD_CLASS: Record<NonNullable<LogoItem["pad"]>, string> = {
+  sm: "p-0.5",
+  md: "p-1",
+  lg: "p-1.5",
+};
 
 export default function Footer() {
   return (
@@ -165,7 +173,7 @@ export default function Footer() {
                     alt={p.alt}
                     loading="lazy"
                     decoding="async"
-                    className="w-full h-full object-contain p-0.5"
+                    className={`w-full h-full object-cover ${p.pad ? PAD_CLASS[p.pad] : ""}`}
                   />
                 </span>
               ))}
@@ -184,7 +192,7 @@ export default function Footer() {
                     alt={p.alt}
                     loading="lazy"
                     decoding="async"
-                    className="w-full h-full object-contain p-0.5"
+                    className={`w-full h-full object-cover ${p.pad ? PAD_CLASS[p.pad] : ""}`}
                   />
                 </span>
               ))}

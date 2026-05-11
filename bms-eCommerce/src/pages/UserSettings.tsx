@@ -36,10 +36,11 @@ import scbLogo from "../assets/payments/scb.png";
 import krungsriLogo from "../assets/payments/krungsri.png";
 import gsbLogo from "../assets/payments/gsb.png";
 import bblLogo from "../assets/payments/bbl.png";
-import Header from "../components/landing/Header";
-import Footer from "../components/landing/Footer";
+import TabBar from "../components/landing/TabBar";
+import ProfilePageShell, {
+  type SidebarKey,
+} from "../components/landing/ProfilePageShell";
 import avatar from "../assets/avatar.jpg";
-import profileBanner from "../assets/banners/profile-banner.png";
 
 const SIDEBAR_ITEMS = [
   { icon: UserIcon, label: "บัญชีของฉัน", key: "account" },
@@ -57,52 +58,6 @@ type Key = (typeof SIDEBAR_ITEMS)[number]["key"];
 
 const TABS = ["ข้อมูลของฉัน", "บัญชีธนาคารและบัตร", "ข้อมูลที่อยู่"] as const;
 type Tab = (typeof TABS)[number];
-
-function Sidebar({
-  active,
-  onChange,
-  onLogout,
-}: {
-  active: Key;
-  onChange: (k: Key) => void;
-  onLogout: () => void;
-}) {
-  return (
-    <aside className="w-full lg:w-[260px] shrink-0 bg-white rounded-2xl border border-[var(--color-neutral-300)] p-2 self-start">
-      <ul className="flex flex-col">
-        {SIDEBAR_ITEMS.map((item) => {
-          const isActive = item.key === active;
-          return (
-            <li key={item.key}>
-              <button
-                type="button"
-                onClick={() => onChange(item.key)}
-                className={[
-                  "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] transition-colors",
-                  isActive
-                    ? "bg-[var(--color-primary-100)] text-[var(--color-primary)] font-semibold"
-                    : "text-[var(--color-neutral-900)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)]",
-                ].join(" ")}
-              >
-                <item.icon size={18} />
-                {item.label}
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-      <hr className="my-2 border-t border-[var(--color-neutral-300)]" />
-      <button
-        type="button"
-        onClick={onLogout}
-        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] text-[var(--color-critical)] hover:bg-[var(--color-critical)]/10 transition-colors"
-      >
-        <LogOut size={18} />
-        ออกจากระบบ
-      </button>
-    </aside>
-  );
-}
 
 function ProfileForm() {
   const [tab, setTab] = useState<Tab>(TABS[0]);
@@ -151,28 +106,15 @@ function ProfileForm() {
   };
 
   return (
-    <section className="flex-1 min-w-0 bg-white rounded-2xl border border-[var(--color-neutral-300)] p-6">
-      {/* Pill-style tabs */}
-      <div className="flex flex-wrap gap-2 pb-4 border-b border-[var(--color-neutral-300)]">
-        {TABS.map((t) => {
-          const active = t === tab;
-          return (
-            <button
-              key={t}
-              type="button"
-              onClick={() => setTab(t)}
-              className={[
-                "h-9 px-4 rounded-md text-[14px] font-medium transition-colors",
-                active
-                  ? "bg-[var(--color-primary)] text-white"
-                  : "bg-[var(--color-neutral-200)] text-[var(--color-neutral-700)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)]",
-              ].join(" ")}
-            >
-              {t}
-            </button>
-          );
-        })}
-      </div>
+    <section className="flex-1 min-w-0 lg:min-h-[1200px] bg-white rounded-2xl border border-[var(--color-neutral-300)]">
+      <TabBar
+        sticky
+        active={tab}
+        onChange={setTab}
+        items={TABS.map((t) => ({ key: t, label: t }))}
+        className="rounded-t-2xl"
+      />
+      <div className="p-4 sm:p-6">
 
       <input
         ref={fileInputRef}
@@ -316,6 +258,7 @@ function ProfileForm() {
 
       {tab === "บัญชีธนาคารและบัตร" && <BankCardsTab />}
       {tab === "ข้อมูลที่อยู่" && <AddressTab />}
+      </div>
     </section>
   );
 }
@@ -720,7 +663,7 @@ function PaymentMethodsPanel() {
   };
 
   return (
-    <section className="bg-white rounded-2xl border border-[var(--color-neutral-300)] p-6 flex flex-col gap-8">
+    <section className="lg:min-h-[1200px] bg-white rounded-2xl border border-[var(--color-neutral-300)] p-4 sm:p-6 flex flex-col gap-8">
       <h1 className="text-[20px] font-bold text-[var(--color-neutral-900)]">
         วิธีการชำระเงิน
       </h1>
@@ -861,85 +804,25 @@ export default function UserSettings() {
   const navigate = useNavigate();
   const [active, setActive] = useState<Key>("account");
 
-  const logout = () => {
-    sessionStorage.removeItem("loggedIn");
-    navigate("/");
-  };
-
   return (
-    <div className="min-h-screen bg-[var(--color-bg)]">
-      <Header />
-
-      {/* Banner */}
-      <section className="relative">
-        <div className="h-[180px] w-full bg-[#cce7ff] overflow-hidden">
-          <img
-            src={profileBanner}
-            alt=""
-            aria-hidden
-            className="w-full h-full object-cover object-bottom pointer-events-none select-none"
-          />
-        </div>
-
-        {/* Profile row straddling banner and content area */}
-        <div className="max-w-[1240px] mx-auto px-3 sm:px-4 lg:px-5 relative z-10">
-          <div className="relative pt-6 pl-[174px]">
-            <img
-              src={avatar}
-              alt=""
-              className="absolute left-0 -top-[75px] w-[150px] h-[150px] rounded-full object-cover ring-4 ring-white"
-            />
-            <div className="flex items-end justify-between gap-6">
-              <div className="flex flex-col gap-3 min-w-0">
-                <h2 className="text-[28px] lg:text-[32px] font-semibold text-black leading-tight truncate">
-                  Okinowa Kawasaki
-                </h2>
-                <div className="flex items-center gap-3 text-[16px] text-black">
-                  <span className="flex items-center gap-3">
-                    <span>2</span>
-                    <span>ผู้ติดตาม</span>
-                  </span>
-                  <span className="w-px h-[22px] bg-[var(--color-neutral-300)]" />
-                  <span className="flex items-center gap-3">
-                    <span>2</span>
-                    <span>กำลังติดตาม</span>
-                  </span>
-                </div>
-              </div>
-              <div className="flex items-center gap-4 shrink-0">
-                <button
-                  type="button"
-                  className="h-[60px] w-[200px] rounded-lg bg-white border border-[var(--color-neutral-300)] text-black text-[16px] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] active:scale-[0.98] transition shadow-sm"
-                >
-                  Seller
-                </button>
-                <button
-                  type="button"
-                  className="h-[60px] w-[200px] rounded-lg bg-white border border-[var(--color-neutral-300)] text-black text-[16px] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] active:scale-[0.98] transition shadow-sm"
-                >
-                  Affiliate
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <main className="max-w-[1240px] mx-auto px-3 sm:px-4 lg:px-5 pt-6 pb-12">
-        <div className="flex flex-col lg:flex-row gap-4">
-          <div className="page-section-in" style={{ animationDelay: "120ms" }}>
-            <Sidebar active={active} onChange={setActive} onLogout={logout} />
-          </div>
-          <div
-            className="flex-1 min-w-0 page-section-in"
-            style={{ animationDelay: "200ms" }}
-          >
-            {active === "payment" ? <PaymentMethodsPanel /> : <ProfileForm />}
-          </div>
-        </div>
-      </main>
-
-      <Footer />
-    </div>
+    <ProfilePageShell
+      activeKey={active as SidebarKey}
+      avatarSrc={avatar}
+      onItemClick={(item) => {
+        if (item.key === "orders") {
+          navigate("/delivery");
+          return;
+        }
+        if (item.key === "quotes") {
+          navigate("/quotation");
+          return;
+        }
+        setActive(item.key as Key);
+      }}
+    >
+      <div className="page-section-in" style={{ animationDelay: "200ms" }}>
+        {active === "payment" ? <PaymentMethodsPanel /> : <ProfileForm />}
+      </div>
+    </ProfilePageShell>
   );
 }

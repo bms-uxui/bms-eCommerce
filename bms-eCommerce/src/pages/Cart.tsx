@@ -44,8 +44,8 @@ const INITIAL_SHOPS: Shop[] = [
         id: "1",
         name: "ยาพาราเซตามอล 1000 mg แก้ปวดได้ดีที่เดียวนะkmkmkmkmksma",
         image: paracetamol,
-        unitPrice: 100,
-        originalPrice: 95,
+        unitPrice: 95,
+        originalPrice: 100,
         qty: 1,
         freeShipping: true,
         discountPct: 40,
@@ -55,8 +55,8 @@ const INITIAL_SHOPS: Shop[] = [
         name: "ยาพาราเซตามอล 1000 mg แก้ปวดได้ดีที่เดียวนะkmkmkmkmksma",
         image: paracetamol,
         variant: "ตัวเลือก",
-        unitPrice: 100,
-        originalPrice: 95,
+        unitPrice: 95,
+        originalPrice: 100,
         qty: 1,
         freeShipping: true,
         discountPct: 40,
@@ -74,8 +74,8 @@ const INITIAL_SHOPS: Shop[] = [
         id: "3",
         name: "ยาพาราเซตามอล 1000 mg แก้ปวดได้ดีที่เดียวนะkmkmkmkmksma",
         image: paracetamol,
-        unitPrice: 100,
-        originalPrice: 95,
+        unitPrice: 95,
+        originalPrice: 100,
         qty: 1,
         freeShipping: true,
         discountPct: 40,
@@ -381,8 +381,9 @@ export default function Cart() {
                 <Link
                   to={`/store/${shop.id}`}
                   aria-label={`ไปที่ร้าน ${shop.name}`}
-                  className="ml-auto w-8 h-8 rounded-full flex items-center justify-center text-[var(--color-neutral-500)] hover:text-[var(--color-primary)] hover:bg-[var(--color-primary-100)] transition-colors"
+                  className="ml-auto inline-flex items-center gap-1 h-8 px-2 rounded-md text-[13px] font-medium text-[var(--color-neutral-600)] hover:text-[var(--color-primary)] hover:bg-[var(--color-primary-100)] transition-colors"
                 >
+                  <span>ไปที่ร้านค้า</span>
                   <ChevronRight size={18} />
                 </Link>
               </div>
@@ -452,7 +453,7 @@ export default function Cart() {
 
                     {/* Line total (highlighted) */}
                     <div className="text-center text-[14px] font-semibold text-[var(--color-primary)] tabular-nums">
-                      {baht(lineTotal * 0.95)}
+                      {baht(lineTotal)}
                     </div>
 
                     {/* Delete */}
@@ -536,15 +537,11 @@ export default function Cart() {
             </div>
             <div className="flex flex-col gap-3 flex-1 min-w-0 text-right">
               <p className="text-[20px] font-semibold leading-4 tabular-nums">
-                {baht(total * 0.95)}
+                {baht(total)}
               </p>
-              {discount > 0 ? (
-                <p className="text-[14px] leading-4">
-                  ส่วนลด ฿{discount.toLocaleString()}
-                </p>
-              ) : (
-                <p className="text-[14px] leading-4 invisible">.</p>
-              )}
+              <p className="text-[14px] leading-4">
+                ส่วนลด ฿{discount.toLocaleString()}
+              </p>
             </div>
           </div>
 

@@ -11,9 +11,11 @@ import {
   ModalBody,
   ModalFooter,
 } from "@heroui/react";
-import { ShieldCheck, X } from "lucide-react";
+import { Plus, ShieldCheck, X } from "lucide-react";
 import visaLogo from "../../assets/payments/visa.png";
 import mcLogo from "../../assets/payments/mastercard.png";
+import kasikornLogo from "../../assets/payments/kasikorn.png";
+import krungthaiLogo from "../../assets/payments/krungthai.png";
 
 function SecurityBanner({ subject }: { subject: string }) {
   return (
@@ -377,6 +379,211 @@ export function AddBankModal({
         </ModalFooter>
       </ModalContent>
     </Modal>
+  );
+}
+
+type SelectRow = {
+  id: string;
+  logo: string;
+  name: string;
+  detail: string;
+  isDefault?: boolean;
+};
+
+function RadioDot({ selected }: { selected: boolean }) {
+  if (selected) {
+    return (
+      <span className="w-5 h-5 rounded-full bg-[var(--color-primary)] flex items-center justify-center">
+        <span className="w-2 h-2 rounded-full bg-white" />
+      </span>
+    );
+  }
+  return (
+    <span className="w-5 h-5 rounded-full border border-[var(--color-neutral-500)] bg-white" />
+  );
+}
+
+function SelectListModal({
+  isOpen,
+  onClose,
+  onConfirm,
+  title,
+  subtitle,
+  addLabel,
+  onAdd,
+  rows,
+  logoVariant,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: (id: string) => void;
+  title: string;
+  subtitle: string;
+  addLabel: string;
+  onAdd: () => void;
+  rows: SelectRow[];
+  logoVariant: "card" | "bank";
+}) {
+  const defaultId = rows.find((r) => r.isDefault)?.id ?? rows[0]?.id ?? "";
+  const [selected, setSelected] = useState(defaultId);
+
+  useEffect(() => {
+    if (isOpen) setSelected(defaultId);
+  }, [isOpen, defaultId]);
+
+  return (
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      placement="center"
+      size="2xl"
+      hideCloseButton
+      classNames={{ base: "rounded-3xl" }}
+    >
+      <ModalContent>
+        <ModalHeader className="flex items-center justify-between gap-4 border-b border-[var(--color-neutral-300)] px-6 pt-6 pb-4">
+          <div className="flex flex-col gap-2 min-w-0">
+            <p className="text-[20px] font-semibold leading-4 text-[var(--color-primary-600)]">
+              {title}
+            </p>
+            <p className="text-[14px] leading-4 text-[var(--color-neutral-500)]">
+              {subtitle}
+            </p>
+          </div>
+          <Button
+            onPress={onAdd}
+            radius="sm"
+            className="shrink-0 w-[150px] h-10 px-4 py-2 bg-[var(--color-primary)] text-white text-[16px] font-medium hover:brightness-110 transition gap-2"
+            startContent={<Plus size={20} strokeWidth={2.5} />}
+          >
+            {addLabel}
+          </Button>
+        </ModalHeader>
+        <ModalBody className="px-6 py-6 max-h-[400px] overflow-y-auto">
+          <div className="flex flex-col gap-6">
+            {rows.map((row) => (
+              <button
+                key={row.id}
+                type="button"
+                onClick={() => setSelected(row.id)}
+                className="flex items-center gap-4 pb-6 border-b border-[var(--color-neutral-200)] last:border-b-0 last:pb-0 text-left"
+              >
+                <RadioDot selected={selected === row.id} />
+                <div className="flex items-center gap-2 w-[240px] shrink-0">
+                  {logoVariant === "card" ? (
+                    <span className="w-10 h-10 rounded-lg border border-[var(--color-neutral-300)] bg-white flex items-center justify-center">
+                      <img src={row.logo} alt="" className="max-w-[34px] max-h-[20px] object-contain" />
+                    </span>
+                  ) : (
+                    <img src={row.logo} alt="" className="w-10 h-10 rounded-lg object-contain shrink-0 bg-white" />
+                  )}
+                  <span className="text-[16px] font-semibold text-black whitespace-nowrap">
+                    {row.name}
+                  </span>
+                  {row.isDefault && (
+                    <span className="px-3 py-1 rounded text-[10px] text-white bg-[#0088ff]">
+                      ค่าเริ่มต้น
+                    </span>
+                  )}
+                </div>
+                <span className="flex-1 text-[16px] text-black text-center tabular-nums">
+                  {row.detail}
+                </span>
+                <span
+                  role="button"
+                  onClick={(e) => e.stopPropagation()}
+                  className="px-4 py-1 rounded border border-[var(--color-critical)] text-[12px] font-medium text-[var(--color-critical)] text-center whitespace-nowrap cursor-pointer hover:bg-[var(--color-critical)]/5 transition"
+                >
+                  ลบข้อมูล
+                </span>
+              </button>
+            ))}
+          </div>
+        </ModalBody>
+        <ModalFooter className="border-t border-[var(--color-neutral-300)] px-6 pt-6 pb-4 gap-4">
+          <Button
+            onPress={onClose}
+            radius="sm"
+            variant="bordered"
+            className="w-[150px] h-10 border border-[var(--color-neutral-400)] text-[var(--color-neutral-900)] text-[16px] font-medium bg-white"
+          >
+            ยกเลิก
+          </Button>
+          <Button
+            onPress={() => {
+              onConfirm(selected);
+              onClose();
+            }}
+            radius="sm"
+            className="w-[150px] h-10 bg-[var(--color-primary)] text-white text-[16px] font-medium hover:brightness-110 transition"
+          >
+            ยืนยัน
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
+}
+
+const SAMPLE_CARDS: SelectRow[] = [
+  { id: "visa-1053", logo: visaLogo, name: "Credit Card", detail: "**** **** **** 1053", isDefault: true },
+  { id: "mc-4522", logo: mcLogo, name: "Master Card", detail: "**** **** **** 4522" },
+];
+
+const SAMPLE_BANKS: SelectRow[] = [
+  { id: "kbank-08", logo: kasikornLogo, name: "ธนาคารกสิกรไทย", detail: "96* **** *08", isDefault: true },
+  { id: "ktb-22", logo: krungthaiLogo, name: "ธนาคารกรุงไทย", detail: "12* **** *22" },
+];
+
+export function SelectCardModal({
+  isOpen,
+  onClose,
+  onConfirm,
+  onAdd,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: (id: string) => void;
+  onAdd: () => void;
+}) {
+  return (
+    <SelectListModal
+      isOpen={isOpen}
+      onClose={onClose}
+      onConfirm={onConfirm}
+      onAdd={onAdd}
+      title="บัตรเครดิต / บัตรเดบิต ของฉัน"
+      subtitle="บัตรจะแสดงให้เลือกตอนที่คุณจำดำเนินการ ชำระเงินหรือผ่อนสินค้า เท่านั้น"
+      addLabel="เพิ่มบัตรใหม่"
+      rows={SAMPLE_CARDS}
+      logoVariant="card"
+    />
+  );
+}
+
+export function SelectBankModal({
+  isOpen,
+  onClose,
+  onConfirm,
+  onAdd,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: (id: string) => void;
+  onAdd: () => void;
+}) {
+  return (
+    <SelectListModal
+      isOpen={isOpen}
+      onClose={onClose}
+      onConfirm={onConfirm}
+      onAdd={onAdd}
+      title="บัญชีธนาคารของฉัน"
+      subtitle="บัญชีธนาคารจะแสดงให้เลือกตอนที่คุณจำดำเนินการ ชำระเงินสินค้า เท่านั้น"
+      addLabel="เพิ่มบัญชีใหม่"
+      rows={SAMPLE_BANKS}
+      logoVariant="bank"
+    />
   );
 }
 
