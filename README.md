@@ -44,7 +44,9 @@
 - **Modal flows** — ขอใบเสนอราคา (สำหรับสินค้าเวชภัณฑ์) → เลือกสินค้าเพิ่ม, เพิ่ม/เลือกที่อยู่, เพิ่ม/เลือกบัตร & บัญชีธนาคาร
 - **ส่วนเสริม** — Playground (sandbox สำหรับนักออกแบบ), Docs (ฝัง doc ของ HeroUI components)
 
-ดูภาพรวมเส้นทางทั้งหมดได้ที่ไฟล์ [`sitemap.svg`](./sitemap.svg)
+ดูภาพรวมเส้นทางทั้งหมดได้ที่ไฟล์ [`sitemap.svg`](./bms-eCommerce/sitemap.svg)
+
+> โค้ดแอปทั้งหมดอยู่ในโฟลเดอร์ [`bms-eCommerce/`](./bms-eCommerce/) ของ repo นี้
 
 ---
 
@@ -69,6 +71,9 @@
 > ต้องมี Node.js (LTS) — ดาวน์โหลดที่ https://nodejs.org
 
 ```bash
+# เข้าไปในโฟลเดอร์โค้ดแอปก่อน
+cd bms-eCommerce
+
 # ติดตั้ง dependencies
 npm install
 
