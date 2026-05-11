@@ -77,19 +77,31 @@ function MenuLink({
   customIcon,
   children,
   trailingIcon,
+  to,
 }: {
   iconName?: string;
   customIcon?: React.ReactNode;
   children: React.ReactNode;
   trailingIcon?: string;
+  to?: string;
 }) {
-  return (
-    <button className="flex items-center gap-1 px-1.5 py-1 rounded-lg text-white text-[13px] lg:text-[14px] font-medium leading-[18px] hover:bg-white/15 active:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 transition-colors whitespace-nowrap shrink-0">
+  const className =
+    "flex items-center gap-1 px-1.5 py-1 rounded-lg text-white text-[13px] lg:text-[14px] font-medium leading-[18px] hover:bg-white/15 active:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 transition-colors whitespace-nowrap shrink-0";
+  const inner = (
+    <>
       {customIcon ?? (iconName && <Icon name={iconName} size={16} />)}
       <span>{children}</span>
       {trailingIcon && <Icon name={trailingIcon} size={16} />}
-    </button>
+    </>
   );
+  if (to) {
+    return (
+      <Link to={to} className={className}>
+        {inner}
+      </Link>
+    );
+  }
+  return <button className={className}>{inner}</button>;
 }
 
 const LANGUAGES = [
@@ -587,12 +599,12 @@ function NotificationButton() {
           </ul>
 
           <div className="border-t border-[var(--color-neutral-300)] px-4 py-3 text-center">
-            <a
-              href="#"
+            <Link
+              to="/notifications"
               className="text-[14px] font-medium text-[var(--color-primary)] hover:underline"
             >
               ดูการแจ้งเตือนทั้งหมด
-            </a>
+            </Link>
           </div>
         </div>
       )}
@@ -604,10 +616,10 @@ const PROFILE_ITEMS = [
   { icon: "user", label: "บัญชีของฉัน", href: "/settings" },
   { icon: "package", label: "การสั่งซื้อของฉัน", href: "/delivery" },
   { icon: "clipboard", label: "ใบเสนอราคาของฉัน", href: "/quotation" },
-  { icon: "crown", label: "BMS Member", href: "/settings" },
-  { icon: "alarm", label: "การแจ้งเตือน", href: "/settings" },
-  { icon: "tag", label: "โค้ดส่วนลด", href: "/settings" },
-  { icon: "heart", label: "สิ่งที่ถูกใจ", href: "/settings" },
+  { icon: "crown", label: "BMS Member", href: "/bms-member" },
+  { icon: "alarm", label: "การแจ้งเตือน", href: "/notifications" },
+  { icon: "tag", label: "โค้ดส่วนลด", href: "/coupons" },
+  { icon: "heart", label: "สิ่งที่ถูกใจ", href: "/favorites" },
   { icon: "cog", label: "การตั้งค่า", href: "/settings" },
 ] as const;
 
@@ -767,33 +779,44 @@ function HeaderIcon({
   iconName,
   badge,
   label,
+  to,
 }: {
   iconName: string;
   badge?: number;
   label?: string;
+  to?: string;
 }) {
+  const className = [
+    "relative flex items-center justify-center shrink-0",
+    "w-9 h-9 rounded-full",
+    "text-[var(--color-neutral-600)]",
+    "border border-transparent",
+    "transition-all duration-150",
+    "hover:bg-[var(--color-primary)]/10 hover:text-[var(--color-primary)] hover:border-[var(--color-primary)]/15",
+    "active:scale-95 active:bg-[var(--color-primary)]/15",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/30 focus-visible:ring-offset-1",
+  ].join(" ");
+  const inner = (
+    <>
+      <Icon name={iconName} size={22} />
+      {badge !== undefined && (
+        <span className="absolute -top-0.5 right-0 min-w-[16px] h-[16px] px-1 rounded-full bg-[var(--color-critical)] text-[9px] font-semibold text-white flex items-center justify-center leading-none ring-2 ring-white">
+          {badge > 99 ? "99+" : badge}
+        </span>
+      )}
+    </>
+  );
   return (
     <div className="relative group shrink-0">
-      <button
-        aria-label={label}
-        className={[
-          "relative flex items-center justify-center shrink-0",
-          "w-9 h-9 rounded-full",
-          "text-[var(--color-neutral-600)]",
-          "border border-transparent",
-          "transition-all duration-150",
-          "hover:bg-[var(--color-primary)]/10 hover:text-[var(--color-primary)] hover:border-[var(--color-primary)]/15",
-          "active:scale-95 active:bg-[var(--color-primary)]/15",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/30 focus-visible:ring-offset-1",
-        ].join(" ")}
-      >
-        <Icon name={iconName} size={22} />
-        {badge !== undefined && (
-          <span className="absolute -top-0.5 right-0 min-w-[16px] h-[16px] px-1 rounded-full bg-[var(--color-critical)] text-[9px] font-semibold text-white flex items-center justify-center leading-none ring-2 ring-white">
-            {badge > 99 ? "99+" : badge}
-          </span>
-        )}
-      </button>
+      {to ? (
+        <Link to={to} aria-label={label} className={className}>
+          {inner}
+        </Link>
+      ) : (
+        <button aria-label={label} className={className}>
+          {inner}
+        </button>
+      )}
       {label && (
         <span
           role="tooltip"
@@ -981,8 +1004,8 @@ export default function Header() {
             <div className="flex items-center shrink-0 h-9">
               <div className="flex items-center gap-1">
                 <CartButton />
-                <HeaderIcon iconName="clipboard" label="ใบเสนอราคา" />
-                <HeaderIcon iconName="heart" label="รายการโปรด" />
+                <HeaderIcon iconName="clipboard" label="ใบเสนอราคา" to="/quotation" />
+                <HeaderIcon iconName="heart" label="รายการโปรด" to="/favorites" />
                 <NotificationButton />
               </div>
               {isLoggedIn ? (
@@ -1051,7 +1074,7 @@ export default function Header() {
             <VDivider />
             <MenuLink iconName="users">สมัคร Affiliate</MenuLink>
             <VDivider />
-            <MenuLink iconName="coin">สมัครสมาชิก BMS Member</MenuLink>
+            <MenuLink iconName="coin" to="/bms-member">สมัครสมาชิก BMS Member</MenuLink>
           </div>
           <div className="flex items-center gap-3">
             {!isLoggedIn && <MenuLink iconName="user">สร้างบัญชีใหม่</MenuLink>}
@@ -1070,7 +1093,7 @@ export default function Header() {
           <VDivider />
           <MenuLink iconName="users">สมัคร Affiliate</MenuLink>
           <VDivider />
-          <MenuLink iconName="coin">BMS Member</MenuLink>
+          <MenuLink iconName="coin" to="/bms-member">BMS Member</MenuLink>
           <VDivider />
           {!isLoggedIn && <MenuLink iconName="user">สร้างบัญชี</MenuLink>}
           <VDivider />
@@ -1086,7 +1109,7 @@ export default function Header() {
               สร้างร้านค้า
             </MenuLink>
             <MenuLink iconName="users">สมัคร Affiliate</MenuLink>
-            <MenuLink iconName="coin">สมัครสมาชิก BMS Member</MenuLink>
+            <MenuLink iconName="coin" to="/bms-member">สมัครสมาชิก BMS Member</MenuLink>
             {!isLoggedIn && <MenuLink iconName="user">สร้างบัญชีใหม่</MenuLink>}
             <LanguageSwitcher />
             <HelpSwitcher />

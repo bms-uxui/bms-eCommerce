@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
-import { Input, Button, Select, SelectItem } from "@heroui/react";
+import { Input, Button, Select, SelectItem, Switch } from "@heroui/react";
 import {
   User as UserIcon,
   Package,
@@ -800,6 +800,52 @@ function PaymentMethodsPanel() {
   );
 }
 
+const NOTIFICATION_SETTINGS = [
+  { key: "orders", label: "การแจ้งเตือนการสั่งซื้อสินค้า", default: true },
+  { key: "promo", label: "การแจ้งเตือนโปรโมชัน", default: true },
+  { key: "messages", label: "การแจ้งเตือนข้อความ", default: true },
+  { key: "status", label: "การแจ้งเตือนสถานะสินค้า", default: true },
+] as const;
+
+function NotificationSettingsPanel() {
+  const [state, setState] = useState<Record<string, boolean>>(
+    Object.fromEntries(NOTIFICATION_SETTINGS.map((s) => [s.key, s.default]))
+  );
+  return (
+    <section className="lg:min-h-[1200px] bg-white rounded-2xl border border-[var(--color-neutral-300)] flex flex-col">
+      <div className="p-4 sm:p-6 border-b border-[var(--color-neutral-300)]">
+        <h2 className="text-[16px] font-semibold text-[var(--color-neutral-900)]">
+          การตั้งค่าการแจ้งเตือน
+        </h2>
+        <p className="text-[14px] text-[var(--color-neutral-500)] mt-2">
+          คุณจะได้รับการแจ้งเตือนด้านความปลอดภัยและอัปเดตโปรโมชันต่างๆ
+        </p>
+      </div>
+      <ul className="px-4 sm:px-6 py-2 flex flex-col">
+        {NOTIFICATION_SETTINGS.map((s) => (
+          <li
+            key={s.key}
+            className="flex items-center justify-between gap-4 py-5 border-b border-[var(--color-neutral-200)] last:border-b-0"
+          >
+            <span className="text-[14px] text-[var(--color-neutral-900)]">
+              {s.label}
+            </span>
+            <Switch
+              size="sm"
+              color="success"
+              isSelected={state[s.key]}
+              onValueChange={(v) =>
+                setState((prev) => ({ ...prev, [s.key]: v }))
+              }
+              aria-label={s.label}
+            />
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
 export default function UserSettings() {
   const navigate = useNavigate();
   const [active, setActive] = useState<Key>("account");
@@ -809,19 +855,21 @@ export default function UserSettings() {
       activeKey={active as SidebarKey}
       avatarSrc={avatar}
       onItemClick={(item) => {
-        if (item.key === "orders") {
-          navigate("/delivery");
-          return;
-        }
-        if (item.key === "quotes") {
-          navigate("/quotation");
+        if (item.path && item.path !== "/settings") {
+          navigate(item.path);
           return;
         }
         setActive(item.key as Key);
       }}
     >
       <div className="page-section-in" style={{ animationDelay: "200ms" }}>
-        {active === "payment" ? <PaymentMethodsPanel /> : <ProfileForm />}
+        {active === "payment" ? (
+          <PaymentMethodsPanel />
+        ) : active === "settings" ? (
+          <NotificationSettingsPanel />
+        ) : (
+          <ProfileForm />
+        )}
       </div>
     </ProfilePageShell>
   );

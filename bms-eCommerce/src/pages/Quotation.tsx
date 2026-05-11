@@ -94,7 +94,7 @@ const QUOTES: Quote[] = Array.from({ length: 237 }, (_, i) => {
 function StatusBadge({ status }: { status: QuoteStatus }) {
   return (
     <span
-      className={`inline-flex items-center justify-center px-4 py-1 rounded text-[12px] font-medium ${STATUS_STYLE[status]}`}
+      className={`inline-flex items-center justify-center px-2 sm:px-4 py-1 rounded text-[11px] sm:text-[12px] font-medium whitespace-nowrap ${STATUS_STYLE[status]}`}
     >
       {STATUS_LABEL[status]}
     </span>
@@ -106,10 +106,10 @@ function QuoteRow({ quote }: { quote: Quote }) {
   const slug = quote.number.replace(/^#/, "");
   const open = () => navigate(`/quotation/${slug}?status=${quote.status}`);
   return (
-    <div className="flex items-center px-4 py-3 border-b border-[var(--color-neutral-200)] text-[14px] text-[var(--color-neutral-900)]">
-      <div className="flex-1 leading-4">{quote.number}</div>
-      <div className="flex-1 text-center leading-4">{quote.requestedAt}</div>
-      <div className="flex-1 text-center leading-4">{quote.itemCount}</div>
+    <div className="flex items-center px-2 sm:px-4 py-3 border-b border-[var(--color-neutral-200)] text-[12px] sm:text-[14px] text-[var(--color-neutral-900)]">
+      <div className="flex-1 leading-4 truncate pr-1">{quote.number}</div>
+      <div className="hidden sm:block flex-1 text-center leading-4">{quote.requestedAt}</div>
+      <div className="hidden md:block flex-1 text-center leading-4">{quote.itemCount}</div>
       <div className="flex-1 flex justify-center">
         <StatusBadge status={quote.status} />
       </div>
@@ -279,47 +279,45 @@ export default function Quotation() {
           />
 
           {/* Table */}
-          <div className="shadow-[0_0_0.5px_rgba(29,33,45,0.2),0_0_1px_rgba(29,33,45,0.08),0_2px_2px_rgba(29,33,45,0.08)] m-2 rounded-xl bg-white flex flex-col overflow-x-auto">
-            <div className="min-w-[720px]">
-              {/* Column headers */}
-              <div className="flex items-center bg-[var(--color-primary-100)] border-b border-[var(--color-neutral-200)] rounded-t-xl px-4 lg:sticky lg:top-[162px] z-[5]">
-                <div className="flex-1 py-2.5 pr-4 text-[12px] font-medium text-[var(--color-neutral-600)] uppercase">
-                  หมายเลขคำขอ
-                </div>
-                <div className="flex-1 py-2.5 px-4 text-[12px] font-medium text-[var(--color-neutral-600)] uppercase text-center">
-                  วันที่ขอ
-                </div>
-                <div className="flex-1 py-2.5 px-4 text-[12px] font-medium text-[var(--color-neutral-600)] uppercase text-center">
-                  จำนวนสินค้า (อย่าง)
-                </div>
-                <div className="flex-1 py-2.5 px-4 text-[12px] font-medium text-[var(--color-neutral-600)] uppercase text-center">
-                  สถานะ
-                </div>
-                <div className="flex-1 py-2.5 px-4 text-[12px] font-medium text-[var(--color-neutral-600)] uppercase text-center">
-                  การดำเนินการ
-                </div>
+          <div className="shadow-[0_0_0.5px_rgba(29,33,45,0.2),0_0_1px_rgba(29,33,45,0.08),0_2px_2px_rgba(29,33,45,0.08)] m-2 rounded-xl bg-white flex flex-col">
+            {/* Column headers (sticky just below the sticky TabBar) */}
+            <div className="flex items-center bg-[var(--color-primary-100)] border-b border-[var(--color-neutral-200)] rounded-t-xl px-2 sm:px-4 lg:sticky lg:top-[162px] z-[5]">
+              <div className="flex-1 py-2.5 sm:pr-4 text-[11px] sm:text-[12px] font-medium text-[var(--color-neutral-600)] uppercase">
+                หมายเลขคำขอ
               </div>
-
-              {/* Rows: fixed height for 10 rows (~41px each); scrolls when more */}
-              <div className="flex flex-col h-[410px] overflow-y-auto">
-                {visible.length === 0 ? (
-                  <div className="py-16 text-center text-[14px] text-[var(--color-neutral-500)]">
-                    ไม่พบรายการ
-                  </div>
-                ) : (
-                  visible.map((q) => <QuoteRow key={q.id} quote={q} />)
-                )}
+              <div className="hidden sm:block flex-1 py-2.5 px-4 text-[12px] font-medium text-[var(--color-neutral-600)] uppercase text-center">
+                วันที่ขอ
               </div>
-
-              <PaginationFooter
-                total={totalRecords}
-                pageSize={pageSize}
-                page={safePage}
-                pageCount={pageCount}
-                onPageChange={setPage}
-                onPageSizeChange={changePageSize}
-              />
+              <div className="hidden md:block flex-1 py-2.5 px-4 text-[12px] font-medium text-[var(--color-neutral-600)] uppercase text-center">
+                จำนวนสินค้า (อย่าง)
+              </div>
+              <div className="flex-1 py-2.5 px-2 sm:px-4 text-[11px] sm:text-[12px] font-medium text-[var(--color-neutral-600)] uppercase text-center">
+                สถานะ
+              </div>
+              <div className="flex-1 py-2.5 px-2 sm:px-4 text-[11px] sm:text-[12px] font-medium text-[var(--color-neutral-600)] uppercase text-center">
+                การดำเนินการ
+              </div>
             </div>
+
+            {/* Rows: fixed height for 10 rows (~41px each); scrolls when more */}
+            <div className="flex flex-col h-[410px] overflow-y-auto">
+              {visible.length === 0 ? (
+                <div className="py-16 text-center text-[14px] text-[var(--color-neutral-500)]">
+                  ไม่พบรายการ
+                </div>
+              ) : (
+                visible.map((q) => <QuoteRow key={q.id} quote={q} />)
+              )}
+            </div>
+
+            <PaginationFooter
+              total={totalRecords}
+              pageSize={pageSize}
+              page={safePage}
+              pageCount={pageCount}
+              onPageChange={setPage}
+              onPageSizeChange={changePageSize}
+            />
           </div>
         </div>
       </div>
