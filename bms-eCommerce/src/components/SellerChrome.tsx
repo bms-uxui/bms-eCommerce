@@ -98,7 +98,7 @@ type SidebarEntry = SidebarLeaf | SidebarGroup;
 const SIDEBAR_ENTRIES: SidebarEntry[] = [
   { kind: "leaf", icon: "grid-alt", label: "ภาพรวมร้านค้า", to: "/seller/overview" },
   { kind: "leaf", icon: "cart", label: "คำสั่งซื้อ", to: "/seller/orders" },
-  { kind: "leaf", icon: "files", label: "ใบเสนอราคา" },
+  { kind: "leaf", icon: "files", label: "ใบเสนอราคา", to: "/seller/quotes" },
   {
     kind: "group",
     icon: "package",
