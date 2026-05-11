@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { flyToCart } from "../../lib/flyToCart";
 import { Button } from "@heroui/react";
+import QuoteRequestModal from "./QuoteRequestModal";
 import {
   Star,
   ShoppingBag,
@@ -32,6 +34,7 @@ export type ProductDetail = {
   stock?: number;
   likes?: number;
   gallery: string[];
+  isMedical?: boolean;
 };
 
 function CountdownPill({ value }: { value: string }) {
@@ -128,10 +131,12 @@ export default function ProductDetailHero({
   product: ProductDetail;
 }) {
   const [activeImg, setActiveImg] = useState(0);
+  const mainImgRef = useRef<HTMLImageElement>(null);
   const [size, setSize] = useState(product.sizes?.[0] ?? "");
   const [variant, setVariant] = useState(product.variants?.[0] ?? "");
   const [qty, setQty] = useState(1);
   const [liked, setLiked] = useState(false);
+  const [quoteOpen, setQuoteOpen] = useState(false);
 
   return (
     <section className="bg-white rounded-2xl border border-[var(--color-neutral-300)] p-4 grid grid-cols-1 lg:grid-cols-[588px_1fr] gap-6">
@@ -139,6 +144,7 @@ export default function ProductDetailHero({
       <div className="flex flex-col gap-2.5 h-[568px]">
         <div className="flex-1 min-h-0 rounded-lg overflow-hidden bg-[var(--color-neutral-200)]">
           <img
+            ref={mainImgRef}
             src={product.gallery[activeImg]}
             alt={product.name}
             className="w-full h-full object-cover"
@@ -285,15 +291,17 @@ export default function ProductDetailHero({
           <Button
             radius="md"
             startContent={<ShoppingBag size={16} />}
+            onPress={() => flyToCart(mainImgRef.current)}
             className="flex-1 h-11 bg-[var(--color-primary-100)] border border-[var(--color-primary)] text-[var(--color-primary)] text-[16px] font-medium tracking-[-0.011em] hover:bg-[var(--color-primary-100)]/80 transition"
           >
             เพิ่มไปที่ตะกร้า
           </Button>
           <Button
             radius="md"
+            onPress={() => product.isMedical && setQuoteOpen(true)}
             className="flex-1 h-11 bg-[var(--color-primary)] text-white text-[16px] font-medium tracking-[-0.011em] hover:brightness-110 transition"
           >
-            ซื้อสินค้า
+            {product.isMedical ? "เสนอราคา" : "ซื้อสินค้า"}
           </Button>
         </div>
 
@@ -339,6 +347,66 @@ export default function ProductDetailHero({
           </button>
         </div>
       </div>
+
+      {product.isMedical && (
+        <QuoteRequestModal
+          isOpen={quoteOpen}
+          onClose={() => setQuoteOpen(false)}
+          initialProducts={[
+            {
+              id: "current",
+              image: product.gallery[0],
+              name: product.name,
+              unitPrice: product.price || product.originalPrice || 0,
+              qty,
+              minOrderQty: 100,
+            },
+          ]}
+          catalog={[
+            {
+              id: "rel-1",
+              image: product.gallery[0],
+              name: "ชาอูหลงผสมดอกหอมหมื่นลี้",
+              unitPrice: 150,
+              stock: 100,
+              minOrderQty: 100,
+            },
+            {
+              id: "rel-2",
+              image: product.gallery[0],
+              name: "วิตามินซี 1000 mg เสริมภูมิคุ้มกัน",
+              unitPrice: 150,
+              stock: 100,
+              minOrderQty: 100,
+            },
+            {
+              id: "rel-3",
+              image: product.gallery[0],
+              name: "พาราเซตามอล 500 mg ลดไข้",
+              unitPrice: 80,
+              stock: 250,
+              minOrderQty: 50,
+            },
+            {
+              id: "rel-4",
+              image: product.gallery[0],
+              name: "แคลเซียม + วิตามินดี",
+              unitPrice: 220,
+              stock: 60,
+              minOrderQty: 100,
+            },
+            {
+              id: "rel-5",
+              image: product.gallery[0],
+              name: "โอเมก้า 3 น้ำมันปลา",
+              unitPrice: 480,
+              stock: 40,
+              minOrderQty: 50,
+            },
+          ]}
+          discountPercent={product.discount ?? 10}
+        />
+      )}
     </section>
   );
 }

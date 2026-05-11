@@ -1,0 +1,219 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1560" height="960" viewBox="0 0 1560 960" font-family="-apple-system, 'Segoe UI', 'Noto Sans Thai', sans-serif">
+  <defs>
+    <style>
+      .route { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 12px; font-weight: 700; }
+      .name  { font-size: 14px; font-weight: 600; }
+      .desc  { font-size: 10.5px; fill: #475569; }
+      .hdr   { font-size: 14px; font-weight: 700; fill: #ffffff; letter-spacing: .04em; }
+      .sub   { font-size: 11px; font-weight: 700; fill: #ffffff; letter-spacing: .03em; }
+      .title { font-size: 26px; font-weight: 800; fill: #0f172a; }
+      .stitle{ font-size: 13px; fill: #64748b; }
+      .note  { font-size: 10px; fill: #64748b; }
+      .nb    { font-style: italic; fill: #64748b; }
+    </style>
+  </defs>
+
+  <rect width="1560" height="960" fill="#ffffff"/>
+
+  <!-- Title -->
+  <text x="40" y="44" class="title">Brightify — BMS E-Commerce · Sitemap</text>
+  <text x="40" y="66" class="stitle">React + Vite + HeroUI · routes from src/main.tsx + Figma frames</text>
+
+  <!-- Legend -->
+  <g transform="translate(1180, 24)">
+    <rect x="0"   y="0" width="14" height="14" rx="3" fill="#eff6ff" stroke="#93c5fd"/><text x="20"  y="11" class="note">Public</text>
+    <rect x="80"  y="0" width="14" height="14" rx="3" fill="#f5f3ff" stroke="#c4b5fd"/><text x="100" y="11" class="note">Account</text>
+    <rect x="165" y="0" width="14" height="14" rx="3" fill="#f0fdf4" stroke="#86efac"/><text x="185" y="11" class="note">Commerce</text>
+    <rect x="0"   y="22" width="14" height="14" rx="3" fill="#fff7ed" stroke="#fdba74"/><text x="20"  y="33" class="note">Modal</text>
+    <rect x="80"  y="22" width="14" height="14" rx="3" fill="#f8fafc" stroke="#cbd5e1"/><text x="100" y="33" class="note">Dev / docs</text>
+    <rect x="165" y="22" width="14" height="14" rx="3" fill="#f1f5f9" stroke="#94a3b8" stroke-dasharray="3 2"/><text x="185" y="33" class="note">Not built</text>
+  </g>
+
+  <!-- Root -->
+  <rect x="600" y="92" width="360" height="50" rx="10" fill="#0f172a"/>
+  <text x="780" y="116" text-anchor="middle" font-size="15" font-weight="700" fill="#ffffff">BRIGHTIFY  ·  E-Commerce by BMS</text>
+  <text x="780" y="133" text-anchor="middle" font-size="11" fill="#cbd5e1">https://…/bms-eCommerce/  ·  BrowserRouter</text>
+
+  <!-- Spine -->
+  <path d="M780 142 V172 H210 V190 M780 172 H582 V190 M780 172 H958 V190 M780 172 H1326 V190" fill="none" stroke="#cbd5e1" stroke-width="1.5"/>
+
+  <!-- ============ COLUMN 1 : PUBLIC ============ -->
+  <rect x="40" y="190" width="340" height="34" rx="8" fill="#2563eb"/>
+  <text x="56" y="212" class="hdr">PUBLIC</text>
+
+  <!-- / Home -->
+  <rect x="40" y="246" width="340" height="92" rx="8" fill="#eff6ff" stroke="#93c5fd"/>
+  <text x="56" y="268" class="route" fill="#1d4ed8">/</text>
+  <text x="56" y="286" class="name">Home / Landing</text>
+  <text x="56" y="304" class="desc">Hero &amp; sub-banners · Flash-sale countdown carousel</text>
+  <text x="56" y="318" class="desc">Category grid · Product carousels · Promo banners</text>
+  <text x="56" y="332" class="desc">Curated product grid · Footer (payment / shipping logos)</text>
+
+  <!-- /login -->
+  <rect x="40" y="350" width="340" height="62" rx="8" fill="#eff6ff" stroke="#93c5fd"/>
+  <text x="56" y="372" class="route" fill="#1d4ed8">/login</text>
+  <text x="56" y="390" class="name">Login</text>
+  <text x="56" y="406" class="desc">Email / password sign-in (animated entry)</text>
+
+  <!-- /products -->
+  <rect x="40" y="424" width="340" height="76" rx="8" fill="#eff6ff" stroke="#93c5fd"/>
+  <text x="56" y="446" class="route" fill="#1d4ed8">/products</text>
+  <text x="56" y="464" class="name">All Products</text>
+  <text x="56" y="480" class="desc">Sidebar filters (category · brand · price · rating)</text>
+  <text x="56" y="494" class="desc">Sort dropdown · pagination · ProductCard grid</text>
+
+  <!-- /products/:id -->
+  <rect x="40" y="512" width="340" height="116" rx="8" fill="#eff6ff" stroke="#93c5fd"/>
+  <text x="56" y="534" class="route" fill="#1d4ed8">/products/:id</text>
+  <text x="56" y="552" class="name">Product Detail</text>
+  <text x="56" y="568" class="desc">Gallery + buy box · shop card · specs · reviews · related</text>
+  <text x="56" y="582" class="desc">Regular: Add to cart  +  Buy</text>
+  <text x="56" y="596" class="desc">Medical: Add to cart  +  เสนอราคา → QuoteRequestModal</text>
+  <text x="56" y="610" class="desc" fill="#2563eb">▸ related "สินค้าภายในร้าน" / "สินค้าแนะนำ" carousels</text>
+  <text x="56" y="624" class="desc" fill="#2563eb">▸ card "ขอใบเสนอราคา" → QuoteRequestModal</text>
+
+  <!-- /store/:id -->
+  <rect x="40" y="640" width="340" height="62" rx="8" fill="#eff6ff" stroke="#93c5fd"/>
+  <text x="56" y="662" class="route" fill="#1d4ed8">/store/:id</text>
+  <text x="56" y="680" class="name">Store Profile</text>
+  <text x="56" y="696" class="desc">Store banner · follow / chat · listings grid</text>
+
+  <!-- ============ COLUMN 2 : ACCOUNT ============ -->
+  <rect x="412" y="190" width="340" height="34" rx="8" fill="#7c3aed"/>
+  <text x="428" y="212" class="hdr">ACCOUNT</text>
+  <text x="428" y="240" class="note">Shared ProfilePageShell · sidebar sticky (desktop) / pill-scroll (mobile) · scroll preserved between profile pages</text>
+
+  <!-- /settings -->
+  <rect x="412" y="252" width="340" height="110" rx="8" fill="#f5f3ff" stroke="#c4b5fd"/>
+  <text x="428" y="274" class="route" fill="#6d28d9">/settings</text>
+  <text x="428" y="292" class="name">User Settings</text>
+  <text x="428" y="308" class="desc">Tabs: ข้อมูลของฉัน · บัญชีธนาคารและบัตร · ข้อมูลที่อยู่</text>
+  <text x="428" y="322" class="desc">Sidebar → "วิธีการชำระเงิน" = PaymentMethodsPanel</text>
+  <text x="428" y="336" class="desc">Avatar upload · profile form · cards / banks / addresses</text>
+  <text x="428" y="350" class="desc" fill="#7c3aed">▸ sidebar "การสั่งซื้อ"→/delivery · "ใบเสนอราคา"→/quotation</text>
+
+  <!-- /delivery -->
+  <rect x="412" y="374" width="340" height="110" rx="8" fill="#f5f3ff" stroke="#c4b5fd"/>
+  <text x="428" y="396" class="route" fill="#6d28d9">/delivery</text>
+  <text x="428" y="414" class="name">Orders / Delivery</text>
+  <text x="428" y="430" class="desc">Status tabs: ทั้งหมด · รอชำระเงิน · กำลังจัดเตรียม ·</text>
+  <text x="428" y="444" class="desc">กำลังจัดส่ง · จัดส่งสำเร็จ · ได้รับสินค้าแล้ว · ยกเลิก</text>
+  <text x="428" y="458" class="desc">OrderCard per order — status-specific badges + actions:</text>
+  <text x="428" y="472" class="desc">cancel · re-pay · contact · confirm receipt · refund · review · re-buy</text>
+
+  <!-- /quotation -->
+  <rect x="412" y="496" width="340" height="110" rx="8" fill="#f5f3ff" stroke="#c4b5fd"/>
+  <text x="428" y="518" class="route" fill="#6d28d9">/quotation</text>
+  <text x="428" y="536" class="name">Quote Requests</text>
+  <text x="428" y="552" class="desc">Status tabs: ทั้งหมด · รอดำเนินการ · ติดต่อแล้ว ·</text>
+  <text x="428" y="566" class="desc">เสนอราคาแล้ว · ยอมรับแล้ว · สร้างคำสั่งซื้อแล้ว · หมดอายุ · ยกเลิก</text>
+  <text x="428" y="580" class="desc">Paginated table (10 / 20 / 50 / 100 per page)</text>
+  <text x="428" y="594" class="desc">Sticky tab bar + sticky table header · "ดูรายละเอียด" → detail</text>
+
+  <!-- /quotation/:id -->
+  <rect x="412" y="618" width="340" height="124" rx="8" fill="#f5f3ff" stroke="#c4b5fd"/>
+  <text x="428" y="640" class="route" fill="#6d28d9">/quotation/:id?status=…</text>
+  <text x="428" y="658" class="name">Quotation Detail</text>
+  <text x="428" y="674" class="desc">Left: request details · customer info · items · summary · note</text>
+  <text x="428" y="688" class="desc">Right: 7-step vertical timeline · "แชทร้านค้า"</text>
+  <text x="428" y="702" class="desc">Step 4 (เสนอราคาแล้ว): download PDF + dashed upload zone</text>
+  <text x="428" y="716" class="desc">Step 5 (ยอมรับแล้ว): uploaded PDF chip (remove)</text>
+  <text x="428" y="730" class="desc">Step 6 (สร้างคำสั่งซื้อแล้ว): + "ดูคำสั่งซื้อ #BMS-…" CTA</text>
+
+  <!-- ============ COLUMN 3 : COMMERCE + MODALS ============ -->
+  <rect x="784" y="190" width="340" height="34" rx="8" fill="#16a34a"/>
+  <text x="800" y="212" class="hdr">COMMERCE</text>
+
+  <!-- /cart -->
+  <rect x="784" y="246" width="340" height="76" rx="8" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="800" y="268" class="route" fill="#15803d">/cart</text>
+  <text x="800" y="286" class="name">Cart</text>
+  <text x="800" y="302" class="desc">Per-shop line items · qty steppers · free-ship notes</text>
+  <text x="800" y="316" class="desc">Coupon entry · summary · checkout CTA · Recommended carousel</text>
+
+  <!-- /checkout -->
+  <rect x="784" y="334" width="340" height="116" rx="8" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="800" y="356" class="route" fill="#15803d">/checkout</text>
+  <text x="800" y="374" class="name">Checkout</text>
+  <text x="800" y="390" class="desc">Address card → SelectAddressModal → AddAddressModal</text>
+  <text x="800" y="404" class="desc">Per-shop items · coupon · BMS member points</text>
+  <text x="800" y="418" class="desc">Payment: PromptPay / Bank→Select/Add · Card→Select/Add · COD</text>
+  <text x="800" y="432" class="desc">Order summary · sticky bottom "สั่งสินค้า" bar</text>
+  <text x="800" y="446" class="desc" fill="#16a34a">▸ address &amp; payment modals (see below)</text>
+
+  <!-- MODALS sub-section -->
+  <rect x="784" y="462" width="340" height="30" rx="8" fill="#ea580c"/>
+  <text x="800" y="482" class="sub">MODALS  ·  overlay flows</text>
+
+  <!-- AddressModals -->
+  <rect x="784" y="500" width="340" height="56" rx="8" fill="#fff7ed" stroke="#fdba74"/>
+  <text x="800" y="522" class="name">AddressModals</text>
+  <text x="800" y="540" class="desc">SelectAddressModal  ·  AddAddressModal</text>
+  <text x="800" y="552" class="desc">used by /checkout · /settings</text>
+
+  <!-- PaymentModals -->
+  <rect x="784" y="568" width="340" height="64" rx="8" fill="#fff7ed" stroke="#fdba74"/>
+  <text x="800" y="590" class="name">PaymentModals</text>
+  <text x="800" y="608" class="desc">SelectCardModal · AddCardModal</text>
+  <text x="800" y="622" class="desc">SelectBankModal · AddBankModal  —  used by /checkout · /settings</text>
+
+  <!-- QuoteRequestModal -->
+  <rect x="784" y="644" width="340" height="72" rx="8" fill="#fff7ed" stroke="#fdba74"/>
+  <text x="800" y="666" class="name">QuoteRequestModal  —  "ขอใบเสนอราคา"</text>
+  <text x="800" y="684" class="desc">Products list + qty stepper · customer info · shipping address · note</text>
+  <text x="800" y="698" class="desc">Opened from medical Product Detail &amp; quote-variant ProductCard</text>
+  <text x="800" y="712" class="desc" fill="#ea580c">▸ "+ เพิ่มสินค้า" → AddProductModal</text>
+
+  <!-- AddProductModal -->
+  <rect x="784" y="728" width="340" height="56" rx="8" fill="#fff7ed" stroke="#fdba74"/>
+  <text x="800" y="750" class="name">AddProductModal  —  "เลือกสินค้า"</text>
+  <text x="800" y="768" class="desc">Catalog picker · checkbox multi-select · search</text>
+  <text x="800" y="780" class="desc">"เลือก N รายการ" → appends to QuoteRequestModal</text>
+
+  <!-- ============ COLUMN 4 : DEV + NOT BUILT ============ -->
+  <rect x="1156" y="190" width="340" height="34" rx="8" fill="#475569"/>
+  <text x="1172" y="212" class="hdr">DEV / DOCS</text>
+
+  <!-- /playground -->
+  <rect x="1156" y="246" width="340" height="56" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="1172" y="268" class="route" fill="#475569">/playground</text>
+  <text x="1172" y="286" class="name">Component Playground</text>
+  <text x="1172" y="298" class="desc">Internal component sandbox</text>
+
+  <!-- /docs -->
+  <rect x="1156" y="314" width="340" height="92" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="1172" y="336" class="route" fill="#475569">/docs  ·  /docs/:component</text>
+  <text x="1172" y="354" class="name">HeroUI Component Docs</text>
+  <text x="1172" y="370" class="desc">input · button · select · checkbox · switch · slider · textarea ·</text>
+  <text x="1172" y="384" class="desc">card · modal · table · tabs · navbar · dropdown · avatar ·</text>
+  <text x="1172" y="398" class="desc">chip · spinner · date-picker · tooltip</text>
+
+  <!-- NOT BUILT sub-section -->
+  <rect x="1156" y="418" width="340" height="30" rx="8" fill="#64748b"/>
+  <text x="1172" y="438" class="sub">IN FIGMA · NOT YET IN CODE</text>
+
+  <!-- Not built list -->
+  <rect x="1156" y="456" width="340" height="146" rx="8" fill="#f1f5f9" stroke="#94a3b8" stroke-dasharray="4 3"/>
+  <text x="1172" y="478" class="name nb">Pending screens</text>
+  <text x="1172" y="496" class="desc">· Seller / Affiliate sign-up flows (header CTAs → #)</text>
+  <text x="1172" y="510" class="desc">· BMS Member subscription page</text>
+  <text x="1172" y="524" class="desc">· การแจ้งเตือน (notifications center)</text>
+  <text x="1172" y="538" class="desc">· โค้ดส่วนลด (coupons list)</text>
+  <text x="1172" y="552" class="desc">· สิ่งที่ถูกใจ (wishlist)</text>
+  <text x="1172" y="566" class="desc">· Register / forgot-password</text>
+  <text x="1172" y="580" class="desc">· Search results page (search bar present in Header)</text>
+  <text x="1172" y="594" class="desc">· BMS Member detail page</text>
+
+  <!-- Global Header note -->
+  <rect x="1156" y="614" width="340" height="110" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="1172" y="636" class="name">Global Header  (on every page)</text>
+  <text x="1172" y="654" class="desc">Profile dropdown → settings · delivery · quotation · member ·</text>
+  <text x="1172" y="668" class="desc">notifications · coupons · wishlist · payment · settings · logout</text>
+  <text x="1172" y="682" class="desc">Search bar · cart (→ /cart) · notifications · wishlist icons</text>
+  <text x="1172" y="696" class="desc">Rich-menu strip: create shop · Affiliate · BMS Member ·</text>
+  <text x="1172" y="710" class="desc">create account · language · help</text>
+
+  <!-- Footer note -->
+  <text x="40" y="744" class="note">Routes: src/main.tsx — / · /login · /products · /products/:id · /store/:id · /settings · /cart · /checkout · /delivery · /quotation · /quotation/:id · /playground · /docs · /docs/:component</text>
+  <text x="40" y="930" class="note">Generated from the implemented React routes + Figma frames worked on. The Figma master canvas is too large to fully enumerate via API — pending screens are best-effort.</text>
+</svg>

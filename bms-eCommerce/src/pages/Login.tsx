@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Input, Button } from "@heroui/react";
 import LanguageSelect from "../components/LanguageSelect";
 import HelpSelect from "../components/HelpSelect";
@@ -232,12 +232,12 @@ export default function Login() {
       {/* Top bar */}
       <header className="login-header-in relative z-10 bg-white border-b border-[var(--color-neutral-300)] h-[72px]">
         <div className="max-w-[1200px] h-full mx-auto flex items-center gap-6 px-4 sm:px-6 lg:px-8">
-          <a href="/" className="flex items-center gap-2 shrink-0">
+          <Link to="/" className="flex items-center gap-2 shrink-0">
             <BrightifyLogo size={36} />
             <span className="text-[24px] font-medium text-[var(--color-primary)] leading-none">
               BRIGHTIFY
             </span>
-          </a>
+          </Link>
           <span className="hidden md:block w-px h-6 bg-[var(--color-neutral-300)]" />
           <p className="hidden md:block flex-1 text-[20px] font-semibold text-[var(--color-neutral-900)] truncate">
             เข้าสู่ระบบ/สมัครสมาชิก BMS Member

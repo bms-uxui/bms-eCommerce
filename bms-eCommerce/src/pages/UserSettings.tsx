@@ -1,6 +1,6 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router";
-import { Input, Button, Select, SelectItem } from "@heroui/react";
+import { Input, Button, Select, SelectItem, Switch } from "@heroui/react";
 import BirthdayPicker, { type BirthdayValue } from "../components/BirthdayPicker";
 import {
   User as UserIcon,
@@ -13,9 +13,34 @@ import {
   Settings as SettingsIcon,
   LogOut,
   Pencil,
+  Plus,
+  CreditCard,
+  Landmark,
+  Trash2,
 } from "lucide-react";
-import Header from "../components/landing/Header";
-import Footer from "../components/landing/Footer";
+import {
+  AddCardModal,
+  AddBankModal,
+  type CardData,
+  type BankData,
+} from "../components/landing/PaymentModals";
+import {
+  AddressModal,
+  type AddressData,
+} from "../components/landing/AddressModal";
+import visaLogo from "../assets/payments/visa.png";
+import mcLogo from "../assets/payments/mastercard.png";
+import amexLogo from "../assets/payments/amex.png";
+import kasikornLogo from "../assets/payments/kasikorn.png";
+import krungthaiLogo from "../assets/payments/krungthai.png";
+import scbLogo from "../assets/payments/scb.png";
+import krungsriLogo from "../assets/payments/krungsri.png";
+import gsbLogo from "../assets/payments/gsb.png";
+import bblLogo from "../assets/payments/bbl.png";
+import TabBar from "../components/landing/TabBar";
+import ProfilePageShell, {
+  type SidebarKey,
+} from "../components/landing/ProfilePageShell";
 import avatar from "../assets/avatar.jpg";
 
 const SIDEBAR_ITEMS = [
@@ -26,59 +51,14 @@ const SIDEBAR_ITEMS = [
   { icon: Bell, label: "การแจ้งเตือน", key: "notifications" },
   { icon: Tag, label: "โค้ดส่วนลด", key: "coupons" },
   { icon: Heart, label: "สิ่งที่ถูกใจ", key: "wishlist" },
+  { icon: CreditCard, label: "วิธีการชำระเงิน", key: "payment" },
   { icon: SettingsIcon, label: "การตั้งค่า", key: "settings" },
 ] as const;
 
 type Key = (typeof SIDEBAR_ITEMS)[number]["key"];
 
-const TABS = ["ข้อมูลส่วนตัว", "ข้อมูลที่อยู่", "รหัสผ่าน"] as const;
+const TABS = ["ข้อมูลของฉัน", "บัญชีธนาคารและบัตร", "ข้อมูลที่อยู่"] as const;
 type Tab = (typeof TABS)[number];
-
-function Sidebar({
-  active,
-  onChange,
-  onLogout,
-}: {
-  active: Key;
-  onChange: (k: Key) => void;
-  onLogout: () => void;
-}) {
-  return (
-    <aside className="w-full lg:w-[260px] shrink-0 bg-white rounded-2xl border border-[var(--color-neutral-300)] p-2 self-start">
-      <ul className="flex flex-col">
-        {SIDEBAR_ITEMS.map((item) => {
-          const isActive = item.key === active;
-          return (
-            <li key={item.key}>
-              <button
-                type="button"
-                onClick={() => onChange(item.key)}
-                className={[
-                  "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] transition-colors",
-                  isActive
-                    ? "bg-[var(--color-primary-100)] text-[var(--color-primary)] font-semibold"
-                    : "text-[var(--color-neutral-900)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)]",
-                ].join(" ")}
-              >
-                <item.icon size={18} />
-                {item.label}
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-      <hr className="my-2 border-t border-[var(--color-neutral-300)]" />
-      <button
-        type="button"
-        onClick={onLogout}
-        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] text-[var(--color-critical)] hover:bg-[var(--color-critical)]/10 transition-colors"
-      >
-        <LogOut size={18} />
-        ออกจากระบบ
-      </button>
-    </aside>
-  );
-}
 
 function ProfileForm() {
   const [tab, setTab] = useState<Tab>(TABS[0]);
@@ -97,162 +77,502 @@ function ProfileForm() {
     `${v.year - 543}-${String(v.month).padStart(2, "0")}-${String(v.day).padStart(2, "0")}`;
   const [gender, setGender] = useState<string>("male");
   const [nationality, setNationality] = useState<string>("th");
+  const [avatarSrc, setAvatarSrc] = useState<string>(
+    () => localStorage.getItem("profile.avatar") ?? avatar
+  );
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const MAX_BYTES = 5 * 1024 * 1024;
+  const ACCEPT = ["image/png", "image/jpeg", "image/webp", "image/gif"];
+
+  const pickFile = () => fileInputRef.current?.click();
+
+  const onFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUploadError(null);
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    if (!ACCEPT.includes(file.type)) {
+      setUploadError("รองรับไฟล์ PNG, JPEG, WEBP, GIF เท่านั้น");
+      return;
+    }
+    if (file.size > MAX_BYTES) {
+      setUploadError("ขนาดไฟล์ต้องไม่เกิน 5MB");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const url = reader.result as string;
+      setAvatarSrc(url);
+      try {
+        localStorage.setItem("profile.avatar", url);
+      } catch {
+        // localStorage full — keep in-memory only
+      }
+    };
+    reader.readAsDataURL(file);
+  };
 
   return (
-    <section className="flex-1 min-w-0 bg-white rounded-2xl border border-[var(--color-neutral-300)] p-6">
-      <h1 className="text-[20px] font-bold text-[var(--color-neutral-900)]">
-        บัญชีของฉัน
-      </h1>
+    <section className="flex-1 min-w-0 lg:min-h-[1200px] bg-white rounded-2xl border border-[var(--color-neutral-300)]">
+      <TabBar
+        sticky
+        active={tab}
+        onChange={setTab}
+        items={TABS.map((t) => ({ key: t, label: t }))}
+        className="rounded-t-2xl"
+      />
+      <div className="p-4 sm:p-6">
 
-      {/* Tabs */}
-      <div className="mt-4 flex border-b border-[var(--color-neutral-300)]">
-        {TABS.map((t) => {
-          const active = t === tab;
-          return (
-            <button
-              key={t}
-              type="button"
-              onClick={() => setTab(t)}
-              className={[
-                "h-10 px-5 text-[14px] font-medium border-b-2 transition-colors",
-                active
-                  ? "border-[var(--color-primary)] text-[var(--color-primary)]"
-                  : "border-transparent text-[var(--color-neutral-700)] hover:text-[var(--color-primary)]",
-              ].join(" ")}
-            >
-              {t}
-            </button>
-          );
-        })}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept={ACCEPT.join(",")}
+        onChange={onFile}
+        className="hidden"
+        aria-label="เลือกรูปโปรไฟล์"
+      />
+
+      {tab === "ข้อมูลของฉัน" && (
+        <form
+          className="mt-8 grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-8"
+          onSubmit={(e) => e.preventDefault()}
+        >
+          {/* Avatar column */}
+          <div className="flex flex-col items-center gap-4">
+            <img
+              src={avatarSrc}
+              alt="รูปโปรไฟล์"
+              className="w-[150px] h-[150px] rounded-full object-cover ring-1 ring-[var(--color-neutral-300)]"
+            />
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={pickFile}
+                className="h-9 px-4 rounded-md border border-[var(--color-primary)] text-[var(--color-primary)] text-[13px] font-medium hover:bg-[var(--color-primary-100)] transition"
+              >
+                อัปโหลดรูป
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setAvatarSrc(avatar);
+                  localStorage.removeItem("profile.avatar");
+                  setUploadError(null);
+                }}
+                disabled={avatarSrc === avatar}
+                className="h-9 px-4 rounded-md border border-[var(--color-critical)] text-[var(--color-critical)] text-[13px] font-medium hover:bg-[var(--color-critical)]/10 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              >
+                ลบรูป
+              </button>
+            </div>
+            {uploadError && (
+              <p className="text-[12px] text-[var(--color-critical)] text-center">
+                {uploadError}
+              </p>
+            )}
+            <div className="text-center text-[12px] text-[var(--color-neutral-500)] leading-relaxed">
+              <p>ขนาดไฟล์: สูงสุด 1 MB</p>
+              <p>ไฟล์ที่รองรับ: JPEG, .PNG</p>
+            </div>
+          </div>
+
+          {/* Fields column */}
+          <div className="flex flex-col gap-5">
+            <Field label="ชื่อบัญชีผู้ใช้งาน">
+              <Input
+                value={`${first} ${last}`.trim()}
+                onValueChange={() => {}}
+                radius="sm"
+                classNames={inputClassNames}
+              />
+            </Field>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
+              <Field label="ชื่อ">
+                <Input
+                  value={first}
+                  onValueChange={setFirst}
+                  radius="sm"
+                  classNames={inputClassNames}
+                />
+              </Field>
+              <Field label="นามสกุล">
+                <Input
+                  value={last}
+                  onValueChange={setLast}
+                  radius="sm"
+                  classNames={inputClassNames}
+                />
+              </Field>
+            </div>
+
+            <Field label="เบอร์โทรศัพท์">
+              <div className="flex items-center gap-2">
+                <Input
+                  value={phone}
+                  onValueChange={(v) => {
+                    const d = v.replace(/\D/g, "").slice(0, 10);
+                    if (d.length <= 3) setPhone(d);
+                    else if (d.length <= 6)
+                      setPhone(`${d.slice(0, 3)}-${d.slice(3)}`);
+                    else
+                      setPhone(`${d.slice(0, 3)}-${d.slice(3, 6)}-${d.slice(6)}`);
+                  }}
+                  inputMode="numeric"
+                  radius="sm"
+                  classNames={inputClassNames}
+                />
+                <button
+                  type="button"
+                  className="shrink-0 h-10 px-4 rounded-md border border-[var(--color-primary)] text-[var(--color-primary)] text-[13px] font-medium hover:bg-[var(--color-primary-100)] transition"
+                >
+                  เปลี่ยน
+                </button>
+              </div>
+            </Field>
+
+            <Field label="อีเมล">
+              <div className="flex items-center gap-2">
+                <Input
+                  type="email"
+                  value={email}
+                  onValueChange={setEmail}
+                  placeholder="กรุณาระบุอีเมล"
+                  radius="sm"
+                  classNames={inputClassNames}
+                />
+                <button
+                  type="button"
+                  className="shrink-0 h-10 px-4 rounded-md border border-[var(--color-primary)] text-[var(--color-primary)] text-[13px] font-medium hover:bg-[var(--color-primary-100)] transition"
+                >
+                  เปลี่ยน
+                </button>
+              </div>
+            </Field>
+
+            <Field label="วันเกิด">
+              <BirthdayPicker value={dobValue} onChange={(v) => setDob(toIsoDate(v))} />
+            </Field>
+
+            <div className="pt-2">
+              <Button
+                type="submit"
+                radius="md"
+                className="h-10 px-8 bg-[var(--color-primary)] text-white text-[14px] font-medium hover:brightness-110 transition"
+              >
+                บันทึก
+              </Button>
+            </div>
+          </div>
+        </form>
+      )}
+
+      {tab === "บัญชีธนาคารและบัตร" && <BankCardsTab />}
+      {tab === "ข้อมูลที่อยู่" && <AddressTab />}
       </div>
-
-      {/* Avatar uploader */}
-      <div className="mt-6 flex items-center gap-5">
-        <div className="relative shrink-0">
-          <img
-            src={avatar}
-            alt=""
-            className="w-[100px] h-[100px] rounded-full object-cover ring-1 ring-[var(--color-neutral-300)]"
-          />
-          <button
-            aria-label="แก้ไขรูป"
-            className="absolute bottom-1 right-1 w-7 h-7 rounded-full bg-[var(--color-primary)] text-white flex items-center justify-center shadow-md hover:brightness-110 active:scale-95 transition"
-          >
-            <Pencil size={14} />
-          </button>
-        </div>
-        <div>
-          <p className="text-[16px] font-semibold text-[var(--color-neutral-900)]">
-            Okinowa Kawasaki
-          </p>
-          <p className="text-[13px] text-[var(--color-neutral-600)] mt-0.5">
-            สมาชิกระดับ Silver
-          </p>
-          <button className="mt-3 h-9 px-4 rounded-md border border-[var(--color-primary)] text-[var(--color-primary)] text-[13px] font-medium hover:bg-[var(--color-primary-100)] transition">
-            อัปโหลดรูปภาพ
-          </button>
-        </div>
-      </div>
-
-      {/* Form */}
-      <form
-        className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5"
-        onSubmit={(e) => e.preventDefault()}
-      >
-        <Field label="ชื่อ">
-          <Input
-            value={first}
-            onValueChange={setFirst}
-            radius="sm"
-            classNames={inputClassNames}
-          />
-        </Field>
-        <Field label="นามสกุล">
-          <Input
-            value={last}
-            onValueChange={setLast}
-            radius="sm"
-            classNames={inputClassNames}
-          />
-        </Field>
-        <Field label="อีเมล">
-          <Input
-            type="email"
-            value={email}
-            onValueChange={setEmail}
-            radius="sm"
-            classNames={inputClassNames}
-          />
-        </Field>
-        <Field label="เบอร์โทรศัพท์">
-          <Input
-            value={phone}
-            onValueChange={(v) => {
-              const d = v.replace(/\D/g, "").slice(0, 10);
-              if (d.length <= 3) setPhone(d);
-              else if (d.length <= 6)
-                setPhone(`${d.slice(0, 3)}-${d.slice(3)}`);
-              else setPhone(`${d.slice(0, 3)}-${d.slice(3, 6)}-${d.slice(6)}`);
-            }}
-            inputMode="numeric"
-            radius="sm"
-            classNames={inputClassNames}
-          />
-        </Field>
-        <Field label="วันเกิด">
-          <BirthdayPicker
-            value={dobValue}
-            onChange={(v) => setDob(toIsoDate(v))}
-          />
-        </Field>
-        <Field label="เพศ">
-          <Select
-            selectedKeys={[gender]}
-            onSelectionChange={(k) => setGender(Array.from(k)[0] as string)}
-            aria-label="เพศ"
-            radius="sm"
-            classNames={{
-              trigger:
-                "h-10 bg-white border border-[var(--color-neutral-300)] data-[hover=true]:border-[var(--color-primary-400)] shadow-none",
-              value: "text-[14px] text-[var(--color-neutral-900)]",
-            }}
-          >
-            <SelectItem key="male">ชาย</SelectItem>
-            <SelectItem key="female">หญิง</SelectItem>
-            <SelectItem key="other">อื่นๆ</SelectItem>
-          </Select>
-        </Field>
-        <Field label="สัญชาติ" full>
-          <Select
-            selectedKeys={[nationality]}
-            onSelectionChange={(k) =>
-              setNationality(Array.from(k)[0] as string)
-            }
-            aria-label="สัญชาติ"
-            radius="sm"
-            classNames={{
-              trigger:
-                "h-10 bg-white border border-[var(--color-neutral-300)] data-[hover=true]:border-[var(--color-primary-400)] shadow-none",
-              value: "text-[14px] text-[var(--color-neutral-900)]",
-            }}
-          >
-            <SelectItem key="th">ไทย</SelectItem>
-            <SelectItem key="jp">ญี่ปุ่น</SelectItem>
-            <SelectItem key="us">สหรัฐอเมริกา</SelectItem>
-            <SelectItem key="other">อื่นๆ</SelectItem>
-          </Select>
-        </Field>
-        <div className="sm:col-span-2 flex justify-end pt-2">
-          <Button
-            type="submit"
-            radius="md"
-            className="h-10 px-8 bg-[var(--color-primary)] text-white text-[14px] font-medium hover:brightness-110 transition"
-          >
-            บันทึก
-          </Button>
-        </div>
-      </form>
     </section>
+  );
+}
+
+function AddSectionButton({ children }: { children: React.ReactNode }) {
+  return (
+    <button
+      type="button"
+      className="h-9 px-4 rounded-md bg-[var(--color-primary)] text-white text-[13px] font-medium flex items-center gap-1.5 hover:brightness-110 active:scale-95 transition"
+    >
+      <Plus size={16} />
+      {children}
+    </button>
+  );
+}
+
+function EmptyCard({ message }: { message: string }) {
+  return (
+    <div className="rounded-lg border border-dashed border-[var(--color-neutral-300)] bg-[var(--color-neutral-100)] py-8 px-4 text-center">
+      <p className="text-[13px] text-[var(--color-neutral-500)]">{message}</p>
+    </div>
+  );
+}
+
+function formatPhoneIntl(p: string) {
+  const d = p.replace(/\D/g, "");
+  if (d.length !== 10) return p;
+  return `(+66)${d.slice(1, 3)} ${d.slice(3, 6)} ${d.slice(6)}`;
+}
+
+function AddressTab() {
+  const [addresses, setAddresses] = useState<AddressData[]>([]);
+  const [open, setOpen] = useState(false);
+  const [editing, setEditing] = useState<AddressData | undefined>();
+
+  const upsert = (data: AddressData) => {
+    setAddresses((prev) => {
+      const without = prev.filter((a) => a.id !== data.id);
+      const list = data.isDefault
+        ? without.map((a) => ({ ...a, isDefault: false }))
+        : without;
+      return [...list, data];
+    });
+  };
+
+  const remove = (id: string) =>
+    setAddresses((prev) => prev.filter((a) => a.id !== id));
+
+  return (
+    <div className="mt-8">
+      <div className="flex items-center justify-between gap-4">
+        <h2 className="text-[20px] font-bold text-[var(--color-primary-700)]">
+          ที่อยู่ของฉัน
+        </h2>
+        <button
+          type="button"
+          onClick={() => {
+            setEditing(undefined);
+            setOpen(true);
+          }}
+          className="h-9 px-4 rounded-md bg-[var(--color-primary)] text-white text-[13px] font-medium flex items-center gap-1.5 hover:brightness-110 active:scale-95 transition"
+        >
+          <Plus size={16} />
+          เพิ่มที่อยู่ใหม่
+        </button>
+      </div>
+      <hr className="mt-3 border-t border-[var(--color-neutral-300)]" />
+
+      <div className="mt-4 flex flex-col">
+        {addresses.length === 0 ? (
+          <div className="py-12 text-center">
+            <p className="text-[15px] font-medium text-[var(--color-neutral-900)]">
+              ยังไม่มีที่อยู่ที่บันทึก
+            </p>
+            <p className="mt-1 text-[13px] text-[var(--color-neutral-500)]">
+              กรุณาเพิ่มที่อยู่สำหรับจัดส่งสินค้า
+            </p>
+          </div>
+        ) : (
+          addresses.map((a) => (
+            <article
+              key={a.id}
+              className="flex items-start justify-between gap-6 py-4 border-b border-[var(--color-neutral-300)] last:border-b-0"
+            >
+              <div className="flex-1 min-w-0">
+                <div className="flex flex-wrap items-baseline gap-3">
+                  <span className="text-[15px] font-bold text-[var(--color-neutral-900)]">
+                    {a.name}
+                  </span>
+                  <span className="text-[13px] text-[var(--color-neutral-700)]">
+                    {formatPhoneIntl(a.phone)}
+                  </span>
+                </div>
+                <p className="mt-1 text-[14px] text-[var(--color-neutral-700)] leading-relaxed">
+                  {a.address}
+                </p>
+                {a.isDefault && (
+                  <span className="inline-flex items-center mt-2 text-[12px] font-semibold text-white bg-[var(--color-primary)] rounded px-2.5 py-1">
+                    ที่อยู่หลัก
+                  </span>
+                )}
+              </div>
+              <div className="flex flex-col gap-2 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditing(a);
+                    setOpen(true);
+                  }}
+                  className="h-8 px-3 rounded-md border border-[var(--color-primary)] text-[var(--color-primary)] text-[12px] font-medium hover:bg-[var(--color-primary-100)] active:scale-95 transition"
+                >
+                  แก้ไข
+                </button>
+                <button
+                  type="button"
+                  onClick={() => remove(a.id)}
+                  className="h-8 px-3 rounded-md border border-[var(--color-critical)] text-[var(--color-critical)] text-[12px] font-medium hover:bg-[var(--color-critical)]/10 active:scale-95 transition"
+                >
+                  ลบข้อมูล
+                </button>
+              </div>
+            </article>
+          ))
+        )}
+      </div>
+
+      <AddressModal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        onSubmit={upsert}
+        initial={editing}
+      />
+    </div>
+  );
+}
+
+function BankCardsTab() {
+  const [cards, setCards] = useState<CardData[]>([]);
+  const [banks, setBanks] = useState<BankData[]>([]);
+  const [cardOpen, setCardOpen] = useState(false);
+  const [bankOpen, setBankOpen] = useState(false);
+
+  const addCard = (data: CardData) => {
+    setCards((prev) => {
+      const next = data.isDefault
+        ? prev.map((c) => ({ ...c, isDefault: false }))
+        : [...prev];
+      return [...next, data];
+    });
+  };
+  const addBank = (data: BankData) => {
+    setBanks((prev) => {
+      const next = data.isDefault
+        ? prev.map((b) => ({ ...b, isDefault: false }))
+        : [...prev];
+      return [...next, data];
+    });
+  };
+
+  return (
+    <div className="mt-8 flex flex-col gap-10">
+      {/* Cards */}
+      <section>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h3 className="text-[18px] font-bold text-[var(--color-primary-700)]">
+              บัตรเครดิต / บัตรเดบิต ของฉัน
+            </h3>
+            <p className="text-[13px] text-[var(--color-neutral-600)] mt-1">
+              บัตรจะแสดงให้เลือกตอนที่คุณจำดำเนินการ ชำระเงินหรือผ่อนสินค้า เท่านั้น
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setCardOpen(true)}
+            className="h-9 px-4 rounded-md bg-[var(--color-primary)] text-white text-[13px] font-medium flex items-center gap-1.5 hover:brightness-110 active:scale-95 transition shrink-0"
+          >
+            <Plus size={16} />
+            เพิ่มบัตรใหม่
+          </button>
+        </div>
+        <hr className="mt-3 border-t border-[var(--color-neutral-300)]" />
+        <div className="mt-6 flex flex-col gap-2">
+          {cards.length === 0 ? (
+            <div className="py-12 text-center">
+              <p className="text-[15px] font-medium text-[var(--color-neutral-900)]">
+                ไม่มีข้อมูลบัตรเครดิต / บัตรเดบิต
+              </p>
+              <p className="mt-1 text-[13px] text-[var(--color-neutral-500)]">
+                กรุณาเชื่อมต่อข้อมูลบัตรของคุณ
+              </p>
+            </div>
+          ) : (
+            cards.map((c, i) => {
+              const brand = detectCardBrand(c.number);
+              return (
+                <div
+                  key={i}
+                  className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 py-4"
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-12 h-8 rounded flex items-center justify-center shrink-0">
+                      <img
+                        src={brand.logo}
+                        alt=""
+                        className="max-h-full max-w-full object-contain"
+                      />
+                    </div>
+                    <span className="text-[15px] font-medium text-[var(--color-neutral-900)]">
+                      {brand.label}
+                    </span>
+                    {c.isDefault && <DefaultPill />}
+                  </div>
+                  <p className="text-[14px] text-[var(--color-neutral-700)] tabular-nums tracking-wider justify-self-center whitespace-nowrap">
+                    {maskCard(c.number)}
+                  </p>
+                  <div className="justify-self-end">
+                    <DeleteButton
+                      onClick={() => setCards((prev) => prev.filter((_, idx) => idx !== i))}
+                    />
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+      </section>
+
+      {/* Banks */}
+      <section>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h3 className="text-[18px] font-bold text-[var(--color-primary-700)]">
+              บัญชีธนาคารของฉัน
+            </h3>
+            <p className="text-[13px] text-[var(--color-neutral-600)] mt-1">
+              บัญชีธนาคารจะแสดงให้เลือกตอนที่คุณจำดำเนินการ ชำระเงินสินค้า เท่านั้น
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setBankOpen(true)}
+            className="h-9 px-4 rounded-md bg-[var(--color-primary)] text-white text-[13px] font-medium flex items-center gap-1.5 hover:brightness-110 active:scale-95 transition shrink-0"
+          >
+            <Plus size={16} />
+            เพิ่มบัญชีใหม่
+          </button>
+        </div>
+        <hr className="mt-3 border-t border-[var(--color-neutral-300)]" />
+        <div className="mt-6 flex flex-col gap-2">
+          {banks.length === 0 ? (
+            <div className="py-12 text-center">
+              <p className="text-[15px] font-medium text-[var(--color-neutral-900)]">
+                ไม่มีข้อมูลบัญชีธนาคาร
+              </p>
+              <p className="mt-1 text-[13px] text-[var(--color-neutral-500)]">
+                กรุณาเชื่อมต่อข้อมูลบัญชีธนาคารของคุณ
+              </p>
+            </div>
+          ) : (
+            banks.map((b, i) => {
+              const info = BANK_INFO[b.bank] ?? {
+                logo: kasikornLogo,
+                label: b.bank.toUpperCase(),
+              };
+              return (
+                <div
+                  key={i}
+                  className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 py-4"
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-9 h-9 rounded-full overflow-hidden flex items-center justify-center shrink-0 bg-white">
+                      <img
+                        src={info.logo}
+                        alt=""
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <span className="text-[15px] font-medium text-[var(--color-neutral-900)] truncate">
+                      {info.label}
+                    </span>
+                    {b.isDefault && <DefaultPill />}
+                  </div>
+                  <p className="text-[14px] text-[var(--color-neutral-700)] tabular-nums justify-self-center whitespace-nowrap">
+                    {maskAccount(b.accountNumber)}
+                  </p>
+                  <div className="justify-self-end">
+                    <DeleteButton
+                      onClick={() => setBanks((prev) => prev.filter((_, idx) => idx !== i))}
+                    />
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+      </section>
+
+      <AddCardModal isOpen={cardOpen} onClose={() => setCardOpen(false)} onSubmit={addCard} />
+      <AddBankModal isOpen={bankOpen} onClose={() => setBankOpen(false)} onSubmit={addBank} />
+    </div>
   );
 }
 
@@ -280,72 +600,290 @@ function Field({
   );
 }
 
-export default function UserSettings() {
-  const navigate = useNavigate();
-  const [active, setActive] = useState<Key>("settings");
+function maskCard(num: string) {
+  const digits = num.replace(/\D/g, "");
+  if (digits.length <= 4) return digits;
+  return "**** **** **** " + digits.slice(-4);
+}
 
-  const logout = () => {
-    sessionStorage.removeItem("loggedIn");
-    navigate("/");
+function maskAccount(num: string) {
+  const d = num.replace(/\D/g, "");
+  if (d.length < 4) return d;
+  // Show first 2 digits, **** in middle, last 2 digits — e.g. "96* **** *08"
+  return `${d.slice(0, 2)}* **** *${d.slice(-2)}`;
+}
+
+function detectCardBrand(num: string): { logo: string; label: string } {
+  const d = num.replace(/\D/g, "");
+  if (d.startsWith("4")) return { logo: visaLogo, label: "Credit Card" };
+  if (/^(5[1-5]|2[2-7])/.test(d)) return { logo: mcLogo, label: "Master Card" };
+  if (/^(34|37)/.test(d)) return { logo: amexLogo, label: "Amex" };
+  return { logo: visaLogo, label: "Credit Card" };
+}
+
+const BANK_INFO: Record<string, { logo: string; label: string }> = {
+  kbank: { logo: kasikornLogo, label: "ธนาคารกสิกรไทย" },
+  scb: { logo: scbLogo, label: "ธนาคารไทยพาณิชย์" },
+  ktb: { logo: krungthaiLogo, label: "ธนาคารกรุงไทย" },
+  bbl: { logo: bblLogo, label: "ธนาคารกรุงเทพ" },
+  bay: { logo: krungsriLogo, label: "ธนาคารกรุงศรีอยุธยา" },
+  gsb: { logo: gsbLogo, label: "ธนาคารออมสิน" },
+  ttb: { logo: gsbLogo, label: "ธนาคารทหารไทยธนชาต" },
+};
+
+function DefaultPill() {
+  return (
+    <span className="inline-flex items-center text-[11px] font-semibold text-white bg-[var(--color-primary)] rounded px-2 py-0.5">
+      ค่าเริ่มต้น
+    </span>
+  );
+}
+
+function DeleteButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="h-8 px-3 rounded-md border border-[var(--color-critical)] text-[var(--color-critical)] text-[12px] font-medium hover:bg-[var(--color-critical)]/10 active:scale-95 transition"
+    >
+      ลบข้อมูล
+    </button>
+  );
+}
+
+function PaymentMethodsPanel() {
+  const [cards, setCards] = useState<CardData[]>([]);
+  const [banks, setBanks] = useState<BankData[]>([]);
+  const [cardOpen, setCardOpen] = useState(false);
+  const [bankOpen, setBankOpen] = useState(false);
+
+  const addCard = (data: CardData) => {
+    setCards((prev) => {
+      const next = data.isDefault
+        ? prev.map((c) => ({ ...c, isDefault: false }))
+        : [...prev];
+      return [...next, data];
+    });
+  };
+
+  const addBank = (data: BankData) => {
+    setBanks((prev) => {
+      const next = data.isDefault
+        ? prev.map((b) => ({ ...b, isDefault: false }))
+        : [...prev];
+      return [...next, data];
+    });
   };
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg)]">
-      <Header />
+    <section className="lg:min-h-[1200px] bg-white rounded-2xl border border-[var(--color-neutral-300)] p-4 sm:p-6 flex flex-col gap-8">
+      <h1 className="text-[20px] font-bold text-[var(--color-neutral-900)]">
+        วิธีการชำระเงิน
+      </h1>
 
-      {/* Banner */}
-      <section className="relative">
-        <div
-          className="h-[250px] w-full"
-          style={{
-            background:
-              "linear-gradient(135deg, #5dd6f0 0%, #21bdff 30%, #0485f7 60%, #f0c674 100%)",
-          }}
-        />
-
-        {/* Profile summary card overlapping banner */}
-        <div className="max-w-[1240px] mx-auto px-3 sm:px-4 lg:px-5 -mt-[120px] relative z-10">
-          <div className="bg-white rounded-2xl shadow-[0_4px_16px_rgba(2,77,143,0.12)] p-5 flex items-center gap-4">
-            <img
-              src={avatar}
-              alt=""
-              className="w-[80px] h-[80px] rounded-full object-cover ring-4 ring-white shrink-0"
-            />
-            <div className="flex-1 min-w-0">
-              <h2 className="text-[18px] font-bold text-[var(--color-neutral-900)] truncate">
-                Okinowa Kawasaki
-              </h2>
-              <p className="text-[13px] text-[var(--color-neutral-600)] mt-1">
-                <span>2 ผู้ติดตาม</span>
-                <span className="mx-2 text-[var(--color-neutral-300)]">|</span>
-                <span>0 กำลังติดตาม</span>
+      {/* Cards */}
+      <section>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h3 className="text-[16px] font-semibold text-[var(--color-neutral-900)]">
+              บัตรเครดิต / เดบิต
+            </h3>
+            <p className="text-[13px] text-[var(--color-neutral-600)] mt-1">
+              ใช้สำหรับการชำระเงินผ่านบัตรเครดิตหรือเดบิต
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setCardOpen(true)}
+            className="h-9 px-4 rounded-md bg-[var(--color-primary)] text-white text-[13px] font-medium flex items-center gap-1.5 hover:brightness-110 active:scale-95 transition"
+          >
+            <Plus size={16} />
+            เพิ่มบัตรใหม่
+          </button>
+        </div>
+        <div className="mt-4 flex flex-col gap-2">
+          {cards.length === 0 ? (
+            <div className="rounded-lg border border-dashed border-[var(--color-neutral-300)] bg-[var(--color-neutral-100)] py-8 px-4 text-center">
+              <p className="text-[13px] text-[var(--color-neutral-500)]">
+                ยังไม่มีบัตรที่บันทึก
               </p>
             </div>
-            <button
-              onClick={logout}
-              className="h-9 px-4 rounded-md border border-[var(--color-critical)] text-[var(--color-critical)] text-[13px] font-medium hover:bg-[var(--color-critical)]/10 transition"
-            >
-              ออกจากระบบ
-            </button>
-          </div>
+          ) : (
+            cards.map((c, i) => (
+              <div
+                key={i}
+                className="flex items-center gap-3 rounded-lg border border-[var(--color-neutral-300)] p-3"
+              >
+                <div className="w-10 h-10 rounded-md bg-[var(--color-primary-100)] text-[var(--color-primary)] flex items-center justify-center">
+                  <CreditCard size={20} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[14px] font-medium text-[var(--color-neutral-900)] tabular-nums">
+                    {maskCard(c.number)}
+                  </p>
+                  <p className="text-[12px] text-[var(--color-neutral-600)]">
+                    {c.holder} · หมดอายุ {c.expiry}
+                  </p>
+                </div>
+                {c.isDefault && (
+                  <span className="text-[11px] font-semibold text-[var(--color-primary)] bg-[var(--color-primary-100)] rounded px-2 py-0.5">
+                    ค่าเริ่มต้น
+                  </span>
+                )}
+                <button
+                  type="button"
+                  aria-label="ลบบัตร"
+                  onClick={() => setCards((prev) => prev.filter((_, idx) => idx !== i))}
+                  className="w-8 h-8 rounded-md text-[var(--color-neutral-500)] hover:text-[var(--color-critical)] hover:bg-[var(--color-critical)]/10 flex items-center justify-center transition"
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
+            ))
+          )}
         </div>
       </section>
 
-      <main className="max-w-[1240px] mx-auto px-3 sm:px-4 lg:px-5 pt-6 pb-12">
-        <div className="flex flex-col lg:flex-row gap-4">
-          <div className="page-section-in" style={{ animationDelay: "120ms" }}>
-            <Sidebar active={active} onChange={setActive} onLogout={logout} />
+      {/* Bank accounts */}
+      <section>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h3 className="text-[16px] font-semibold text-[var(--color-neutral-900)]">
+              บัญชีธนาคาร
+            </h3>
+            <p className="text-[13px] text-[var(--color-neutral-600)] mt-1">
+              ใช้สำหรับโอนเงินผ่านพร้อมเพย์หรือธนาคาร
+            </p>
           </div>
-          <div
-            className="flex-1 min-w-0 page-section-in"
-            style={{ animationDelay: "200ms" }}
+          <button
+            type="button"
+            onClick={() => setBankOpen(true)}
+            className="h-9 px-4 rounded-md bg-[var(--color-primary)] text-white text-[13px] font-medium flex items-center gap-1.5 hover:brightness-110 active:scale-95 transition"
           >
-            <ProfileForm />
-          </div>
+            <Plus size={16} />
+            เพิ่มบัญชีใหม่
+          </button>
         </div>
-      </main>
+        <div className="mt-4 flex flex-col gap-2">
+          {banks.length === 0 ? (
+            <div className="rounded-lg border border-dashed border-[var(--color-neutral-300)] bg-[var(--color-neutral-100)] py-8 px-4 text-center">
+              <p className="text-[13px] text-[var(--color-neutral-500)]">
+                ยังไม่มีบัญชีธนาคารที่บันทึก
+              </p>
+            </div>
+          ) : (
+            banks.map((b, i) => (
+              <div
+                key={i}
+                className="flex items-center gap-3 rounded-lg border border-[var(--color-neutral-300)] p-3"
+              >
+                <div className="w-10 h-10 rounded-md bg-[var(--color-primary-100)] text-[var(--color-primary)] flex items-center justify-center">
+                  <Landmark size={20} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[14px] font-medium text-[var(--color-neutral-900)]">
+                    {b.holder}
+                  </p>
+                  <p className="text-[12px] text-[var(--color-neutral-600)] tabular-nums">
+                    {maskAccount(b.accountNumber)} · {b.bank.toUpperCase()}
+                  </p>
+                </div>
+                {b.isDefault && (
+                  <span className="text-[11px] font-semibold text-[var(--color-primary)] bg-[var(--color-primary-100)] rounded px-2 py-0.5">
+                    ค่าเริ่มต้น
+                  </span>
+                )}
+                <button
+                  type="button"
+                  aria-label="ลบบัญชี"
+                  onClick={() => setBanks((prev) => prev.filter((_, idx) => idx !== i))}
+                  className="w-8 h-8 rounded-md text-[var(--color-neutral-500)] hover:text-[var(--color-critical)] hover:bg-[var(--color-critical)]/10 flex items-center justify-center transition"
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
+            ))
+          )}
+        </div>
+      </section>
 
-      <Footer />
-    </div>
+      <AddCardModal isOpen={cardOpen} onClose={() => setCardOpen(false)} onSubmit={addCard} />
+      <AddBankModal isOpen={bankOpen} onClose={() => setBankOpen(false)} onSubmit={addBank} />
+    </section>
+  );
+}
+
+const NOTIFICATION_SETTINGS = [
+  { key: "orders", label: "การแจ้งเตือนการสั่งซื้อสินค้า", default: true },
+  { key: "promo", label: "การแจ้งเตือนโปรโมชัน", default: true },
+  { key: "messages", label: "การแจ้งเตือนข้อความ", default: true },
+  { key: "status", label: "การแจ้งเตือนสถานะสินค้า", default: true },
+] as const;
+
+function NotificationSettingsPanel() {
+  const [state, setState] = useState<Record<string, boolean>>(
+    Object.fromEntries(NOTIFICATION_SETTINGS.map((s) => [s.key, s.default]))
+  );
+  return (
+    <section className="lg:min-h-[1200px] bg-white rounded-2xl border border-[var(--color-neutral-300)] flex flex-col">
+      <div className="p-4 sm:p-6 border-b border-[var(--color-neutral-300)]">
+        <h2 className="text-[16px] font-semibold text-[var(--color-neutral-900)]">
+          การตั้งค่าการแจ้งเตือน
+        </h2>
+        <p className="text-[14px] text-[var(--color-neutral-500)] mt-2">
+          คุณจะได้รับการแจ้งเตือนด้านความปลอดภัยและอัปเดตโปรโมชันต่างๆ
+        </p>
+      </div>
+      <ul className="px-4 sm:px-6 py-2 flex flex-col">
+        {NOTIFICATION_SETTINGS.map((s) => (
+          <li
+            key={s.key}
+            className="flex items-center justify-between gap-4 py-5 border-b border-[var(--color-neutral-200)] last:border-b-0"
+          >
+            <span className="text-[14px] text-[var(--color-neutral-900)]">
+              {s.label}
+            </span>
+            <Switch
+              size="sm"
+              color="success"
+              isSelected={state[s.key]}
+              onValueChange={(v) =>
+                setState((prev) => ({ ...prev, [s.key]: v }))
+              }
+              aria-label={s.label}
+            />
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+export default function UserSettings() {
+  const navigate = useNavigate();
+  const [active, setActive] = useState<Key>("account");
+
+  return (
+    <ProfilePageShell
+      activeKey={active as SidebarKey}
+      avatarSrc={avatar}
+      onItemClick={(item) => {
+        if (item.path && item.path !== "/settings") {
+          navigate(item.path);
+          return;
+        }
+        setActive(item.key as Key);
+      }}
+    >
+      <div className="page-section-in" style={{ animationDelay: "200ms" }}>
+        {active === "payment" ? (
+          <PaymentMethodsPanel />
+        ) : active === "settings" ? (
+          <NotificationSettingsPanel />
+        ) : (
+          <ProfileForm />
+        )}
+      </div>
+    </ProfilePageShell>
   );
 }
