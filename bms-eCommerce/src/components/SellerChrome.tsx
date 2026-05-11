@@ -24,12 +24,12 @@ function BrightifyLogo({ size = 36 }: { size?: number }) {
 }
 
 const SELLER_NAV = [
-  { id: "manage", icon: "life-ring", label: "การจัดการร้านค้า" },
-  { id: "storefront", icon: "shop", label: "หน้าร้านค้า" },
+  { id: "manage", icon: "life-ring", label: "การจัดการร้านค้า", to: "/seller/overview" },
+  { id: "storefront", icon: "shop", label: "หน้าร้านค้า", to: "/seller/shop" },
 ] as const;
 
-export function SellerHeader() {
-  const [activeNav, setActiveNav] = useState<(typeof SELLER_NAV)[number]["id"]>("manage");
+export function SellerHeader({ active }: { active?: (typeof SELLER_NAV)[number]["id"] }) {
+  const navigate = useNavigate();
   return (
     <header className="sticky top-0 z-30 bg-white border-b border-[var(--color-neutral-300)] px-6 py-[18px]">
       <div className="flex items-center gap-6 w-full">
@@ -48,15 +48,15 @@ export function SellerHeader() {
 
         <nav className="flex-1 min-w-0 flex items-center justify-center gap-4 h-9">
           {SELLER_NAV.map((item) => {
-            const active = item.id === activeNav;
+            const isActive = item.id === (active ?? "manage");
             return (
               <button
                 key={item.id}
                 type="button"
-                onClick={() => setActiveNav(item.id)}
+                onClick={() => navigate(item.to)}
                 className={[
                   "flex items-center gap-1 px-1.5 py-1 rounded-lg text-[16px] font-medium leading-[18px] whitespace-nowrap transition-colors",
-                  active
+                  isActive
                     ? "bg-[var(--color-primary)] text-white"
                     : "text-[var(--color-neutral-500)] hover:text-[var(--color-primary)] hover:bg-[var(--color-primary-100)]",
                 ].join(" ")}
@@ -170,7 +170,7 @@ function LeafRow({
         "w-full flex items-center gap-2.5 p-2 rounded-lg text-left text-[14px] transition-colors",
         active
           ? "bg-[var(--color-primary-100)] text-[var(--color-neutral-900)] font-medium"
-          : "bg-white text-[var(--color-neutral-900)] hover:bg-[var(--color-neutral-200)]",
+          : "bg-white text-[var(--color-neutral-900)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)]",
       ].join(" ")}
     >
       <IconBadge icon={icon} variant={active ? "primary" : "default"} />
@@ -202,7 +202,7 @@ function GroupRow({
           "w-full flex items-center justify-between p-2 rounded-lg text-left text-[14px] transition-colors",
           open
             ? "bg-[var(--color-neutral-100,#f5f8fa)] text-[var(--color-neutral-900)]"
-            : "bg-white text-[var(--color-neutral-900)] hover:bg-[var(--color-neutral-200)]",
+            : "bg-white text-[var(--color-neutral-900)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)]",
         ].join(" ")}
       >
         <span className="flex items-center gap-2.5 min-w-0 flex-1">
@@ -277,7 +277,7 @@ export function SellerSidebar({ active }: { active?: string }) {
         <span className="block w-full h-px bg-[var(--color-neutral-200)]" />
         <a
           href="/"
-          className="w-full flex items-center gap-2.5 px-4 py-2 rounded-lg text-[14px] text-[var(--color-neutral-900)] hover:bg-[var(--color-neutral-200)] transition-colors"
+          className="w-full flex items-center gap-2.5 px-4 py-2 rounded-lg text-[14px] text-[var(--color-neutral-900)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)] transition-colors"
         >
           <IconBadge icon="cart" />
           <span className="flex-1 min-w-0 truncate">BMS E-Commerce</span>
@@ -286,7 +286,7 @@ export function SellerSidebar({ active }: { active?: string }) {
         <a
           href="#"
           onClick={(e) => e.preventDefault()}
-          className="w-full flex items-center gap-2.5 px-4 py-2 rounded-lg text-[14px] text-[var(--color-neutral-900)] hover:bg-[var(--color-neutral-200)] transition-colors"
+          className="w-full flex items-center gap-2.5 px-4 py-2 rounded-lg text-[14px] text-[var(--color-neutral-900)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)] transition-colors"
         >
           <IconBadge icon="users" />
           <span className="flex-1 min-w-0 truncate">BMS Affiliate</span>
@@ -294,7 +294,7 @@ export function SellerSidebar({ active }: { active?: string }) {
         </a>
         <button
           type="button"
-          className="w-full flex items-center gap-2.5 px-4 py-2 rounded-lg text-[14px] text-[var(--color-neutral-900)] hover:bg-[var(--color-neutral-200)] transition-colors"
+          className="w-full flex items-center gap-2.5 px-4 py-2 rounded-lg text-[14px] text-[var(--color-neutral-900)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)] transition-colors"
         >
           <span className="flex-1 text-left">ย่อเมนู</span>
           <Icon name="arrow-left-circle" size={18} className="text-[var(--color-neutral-600)]" />

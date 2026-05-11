@@ -390,6 +390,10 @@ export default function SellerLogin() {
               </button>
               <button
                 type="button"
+                onClick={() => {
+                  sessionStorage.setItem("sellerLoggedIn", "1");
+                  navigate("/seller/overview");
+                }}
                 className="h-10 w-full flex items-center justify-center gap-4 rounded-lg bg-white border border-[var(--color-neutral-300)] px-6 text-[16px] font-medium text-[var(--color-neutral-900)] hover:bg-[var(--color-neutral-200)] active:scale-[0.99] transition"
               >
                 <BrightifyLogo size={24} />

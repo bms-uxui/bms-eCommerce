@@ -39,7 +39,7 @@ function InfoChip({
   );
 }
 
-function ShopCard() {
+export function ShopCard() {
   return (
     <section className="bg-white rounded-2xl border border-[var(--color-neutral-300)] p-4 flex gap-4 items-start">
       <img
@@ -90,7 +90,7 @@ function ShopCard() {
 }
 
 // ---------- Details + specs ----------
-function DetailsCard() {
+export function DetailsCard() {
   return (
     <section className="bg-white rounded-2xl border border-[var(--color-neutral-300)] p-4 lg:p-6">
       <h2 className="text-[18px] font-semibold text-[var(--color-neutral-900)] mb-2">
@@ -190,7 +190,7 @@ function ReviewCard({ withPhotos = true }: { withPhotos?: boolean }) {
   );
 }
 
-function ReviewsCard() {
+export function ReviewsCard() {
   const [filter, setFilter] = useState(REVIEW_FILTERS[0]);
   return (
     <section className="bg-white rounded-2xl border border-[var(--color-neutral-300)] p-4 lg:p-6">

@@ -17,8 +17,8 @@ import ProductCard from "../components/landing/ProductCard";
 import { makeProducts } from "../components/landing/mockData";
 import storeAvatar from "../assets/store-avatar.png";
 
-const TABS = ["ทั้งหมด", "สินค้าแนะนำ", "ใหม่ล่าสุด"] as const;
-type Tab = (typeof TABS)[number];
+export const TABS = ["ทั้งหมด", "สินค้าแนะนำ", "ใหม่ล่าสุด"] as const;
+export type Tab = (typeof TABS)[number];
 
 function InfoChip({
   icon: Icon,
@@ -35,7 +35,7 @@ function InfoChip({
   );
 }
 
-function StoreHero() {
+export function StoreHero() {
   return (
     <section className="relative">
       {/* Banner */}
@@ -120,7 +120,7 @@ function StoreHero() {
   );
 }
 
-function SegmentedTabs({
+export function SegmentedTabs({
   value,
   onChange,
 }: {
