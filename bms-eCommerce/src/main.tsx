@@ -25,6 +25,7 @@ import SellerReviews from "./pages/SellerReviews.tsx";
 import SellerReviewDetail from "./pages/SellerReviewDetail.tsx";
 import SellerChat from "./pages/SellerChat.tsx";
 import SellerWallet from "./pages/SellerWallet.tsx";
+import SellerStoreSettings from "./pages/SellerStoreSettings.tsx";
 import SellerQuotes from "./pages/SellerQuotes.tsx";
 import SellerQuoteDetail from "./pages/SellerQuoteDetail.tsx";
 import AffiliateRegister from "./pages/AffiliateRegister.tsx";
@@ -133,6 +134,7 @@ createRoot(document.getElementById("root")!).render(
               <Route path="/seller/reviews/:id" element={<SellerReviewDetail />} />
               <Route path="/seller/chat" element={<SellerChat />} />
               <Route path="/seller/wallet" element={<SellerWallet />} />
+              <Route path="/seller/settings" element={<SellerStoreSettings />} />
               <Route path="/seller/quotes" element={<SellerQuotes />} />
               <Route path="/seller/quotes/:id" element={<SellerQuoteDetail />} />
               <Route path="/affiliate/register" element={<AffiliateRegister />} />
