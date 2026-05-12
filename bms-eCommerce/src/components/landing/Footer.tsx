@@ -148,8 +148,8 @@ export default function Footer() {
           <div>
             <h4 className="text-sm font-bold text-white mb-3">ติดตามเรา</h4>
             <ul className="space-y-3">
-              {socials.map((s) => (
-                <li key={s.label} className="flex items-center gap-2 text-sm hover:underline cursor-pointer">
+              {socials.map((s, i) => (
+                <li key={i} className="flex items-center gap-2 text-sm hover:underline cursor-pointer">
                   <s.icon size={20} />
                   {s.label}
                 </li>

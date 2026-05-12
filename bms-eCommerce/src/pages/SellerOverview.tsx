@@ -2,9 +2,9 @@ import { useState } from "react";
 import Icon from "../components/landing/Icon";
 import { SellerHeader, SellerSidebar } from "../components/SellerChrome";
 
-type BadgeTone = "positive" | "critical" | "neutral";
+export type BadgeTone = "positive" | "critical" | "neutral";
 
-function ChangeBadge({
+export function ChangeBadge({
   value,
   tone = "positive",
   size = "sm",
