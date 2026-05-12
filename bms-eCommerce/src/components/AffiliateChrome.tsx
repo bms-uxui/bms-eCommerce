@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { Star as StarIcon } from "lucide-react";
 import Icon from "./landing/Icon";
 import LanguageSelect from "./LanguageSelect";
 import NotificationBell from "./NotificationBell";
@@ -24,57 +23,29 @@ function BrightifyLogo({ size = 36 }: { size?: number }) {
   );
 }
 
-const SELLER_NAV = [
-  { id: "manage", icon: "life-ring", label: "การจัดการร้านค้า", to: "/seller/overview" },
-  { id: "storefront", icon: "shop", label: "หน้าร้านค้า", to: "/seller/shop" },
-] as const;
-
-export function SellerHeader({ active }: { active?: (typeof SELLER_NAV)[number]["id"] }) {
-  const navigate = useNavigate();
+export function AffiliateHeader() {
   return (
     <header className="sticky top-0 z-30 bg-white border-b border-[var(--color-neutral-300)] px-6 py-[18px]">
-      <div className="flex items-center gap-6 w-full">
-        <div className="flex items-center gap-6 shrink-0 w-[378px]">
-          <a href="/seller/overview" className="flex items-center gap-2 h-9 shrink-0">
+      <div className="flex items-center justify-between gap-6 w-full">
+        <a href="/affiliate/overview" className="flex items-center gap-4 sm:gap-6 h-9 shrink-0">
+          <span className="flex items-center gap-2">
             <BrightifyLogo size={36} />
-            <span className="text-[24px] font-medium leading-[16.8px] text-[var(--color-primary)]">
+            <span className="text-[22px] sm:text-[24px] font-medium leading-none text-[var(--color-primary)]">
               BRIGHTIFY
             </span>
-          </a>
-          <span className="w-px h-6 bg-[var(--color-neutral-300)]" />
-          <p className="text-[20px] font-semibold leading-[16.8px] text-[var(--color-neutral-900)]">
-            ร้านค้า
-          </p>
-        </div>
+          </span>
+          <span className="hidden sm:block w-px h-6 bg-[var(--color-neutral-300)]" />
+          <span className="hidden sm:block text-[20px] font-semibold leading-none text-[var(--color-neutral-900)]">
+            Affiliate
+          </span>
+        </a>
 
-        <nav className="flex-1 min-w-0 flex items-center justify-center gap-4 h-9">
-          {SELLER_NAV.map((item) => {
-            const isActive = item.id === (active ?? "manage");
-            return (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => navigate(item.to)}
-                className={[
-                  "flex items-center gap-1 px-1.5 py-1 rounded-lg text-[16px] font-medium leading-[18px] whitespace-nowrap transition-colors",
-                  isActive
-                    ? "bg-[var(--color-primary)] text-white"
-                    : "text-[var(--color-neutral-500)] hover:text-[var(--color-primary)] hover:bg-[var(--color-primary-100)]",
-                ].join(" ")}
-              >
-                <Icon name={item.icon} size={20} />
-                <span>{item.label}</span>
-              </button>
-            );
-          })}
-        </nav>
-
-        <div className="flex items-center justify-end gap-6 shrink-0 w-[378px]">
-          <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 sm:gap-6 shrink-0">
+          <div className="hidden md:flex items-center gap-1">
             <LanguageSelect />
             <HelpSelect />
           </div>
-          <span className="w-px h-[18.5px] bg-[var(--color-neutral-300)]" />
+          <span className="hidden md:block w-px h-[18.5px] bg-[var(--color-neutral-300)]" />
           <NotificationBell />
           <SellerProfile />
         </div>
@@ -88,44 +59,38 @@ type SidebarGroup = { kind: "group"; icon: string; label: string; children: Side
 type SidebarEntry = SidebarLeaf | SidebarGroup;
 
 const SIDEBAR_ENTRIES: SidebarEntry[] = [
-  { kind: "leaf", icon: "grid-alt", label: "ภาพรวมร้านค้า", to: "/seller/overview" },
-  { kind: "leaf", icon: "cart", label: "คำสั่งซื้อ", to: "/seller/orders" },
-  { kind: "leaf", icon: "files", label: "ใบเสนอราคา", to: "/seller/quotes" },
+  { kind: "leaf", icon: "grid-alt", label: "ภาพรวม Affiliate", to: "/affiliate/overview" },
   {
     kind: "group",
-    icon: "package",
-    label: "สินค้า",
+    icon: "link",
+    label: "สินค้าลิงก์คอมมิชชัน",
     children: [
-      { kind: "leaf", icon: "package", label: "การจัดการสินค้า" },
-      { kind: "leaf", icon: "reload", label: "คำขอคืนเงิน/คืนสินค้า" },
+      { kind: "leaf", icon: "package", label: "คอมมิชชัน BRIGHTIFY", to: "/affiliate/commission/brightify" },
+      { kind: "leaf", icon: "shop", label: "คอมมิชชันร้านค้า", to: "/affiliate/commission/shop" },
+      { kind: "leaf", icon: "tag", label: "คอมมิชชันสินค้า", to: "/affiliate/commission/product" },
+      { kind: "leaf", icon: "unlink", label: "ลิงก์ที่กำหนดเอง", to: "/affiliate/commission/custom-link" },
+    ],
+  },
+  { kind: "leaf", icon: "cup", label: "แคมเปญ Affiliate", to: "/affiliate/campaign" },
+  {
+    kind: "group",
+    icon: "files",
+    label: "รายงาน",
+    children: [
+      { kind: "leaf", icon: "clipboard", label: "รายงานคำสั่งซื้อ", to: "/affiliate/reports/orders" },
+      { kind: "leaf", icon: "pointer", label: "รายงานการคลิก", to: "/affiliate/reports/clicks" },
     ],
   },
   {
     kind: "group",
-    icon: "bullhorn",
-    label: "การตลาด",
+    icon: "wallet",
+    label: "รายได้คอมมิชชัน",
     children: [
-      { kind: "leaf", icon: "tag", label: "โปรโมชั่น" },
-      { kind: "leaf", icon: "ticket", label: "โค้ดส่วนลด" },
-      { kind: "leaf", icon: "bolt-alt", label: "Flash Sale" },
+      { kind: "leaf", icon: "coin", label: "สรุปค่าคอมมิชชัน", to: "/affiliate/commission-income/summary" },
+      { kind: "leaf", icon: "credit-cards", label: "ถอนเงินคอมมิชชัน", to: "/affiliate/commission-income/withdraw" },
     ],
   },
-  { kind: "leaf", icon: "delivery", label: "โลจิสติกส์" },
-  { kind: "leaf", icon: "star", label: "รีวิว & คะแนนร้านค้า" },
-  { kind: "leaf", icon: "comments", label: "แชท" },
-  {
-    kind: "group",
-    icon: "bar-chart",
-    label: "การวิเคราะห์",
-    children: [
-      { kind: "leaf", icon: "dollar", label: "การวิเคราะห์รายได้" },
-      { kind: "leaf", icon: "users", label: "การวิเคราะห์ลูกค้า" },
-      { kind: "leaf", icon: "package", label: "การวิเคราะห์สินค้า" },
-      { kind: "leaf", icon: "bullhorn", label: "การวิเคราะห์การตลาด" },
-    ],
-  },
-  { kind: "leaf", icon: "wallet", label: "กระเป๋าเงิน" },
-  { kind: "leaf", icon: "cog", label: "การตั้งค่าร้านค้า" },
+  { kind: "leaf", icon: "cog", label: "การตั้งค่า", to: "/affiliate/settings" },
 ];
 
 type BadgeVariant = "default" | "white" | "primary";
@@ -138,7 +103,7 @@ function IconBadge({ icon, variant = "default" }: { icon: string; variant?: Badg
   };
   return (
     <span className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center ${styles[variant]}`}>
-      {icon === "star" ? <StarIcon size={14} /> : <Icon name={icon} size={14} />}
+      <Icon name={icon} size={14} />
     </span>
   );
 }
@@ -224,7 +189,7 @@ function GroupRow({
   );
 }
 
-export function SellerSidebar({ active }: { active?: string }) {
+export function AffiliateSidebar({ active }: { active?: string }) {
   const navigate = useNavigate();
   const groupOfActive = SIDEBAR_ENTRIES.findIndex(
     (e) => e.kind === "group" && e.children.some((c) => c.label === active)
@@ -265,32 +230,33 @@ export function SellerSidebar({ active }: { active?: string }) {
         })}
       </nav>
 
-      <div className="px-4 flex flex-col gap-2 pt-4">
+      <div className="flex flex-col gap-2 pt-4">
         <span className="block w-full h-px bg-[var(--color-neutral-200)]" />
-        <a
-          href="/"
-          className="w-full flex items-center gap-2.5 px-4 py-2 rounded-lg text-[14px] text-[var(--color-neutral-900)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)] transition-colors"
-        >
-          <IconBadge icon="cart" />
-          <span className="flex-1 min-w-0 truncate">BMS E-Commerce</span>
-          <Icon name="link" size={16} className="text-[var(--color-neutral-600)]" />
-        </a>
-        <a
-          href="#"
-          onClick={(e) => e.preventDefault()}
-          className="w-full flex items-center gap-2.5 px-4 py-2 rounded-lg text-[14px] text-[var(--color-neutral-900)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)] transition-colors"
-        >
-          <IconBadge icon="users" />
-          <span className="flex-1 min-w-0 truncate">BMS Affiliate</span>
-          <Icon name="link" size={16} className="text-[var(--color-neutral-600)]" />
-        </a>
-        <button
-          type="button"
-          className="w-full flex items-center gap-2.5 px-4 py-2 rounded-lg text-[14px] text-[var(--color-neutral-900)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)] transition-colors"
-        >
-          <span className="flex-1 text-left">ย่อเมนู</span>
-          <Icon name="arrow-left-circle" size={18} className="text-[var(--color-neutral-600)]" />
-        </button>
+        <div className="px-4 flex flex-col gap-2">
+          <a
+            href="/"
+            className="w-full flex items-center gap-2.5 px-2 py-2 rounded-lg text-[14px] text-[var(--color-neutral-900)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)] transition-colors"
+          >
+            <IconBadge icon="cart" />
+            <span className="flex-1 min-w-0 truncate">BMS E-Commerce</span>
+            <Icon name="popup" size={18} className="text-[var(--color-primary)]" />
+          </a>
+          <a
+            href="/seller/overview"
+            className="w-full flex items-center gap-2.5 px-2 py-2 rounded-lg text-[14px] text-[var(--color-neutral-900)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)] transition-colors"
+          >
+            <IconBadge icon="shop" />
+            <span className="flex-1 min-w-0 truncate">BMS Seller</span>
+            <Icon name="popup" size={18} className="text-[var(--color-primary)]" />
+          </a>
+          <button
+            type="button"
+            className="w-full flex items-center gap-2.5 px-2 py-2 rounded-lg text-[14px] text-[var(--color-neutral-900)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)] transition-colors"
+          >
+            <span className="flex-1 text-left">ย่อเมนู</span>
+            <Icon name="arrow-left-circle" size={18} className="text-[var(--color-neutral-600)]" />
+          </button>
+        </div>
       </div>
     </aside>
   );

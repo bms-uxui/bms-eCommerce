@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import { Button, Input, Textarea, Select, SelectItem } from "@heroui/react";
 import Icon from "../components/landing/Icon";
 import LanguageSelect from "../components/LanguageSelect";
+import NotificationBell from "../components/NotificationBell";
 import HelpSelect from "../components/HelpSelect";
 import GuestProfile from "../components/GuestProfile";
 import SellerProfile from "../components/SellerProfile";
@@ -279,16 +280,7 @@ function SellerHeader() {
           <LanguageSelect />
           <HelpSelect />
           <span className="w-px h-[18px] bg-[var(--color-neutral-300)]" />
-          <button
-            type="button"
-            aria-label="การแจ้งเตือน"
-            className="relative text-[var(--color-neutral-900)] hover:text-[var(--color-primary)] transition-colors"
-          >
-            <Icon name="alarm" size={24} />
-            <span className="absolute -top-1 left-[14px] min-w-[14px] h-[14px] px-1 rounded-full bg-[var(--color-critical)] text-white text-[8px] font-medium leading-[14px] text-center">
-              10
-            </span>
-          </button>
+          <NotificationBell />
           {sellerLoggedIn ? <SellerProfile /> : <GuestProfile compact to="/seller/login" />}
         </div>
       </div>

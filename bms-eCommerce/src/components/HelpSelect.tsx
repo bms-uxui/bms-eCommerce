@@ -50,7 +50,7 @@ export default function HelpSelect({ className = "", onSelect }: HelpSelectProps
             : "text-[var(--color-neutral-900)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)] active:bg-[var(--color-primary-100)]",
         ].join(" ")}
       >
-        <Icon name="question-circle" size={16} />
+        <Icon name="information" size={16} />
         <span>ช่วยเหลือ</span>
         <Icon
           name="chevron-down"

@@ -15,6 +15,19 @@ import SellerProducts from "./pages/SellerProducts.tsx";
 import SellerQuotes from "./pages/SellerQuotes.tsx";
 import SellerQuoteDetail from "./pages/SellerQuoteDetail.tsx";
 import AffiliateRegister from "./pages/AffiliateRegister.tsx";
+import AffiliateOverview from "./pages/AffiliateOverview.tsx";
+import BrightifyCommission from "./pages/BrightifyCommission.tsx";
+import BrightifyCommissionDetail from "./pages/BrightifyCommissionDetail.tsx";
+import ShopCommission from "./pages/ShopCommission.tsx";
+import ShopCommissionDetail from "./pages/ShopCommissionDetail.tsx";
+import ProductCommission from "./pages/ProductCommission.tsx";
+import CustomLink from "./pages/CustomLink.tsx";
+import AffiliateCampaign from "./pages/AffiliateCampaign.tsx";
+import OrderReport from "./pages/OrderReport.tsx";
+import ClickReport from "./pages/ClickReport.tsx";
+import CommissionSummary from "./pages/CommissionSummary.tsx";
+import WithdrawCommission from "./pages/WithdrawCommission.tsx";
+import AffiliateSettings from "./pages/AffiliateSettings.tsx";
 import AllProducts from "./pages/AllProducts.tsx";
 import ProductDetail from "./pages/ProductDetail.tsx";
 import StoreProfile from "./pages/StoreProfile.tsx";
@@ -109,6 +122,19 @@ createRoot(document.getElementById("root")!).render(
               <Route path="/seller/quotes" element={<SellerQuotes />} />
               <Route path="/seller/quotes/:id" element={<SellerQuoteDetail />} />
               <Route path="/affiliate/register" element={<AffiliateRegister />} />
+              <Route path="/affiliate/overview" element={<AffiliateOverview />} />
+              <Route path="/affiliate/commission/brightify" element={<BrightifyCommission />} />
+              <Route path="/affiliate/commission/brightify/:id" element={<BrightifyCommissionDetail />} />
+              <Route path="/affiliate/commission/shop" element={<ShopCommission />} />
+              <Route path="/affiliate/commission/shop/:id" element={<ShopCommissionDetail />} />
+              <Route path="/affiliate/commission/product" element={<ProductCommission />} />
+              <Route path="/affiliate/commission/custom-link" element={<CustomLink />} />
+              <Route path="/affiliate/campaign" element={<AffiliateCampaign />} />
+              <Route path="/affiliate/reports/orders" element={<OrderReport />} />
+              <Route path="/affiliate/reports/clicks" element={<ClickReport />} />
+              <Route path="/affiliate/commission-income/summary" element={<CommissionSummary />} />
+              <Route path="/affiliate/commission-income/withdraw" element={<WithdrawCommission />} />
+              <Route path="/affiliate/settings" element={<AffiliateSettings />} />
               <Route path="/products" element={<AllProducts />} />
               <Route path="/products/:id" element={<ProductDetail />} />
               <Route path="/store/:id" element={<StoreProfile />} />

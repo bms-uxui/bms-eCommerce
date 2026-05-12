@@ -19,9 +19,11 @@ import {
   Trash2,
   Globe,
   ChevronDown,
-  Bell,
   Check,
 } from "lucide-react";
+import LanguageSelect from "../components/LanguageSelect";
+import HelpSelect from "../components/HelpSelect";
+import NotificationBell from "../components/NotificationBell";
 import facebookLogo from "../assets/social/facebook.png";
 import tiktokLogo from "../assets/social/tiktok.png";
 import instagramLogo from "../assets/social/instagram.png";
@@ -161,25 +163,12 @@ function AffiliateHeader() {
           </span>
         </Link>
         <div className="flex items-center gap-3 sm:gap-6">
-          <div className="hidden md:flex items-center gap-4 text-[14px] text-[var(--color-neutral-900)]">
-            <button className="flex items-center gap-1 hover:text-[var(--color-primary)] transition">
-              <Globe size={16} />
-              <span>ภาษาไทย</span>
-              <ChevronDown size={16} />
-            </button>
-            <button className="flex items-center gap-1 hover:text-[var(--color-primary)] transition">
-              <span>?</span>
-              <span>ช่วยเหลือ</span>
-              <ChevronDown size={16} />
-            </button>
+          <div className="hidden md:flex items-center gap-1">
+            <LanguageSelect />
+            <HelpSelect />
           </div>
           <span className="hidden md:block w-px h-5 bg-[var(--color-neutral-300)]" />
-          <button className="relative text-[var(--color-neutral-700)] hover:text-[var(--color-primary)] transition">
-            <Bell size={24} />
-            <span className="absolute -top-1 left-3 min-w-[16px] h-4 px-1 rounded-full bg-[var(--color-critical)] text-[9px] text-white flex items-center justify-center">
-              10
-            </span>
-          </button>
+          <NotificationBell />
           <button className="flex items-center gap-2">
             <img src={avatar} alt="" className="w-9 h-9 rounded-full object-cover" />
             <ChevronDown size={18} className="text-[var(--color-neutral-600)]" />
@@ -505,14 +494,14 @@ function RegistrationForm({ onSubmit }: { onSubmit: () => void }) {
 function SuccessState() {
   const navigate = useNavigate();
   return (
-    <div className="relative">
+    <div className="relative w-full max-w-[1200px] mx-auto">
       <span
         aria-hidden
         className="pointer-events-none select-none absolute left-1/2 -translate-x-1/2 top-8 text-[180px] font-bold text-white/40 leading-none whitespace-nowrap"
       >
         Affiliate
       </span>
-      <div className="relative bg-white rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.08)] max-w-[560px] mx-auto px-8 py-12 flex flex-col items-center text-center gap-4">
+      <div className="relative bg-white rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.08)] w-full px-8 py-12 flex flex-col items-center text-center gap-4">
         <span className="w-16 h-16 rounded-full bg-[var(--color-positive-700)]/10 flex items-center justify-center">
           <span className="w-12 h-12 rounded-full bg-[#2ecc71] flex items-center justify-center">
             <Check size={28} className="text-white" strokeWidth={3} />
@@ -521,13 +510,13 @@ function SuccessState() {
         <h2 className="text-[22px] font-semibold text-[var(--color-neutral-900)]">
           ส่งแบบฟอร์มสำเร็จแล้ว
         </h2>
-        <p className="text-[15px] text-[var(--color-neutral-600)] max-w-[440px]">
+        <p className="text-[15px] text-[var(--color-neutral-600)] max-w-[1200px]">
           ขอบคุณสำหรับการสมัครโปรแกรม Affiliate เราจะทำการตรวจสอบข้อมูลที่คุณส่งมา และจะแจ้งให้คุณทราบทางอีเมล
         </p>
         <Button
           radius="sm"
-          onPress={() => navigate("/")}
-          className="mt-2 h-11 px-6 bg-[var(--color-primary)] text-white text-[16px] font-medium hover:brightness-110 transition"
+          onPress={() => navigate("/affiliate/overview")}
+          className="mt-6 h-11 px-6 bg-[var(--color-primary)] text-white text-[16px] font-medium hover:brightness-110 transition"
         >
           ดูรายละเอียด Affiliate เพิ่มเติม
         </Button>
@@ -547,7 +536,13 @@ export default function AffiliateRegister() {
   return (
     <div className="min-h-screen flex flex-col" style={{ background: BG_GRADIENT }}>
       <AffiliateHeader />
-      <main className="flex-1 max-w-[1200px] w-full mx-auto px-3 sm:px-4 lg:px-5 py-8 sm:py-12">
+      <main
+        className={`flex-1 w-full mx-auto px-3 sm:px-4 lg:px-5 py-8 sm:py-12 ${
+          submitted
+            ? "flex items-center justify-center"
+            : "max-w-[1200px]"
+        }`}
+      >
         {submitted ? (
           <SuccessState />
         ) : (
