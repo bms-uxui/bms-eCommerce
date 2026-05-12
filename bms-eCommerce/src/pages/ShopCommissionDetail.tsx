@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router";
 import Icon from "../components/landing/Icon";
+import Pagination from "../components/Pagination";
 import { AffiliateHeader, AffiliateSidebar } from "../components/AffiliateChrome";
+import CommissionBulkBar from "../components/CommissionBulkBar";
 import { makeProducts } from "../components/landing/mockData";
 
 const RATES = [1.5, 2.0, 3.0, 2.5, 1.8, 1.2, 2.2, 3.5];
@@ -25,8 +27,8 @@ function Breadcrumb() {
 
 function CommissionCard({ product }: { product: (typeof GRID_PRODUCTS)[number] }) {
   return (
-    <div className="flex flex-col bg-white border border-[var(--color-neutral-300)] rounded-lg overflow-hidden hover:shadow-md hover:border-[var(--color-primary-400)] transition-all">
-      <div className="relative aspect-square overflow-hidden">
+    <div className="flex flex-col bg-white border border-[var(--color-neutral-300)] rounded-xl overflow-hidden hover:shadow-md hover:border-[var(--color-primary-400)] transition-all">
+      <div className="relative aspect-[4/3] overflow-hidden">
         <img src={product.image} alt={product.name} className="absolute inset-0 w-full h-full object-cover" />
         {product.discount !== undefined && (
           <div className="absolute top-0 right-0 w-10 h-5 rounded-bl-xl bg-gradient-to-b from-[var(--color-primary-400)] via-[var(--color-primary)] to-[var(--color-primary-600)] flex items-center justify-center">
@@ -139,84 +141,17 @@ export default function ShopCommissionDetail() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
               {GRID_PRODUCTS.map((p) => (
                 <CommissionCard key={p.id} product={p} />
               ))}
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-              <div className="flex items-center gap-3 text-[14px] text-[var(--color-neutral-600)]">
-                <span>10,488 รายการ</span>
-                <span className="flex items-center gap-1">
-                  แสดง
-                  <span className="inline-flex items-center gap-2 h-8 px-2.5 rounded-lg border border-[var(--color-neutral-300)] text-[var(--color-neutral-900)] font-medium">
-                    20
-                    <Icon name="chevron-down" size={14} className="text-[var(--color-neutral-600)]" />
-                  </span>
-                </span>
-              </div>
-              <div className="flex items-center gap-1">
-                <button
-                  type="button"
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className="min-w-8 h-8 px-2 rounded-lg text-[var(--color-neutral-700)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)] flex items-center justify-center"
-                >
-                  <Icon name="chevron-left" size={16} />
-                </button>
-                {[1, 2, 3, 4, 5].map((n) => (
-                  <button
-                    key={n}
-                    type="button"
-                    onClick={() => setPage(n)}
-                    className={[
-                      "min-w-8 h-8 px-2 rounded-lg text-[14px] flex items-center justify-center transition-colors",
-                      n === page
-                        ? "bg-[var(--color-primary)] text-white font-medium"
-                        : "text-[var(--color-neutral-700)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)]",
-                    ].join(" ")}
-                  >
-                    {n}
-                  </button>
-                ))}
-                <span className="px-1 text-[var(--color-neutral-500)]">…</span>
-                <button
-                  type="button"
-                  onClick={() => setPage(12)}
-                  className="min-w-8 h-8 px-2 rounded-lg text-[14px] text-[var(--color-neutral-700)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)] flex items-center justify-center"
-                >
-                  12
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPage((p) => p + 1)}
-                  className="min-w-8 h-8 px-2 rounded-lg text-[var(--color-neutral-700)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)] flex items-center justify-center"
-                >
-                  <Icon name="chevron-right" size={16} />
-                </button>
-              </div>
-            </div>
+            <Pagination page={page} onPageChange={setPage} />
           </section>
         </main>
       </div>
-
-      <div className="sticky bottom-0 z-20 bg-[var(--color-primary)] text-white">
-        <div className="flex items-center justify-between gap-4 px-4 sm:px-8 py-3 ml-0 lg:ml-[232px]">
-          <label className="flex items-center gap-2 text-[14px] cursor-pointer">
-            <input type="checkbox" className="accent-white w-4 h-4" />
-            เลือกสินค้าคอมมิชชันทั้งหมดในหน้านี้
-          </label>
-          <div className="flex items-center gap-4">
-            <span className="text-[14px]">0/100</span>
-            <button
-              type="button"
-              className="h-9 px-4 rounded-lg bg-white text-[var(--color-primary)] text-[14px] font-medium hover:bg-white/90 transition"
-            >
-              รับลิงก์แบบทันทีทั้งหมด
-            </button>
-          </div>
-        </div>
-      </div>
+      <CommissionBulkBar />
     </div>
   );
 }

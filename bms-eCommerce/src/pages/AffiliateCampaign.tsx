@@ -31,7 +31,7 @@ const CAMPAIGNS = makeProducts(NAMES.length).map((p, i) => ({
 function CampaignCard({ campaign }: { campaign: (typeof CAMPAIGNS)[number] }) {
   return (
     <div className="flex flex-col bg-white border border-[var(--color-neutral-300)] rounded-xl overflow-hidden hover:shadow-md hover:border-[var(--color-primary-400)] transition-all">
-      <div className="relative aspect-[4/5] overflow-hidden bg-[var(--color-neutral-200)]">
+      <div className="relative aspect-[4/3] overflow-hidden bg-[var(--color-neutral-200)]">
         <img src={campaign.image} alt={campaign.name} className="absolute inset-0 w-full h-full object-cover" />
         <span className="absolute top-2 left-2 bg-[var(--color-primary)] text-white text-[11px] font-medium px-2 py-0.5 rounded-full">
           กำลังดำเนินการ
@@ -78,7 +78,7 @@ export default function AffiliateCampaign() {
           </div>
 
           <section className="bg-white rounded-2xl border border-[var(--color-neutral-300)] p-4 sm:p-5">
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
               {CAMPAIGNS.map((c) => (
                 <CampaignCard key={c.id} campaign={c} />
               ))}

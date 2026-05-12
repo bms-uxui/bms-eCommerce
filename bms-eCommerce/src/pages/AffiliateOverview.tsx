@@ -1,6 +1,8 @@
+import { useState } from "react";
 import Icon from "../components/landing/Icon";
 import { AffiliateHeader, AffiliateSidebar } from "../components/AffiliateChrome";
 import DateRangePicker from "../components/DateRangePicker";
+import Pagination from "../components/Pagination";
 import { ChangeBadge, type BadgeTone } from "./SellerOverview";
 import { makeProducts } from "../components/landing/mockData";
 
@@ -72,97 +74,43 @@ function StatTile({ stat }: { stat: SummaryStat }) {
   );
 }
 
-function PageButton({
-  children,
-  active,
-  onClick,
-}: {
-  children: React.ReactNode;
-  active?: boolean;
-  onClick?: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={[
-        "min-w-8 h-8 px-2 rounded-lg text-[14px] flex items-center justify-center transition-colors",
-        active
-          ? "bg-[var(--color-primary)] text-white font-medium"
-          : "text-[var(--color-neutral-700)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)]",
-      ].join(" ")}
-    >
-      {children}
-    </button>
-  );
-}
-
-function TableFooter({ total }: { total: number }) {
-  return (
-    <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-2 pt-4">
-      <div className="flex items-center gap-3 text-[14px] text-[var(--color-neutral-600)]">
-        <span>{total.toLocaleString()} รายการ</span>
-        <span className="flex items-center gap-1">
-          แสดง
-          <span className="inline-flex items-center gap-2 h-8 px-2.5 rounded-lg border border-[var(--color-neutral-300)] text-[var(--color-neutral-900)] font-medium">
-            20
-            <Icon name="chevron-down" size={14} className="text-[var(--color-neutral-600)]" />
-          </span>
-        </span>
-      </div>
-      <div className="flex items-center gap-1">
-        <PageButton>
-          <Icon name="chevron-left" size={16} />
-        </PageButton>
-        <PageButton>1</PageButton>
-        <PageButton active>2</PageButton>
-        <PageButton>3</PageButton>
-        <PageButton>4</PageButton>
-        <PageButton>5</PageButton>
-        <span className="px-1 text-[var(--color-neutral-500)]">…</span>
-        <PageButton>12</PageButton>
-        <PageButton>
-          <Icon name="chevron-right" size={16} />
-        </PageButton>
-      </div>
-    </div>
-  );
-}
-
-const TH = "px-3 py-3 text-[12px] font-medium text-[var(--color-neutral-500)] align-bottom";
+const TH ="px-3 py-2.5 text-[12px] font-medium text-[var(--color-neutral-500)] align-bottom bg-[#EFF9FE]";
 const TD = "px-3 py-3.5 text-[14px] text-[var(--color-neutral-900)] align-middle";
+const TR_DATA = "border-b border-[var(--color-neutral-200)] last:border-b-0";
 
 function SummaryTableSection() {
+  const [page, setPage] = useState(2);
   return (
     <section className="bg-white rounded-2xl border border-[var(--color-neutral-300)] p-4">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-2 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-1 pb-3">
         <h2 className="text-[18px] font-bold text-[var(--color-primary-700)]">
           สรุปผลโดยรวมแบบตาราง
         </h2>
         <button
           type="button"
-          className="inline-flex items-center gap-2 h-9 px-4 rounded-lg bg-[var(--color-primary-100)] text-[var(--color-primary-700)] text-[14px] font-medium hover:brightness-95 transition"
+          className="inline-flex items-center gap-2 h-9 px-4 rounded-lg bg-[var(--color-primary)] text-white text-[14px] font-medium hover:brightness-110 transition"
         >
           <Icon name="download" size={18} />
           ดาวน์โหลดรายงาน
         </button>
       </div>
-      <div className="overflow-x-auto rounded-xl border border-[var(--color-neutral-200)]">
+      <hr className="border-t border-[var(--color-neutral-200)] mb-3" />
+      <div className="overflow-x-auto">
         <table className="w-full min-w-[760px] border-collapse">
           <thead>
-            <tr className="bg-[#f1f6fc] text-left">
-              <th className={TH}>วันที่</th>
+            <tr className="text-left">
+              <th className={`${TH} rounded-l-lg`}>วันที่</th>
               <th className={`${TH} text-center`}>ยอดการคลิก</th>
               <th className={`${TH} text-center`}>ค่าสั่งซื้อ</th>
-              <th className={`${TH} text-center`}>ค่าคอมมิชชั่นโดยประมาณ (B)</th>
+              <th className={`${TH} text-center`}>ค่าคอมมิชชันโดยประมาณ (฿)</th>
               <th className={`${TH} text-center`}>จำนวนที่ขายได้</th>
-              <th className={`${TH} text-center`}>ยอดค่าสั่งซื้อ (B)</th>
-              <th className={`${TH} text-center`}>ลูกค้าใหม่</th>
+              <th className={`${TH} text-center`}>ยอดค่าสั่งซื้อ (฿)</th>
+              <th className={`${TH} text-center rounded-r-lg`}>ลูกค้าใหม่</th>
             </tr>
           </thead>
           <tbody>
             {SUMMARY_ROWS.map((r) => (
-              <tr key={r.date} className="border-t border-[var(--color-neutral-200)]">
+              <tr key={r.date} className={TR_DATA}>
                 <td className={TD}>{r.date}</td>
                 <td className={`${TD} text-center`}>{r.clicks}</td>
                 <td className={`${TD} text-center`}>{r.orders}</td>
@@ -175,7 +123,7 @@ function SummaryTableSection() {
           </tbody>
         </table>
       </div>
-      <TableFooter total={10488} />
+      <Pagination page={page} onPageChange={setPage} className="mt-1" />
     </section>
   );
 }
@@ -183,24 +131,25 @@ function SummaryTableSection() {
 function TopProductsSection() {
   return (
     <section className="bg-white rounded-2xl border border-[var(--color-neutral-300)] p-4">
-      <h2 className="text-[18px] font-bold text-[var(--color-primary-700)] px-2 pb-4">
+      <h2 className="text-[18px] font-bold text-[var(--color-primary-700)] px-1 pb-3">
         10 สินค้าที่ขายดีสูงสุด
       </h2>
-      <div className="overflow-x-auto rounded-xl border border-[var(--color-neutral-200)]">
+      <hr className="border-t border-[var(--color-neutral-200)] mb-3" />
+      <div className="overflow-x-auto">
         <table className="w-full min-w-[820px] border-collapse">
           <thead>
-            <tr className="bg-[#f1f6fc] text-left">
-              <th className={`${TH} w-14 text-center`}>ลำดับ</th>
+            <tr className="text-left">
+              <th className={`${TH} w-14 text-center rounded-l-lg`}>ลำดับ</th>
               <th className={TH}>สินค้า</th>
               <th className={`${TH} text-center`}>จำนวนที่ขายได้</th>
               <th className={`${TH} text-center`}>ค่าสั่งซื้อ</th>
-              <th className={`${TH} text-center`}>ค่าคอมมิชชั่นโดยประมาณ (B)</th>
-              <th className={TH}>การดำเนินการ</th>
+              <th className={`${TH} text-center`}>ค่าคอมมิชชันโดยประมาณ (฿)</th>
+              <th className={`${TH} rounded-r-lg`}>การดำเนินการ</th>
             </tr>
           </thead>
           <tbody>
             {TOP_PRODUCTS.map((p, i) => (
-              <tr key={p.name} className="border-t border-[var(--color-neutral-200)]">
+              <tr key={p.name} className={TR_DATA}>
                 <td className={`${TD} text-center text-[var(--color-neutral-600)]`}>{i + 1}</td>
                 <td className={TD}>
                   <div className="flex items-center gap-3 min-w-0">

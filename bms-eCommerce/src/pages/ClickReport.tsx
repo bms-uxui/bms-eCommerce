@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Icon from "../components/landing/Icon";
+import Pagination from "../components/Pagination";
 import { AffiliateHeader, AffiliateSidebar } from "../components/AffiliateChrome";
 import DateRangePicker from "../components/DateRangePicker";
 
@@ -23,7 +24,7 @@ function FilterField({ label, children }: { label: string; children: React.React
   );
 }
 
-const TH = "px-3 py-3 text-[12px] font-medium text-[var(--color-neutral-500)] align-bottom whitespace-nowrap";
+const TH = "px-3 py-2.5 text-[12px] font-medium text-[var(--color-neutral-500)] align-bottom bg-[#EFF9FE]";
 const TD = "px-3 py-3.5 text-[14px] text-[var(--color-neutral-900)] align-middle";
 
 export default function ClickReport() {
@@ -61,7 +62,7 @@ export default function ClickReport() {
                 </button>
               </FilterField>
               <FilterField label="วันที่คลิก">
-                <DateRangePicker className="!flex" />
+                <DateRangePicker className="!flex w-full" />
               </FilterField>
               <FilterField label="Sub_id">
                 <input
@@ -71,7 +72,7 @@ export default function ClickReport() {
               </FilterField>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center gap-3">
               <button
                 type="button"
                 className="h-10 px-8 rounded-lg bg-[var(--color-primary)] text-white text-[14px] font-medium hover:brightness-110 transition"
@@ -93,26 +94,27 @@ export default function ClickReport() {
               <h2 className="text-[18px] font-bold text-[var(--color-primary-700)]">แสดงผลแบบตาราง</h2>
               <button
                 type="button"
-                className="inline-flex items-center gap-2 h-9 px-4 rounded-lg bg-[var(--color-primary-100)] text-[var(--color-primary-700)] text-[14px] font-medium hover:brightness-95 transition"
+                className="inline-flex items-center gap-2 h-9 px-4 rounded-lg bg-[var(--color-primary)] text-white text-[14px] font-medium hover:brightness-110 transition"
               >
                 <Icon name="download" size={18} />
                 ดาวน์โหลดรายงาน
               </button>
             </div>
 
-            <div className="overflow-x-auto rounded-xl border border-[var(--color-neutral-200)]">
+            <hr className="border-t border-[var(--color-neutral-200)]" />
+            <div className="overflow-x-auto">
               <table className="w-full min-w-[720px] border-collapse">
                 <thead>
-                  <tr className="bg-[#f1f6fc] text-left">
-                    <th className={TH}>ประเภทโซเชียลที่คลิก</th>
+                  <tr className="text-left">
+                    <th className={`${TH} rounded-l-lg`}>ประเภทโซเชียลที่คลิก</th>
                     <th className={TH}>วันที่คลิก</th>
                     <th className={TH}>เวลาที่คลิก</th>
-                    <th className={TH}>Sub_id</th>
+                    <th className={`${TH} rounded-r-lg`}>Sub_id</th>
                   </tr>
                 </thead>
                 <tbody>
                   {ROWS.map((r) => (
-                    <tr key={r.id} className="border-t border-[var(--color-neutral-200)]">
+                    <tr key={r.id} className="border-b border-[var(--color-neutral-200)] last:border-b-0">
                       <td className={TD}>{r.source}</td>
                       <td className={TD}>{r.date}</td>
                       <td className={TD}>{r.time}</td>
@@ -125,57 +127,7 @@ export default function ClickReport() {
               </table>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-              <div className="flex items-center gap-3 text-[14px] text-[var(--color-neutral-600)]">
-                <span>10,488 รายการ</span>
-                <span className="flex items-center gap-1">
-                  แสดง
-                  <span className="inline-flex items-center gap-2 h-8 px-2.5 rounded-lg border border-[var(--color-neutral-300)] text-[var(--color-neutral-900)] font-medium">
-                    20
-                    <Icon name="chevron-down" size={14} className="text-[var(--color-neutral-600)]" />
-                  </span>
-                </span>
-              </div>
-              <div className="flex items-center gap-1">
-                <button
-                  type="button"
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className="min-w-8 h-8 px-2 rounded-lg text-[var(--color-neutral-700)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)] flex items-center justify-center"
-                >
-                  <Icon name="chevron-left" size={16} />
-                </button>
-                {[1, 2, 3, 4, 5].map((n) => (
-                  <button
-                    key={n}
-                    type="button"
-                    onClick={() => setPage(n)}
-                    className={[
-                      "min-w-8 h-8 px-2 rounded-lg text-[14px] flex items-center justify-center transition-colors",
-                      n === page
-                        ? "bg-[var(--color-primary)] text-white font-medium"
-                        : "text-[var(--color-neutral-700)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)]",
-                    ].join(" ")}
-                  >
-                    {n}
-                  </button>
-                ))}
-                <span className="px-1 text-[var(--color-neutral-500)]">…</span>
-                <button
-                  type="button"
-                  onClick={() => setPage(12)}
-                  className="min-w-8 h-8 px-2 rounded-lg text-[14px] text-[var(--color-neutral-700)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)] flex items-center justify-center"
-                >
-                  12
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPage((p) => p + 1)}
-                  className="min-w-8 h-8 px-2 rounded-lg text-[var(--color-neutral-700)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)] flex items-center justify-center"
-                >
-                  <Icon name="chevron-right" size={16} />
-                </button>
-              </div>
-            </div>
+            <Pagination page={page} onPageChange={setPage} />
           </section>
         </main>
       </div>

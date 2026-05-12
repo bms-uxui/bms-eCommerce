@@ -1,24 +1,22 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import { Check, X } from "lucide-react";
 import Icon from "../components/landing/Icon";
+import Pagination from "../components/Pagination";
+import StatusBadge, { type StatusTone } from "../components/StatusBadge";
 import { AffiliateHeader, AffiliateSidebar } from "../components/AffiliateChrome";
 import DateRangePicker from "../components/DateRangePicker";
 import kasikornLogo from "../assets/payments/kasikorn.png";
 
-type TxStatus = { label: string; tone: "positive" | "critical" | "neutral" };
+type TxStatus = { label: string; tone: StatusTone };
 const STATUSES: TxStatus[] = [
-  { label: "กำลังดำเนินการ", tone: "neutral" },
-  { label: "ถอนเงินไม่สำเร็จ", tone: "critical" },
-  { label: "ถอนเงินสำเร็จ", tone: "positive" },
-  { label: "ถอนเงินสำเร็จ", tone: "positive" },
-  { label: "ถอนเงินสำเร็จ", tone: "positive" },
-  { label: "ถอนเงินสำเร็จ", tone: "positive" },
+  { label: "กำลังดำเนินการ", tone: "pending" },
+  { label: "ถอนเงินไม่สำเร็จ", tone: "danger" },
+  { label: "ถอนเงินสำเร็จ", tone: "success" },
+  { label: "ถอนเงินสำเร็จ", tone: "success" },
+  { label: "ถอนเงินสำเร็จ", tone: "success" },
+  { label: "ถอนเงินสำเร็จ", tone: "success" },
 ];
-const TONE_BADGE: Record<TxStatus["tone"], string> = {
-  positive: "bg-[#d6fc92] text-[#317a06]",
-  critical: "bg-[#feeaed] text-[#dd214f]",
-  neutral: "bg-[#fff3d6] text-[#b07908]",
-};
 
 const TXS = STATUSES.map((s, i) => ({
   id: i,
@@ -34,8 +32,9 @@ const ACCOUNTS = [
   { bank: "ธนาคารกสิกรไทย", logo: kasikornLogo, masked: "89* **** *88", primary: false },
 ];
 
-const TH = "px-3 py-3 text-[12px] font-medium text-[var(--color-neutral-500)] align-bottom whitespace-nowrap";
+const TH = "px-3 py-2.5 text-[12px] font-medium text-[var(--color-neutral-500)] align-bottom bg-[#EFF9FE]";
 const TD = "px-3 py-3.5 text-[13px] text-[var(--color-neutral-900)] align-middle";
+const TR_DATA = "border-b border-[var(--color-neutral-200)] last:border-b-0";
 
 const BALANCE = 6500;
 const baht2 = (n: number) =>
@@ -83,7 +82,7 @@ function WithdrawModal({ onClose }: { onClose: () => void }) {
         <div className="px-6 py-5 flex flex-col gap-5">
           {/* Account */}
           <div className="flex items-center gap-3">
-            <img src={kasikornLogo} alt="" className="w-9 h-9 rounded-md object-contain border border-[var(--color-neutral-200)] bg-white p-1 shrink-0" />
+            <img src={kasikornLogo} alt="" className="w-9 h-9 rounded-md object-cover border border-[var(--color-neutral-200)] shrink-0" />
             <span className="text-[14px] text-[var(--color-neutral-900)] flex-1">ธนาคารกสิกรไทย</span>
             <span className="text-[14px] text-[var(--color-neutral-700)]">96* **** *08</span>
             <button
@@ -188,8 +187,8 @@ function TxDetailModal({
     return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  const failed = tx.status.tone === "critical";
-  const pending = tx.status.tone === "neutral";
+  const failed = tx.status.tone === "danger";
+  const pending = tx.status.tone === "pending";
   const title = failed ? "ถอนเงินไม่สำเร็จ" : pending ? "กำลังดำเนินการถอน" : "ถอนเงินสำเร็จ";
   const subtitle = pending
     ? "คุณจะได้รับเงินภายใน 5 วันทำการ"
@@ -261,6 +260,7 @@ function TxDetailModal({
 }
 
 export default function WithdrawCommission() {
+  const navigate = useNavigate();
   const [page, setPage] = useState(2);
   const [withdrawOpen, setWithdrawOpen] = useState(false);
   const [detailTx, setDetailTx] = useState<(typeof TXS)[number] | null>(null);
@@ -282,20 +282,20 @@ export default function WithdrawCommission() {
           {/* Top cards */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Withdrawable */}
-            <section className="bg-white rounded-2xl border border-[var(--color-neutral-300)] p-5 flex flex-col gap-3">
+            <section className="bg-white rounded-2xl border border-[var(--color-neutral-300)] p-5 flex flex-col gap-3 justify-between h-full">
               <div className="flex items-center justify-between gap-2">
                 <p className="text-[14px] text-[var(--color-neutral-700)]">คอมมิชชันที่สามารถถอนได้</p>
                 <p className="text-[12px] text-[var(--color-neutral-500)]">อัปเดตข้อมูลล่าสุดวันที่ 27/04/2026</p>
               </div>
-              <div className="flex items-end justify-between gap-3">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-[18px] font-bold text-[var(--color-primary)]">฿</span>
+              <div className="flex items-end justify-between gap-4">
+                <div className="flex items-baseline gap-2 shrink-0">
+                  <span className="text-[34px] font-bold text-[var(--color-primary)] leading-none">฿</span>
                   <span className="text-[34px] font-bold text-[var(--color-primary)] leading-none">6,500</span>
                 </div>
                 <button
                   type="button"
                   onClick={() => setWithdrawOpen(true)}
-                  className="h-10 px-6 rounded-lg bg-[var(--color-positive-700,#317a06)] text-white text-[14px] font-medium hover:brightness-110 transition"
+                  className="w-[150px] h-10 rounded-lg bg-[#a5e840] text-[#1d212d] text-[14px] font-medium text-center hover:brightness-105 transition shrink-0"
                 >
                   ถอนเงิน
                 </button>
@@ -303,7 +303,13 @@ export default function WithdrawCommission() {
               <p className="text-[12px] text-[var(--color-neutral-500)] leading-relaxed">
                 คุณสามารถถอนได้ทุกเดือน และสามารถกำหนดการถอนอัตโนมัติเมื่อมีถึงขั้นต่ำที่ตั้งไว้
                 ระบบจะจ่ายถอนให้ในรอบ 1 ครั้งเท่านั้น{" "}
-                <button type="button" className="text-[var(--color-primary)] hover:underline">
+                <button
+                  type="button"
+                  onClick={() =>
+                    navigate("/affiliate/settings", { state: { tab: "บัญชีธนาคารและการชำระเงิน" } })
+                  }
+                  className="text-[var(--color-primary)] hover:underline"
+                >
                   ตั้งค่าการถอนเงินอัตโนมัติ
                 </button>
               </p>
@@ -313,28 +319,29 @@ export default function WithdrawCommission() {
             <section className="bg-white rounded-2xl border border-[var(--color-neutral-300)] p-5 flex flex-col gap-3">
               <div className="flex items-center justify-between gap-2">
                 <p className="text-[14px] font-medium text-[var(--color-neutral-900)]">บัญชีการถอนเงิน</p>
-                <button type="button" className="text-[13px] text-[var(--color-primary)] hover:underline">
+                <button
+                  type="button"
+                  onClick={() =>
+                    navigate("/affiliate/settings", { state: { tab: "บัญชีธนาคารและการชำระเงิน" } })
+                  }
+                  className="text-[13px] text-[var(--color-primary)] hover:underline"
+                >
                   จัดการบัญชี
                 </button>
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-1">
                 {ACCOUNTS.map((a, i) => (
-                  <div
-                    key={i}
-                    className="flex items-center gap-3 rounded-xl border border-[var(--color-neutral-200)] px-3 py-2.5"
-                  >
-                    <img src={a.logo} alt="" className="w-9 h-9 rounded-md object-contain shrink-0 border border-[var(--color-neutral-200)] bg-white p-1" />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[14px] text-[var(--color-neutral-900)] truncate">{a.bank}</span>
-                        {a.primary && (
-                          <span className="text-[11px] font-medium text-[var(--color-primary)] bg-[var(--color-primary-100)] px-2 py-0.5 rounded-full">
-                            ค่าเริ่มต้น
-                          </span>
-                        )}
-                      </div>
-                      <div className="text-[13px] text-[var(--color-neutral-600)]">{a.masked}</div>
+                  <div key={i} className="flex items-center gap-3 py-2.5">
+                    <img src={a.logo} alt="" className="w-9 h-9 rounded-md object-cover shrink-0 border border-[var(--color-neutral-200)]" />
+                    <div className="flex items-center gap-2 min-w-0 shrink-0">
+                      <span className="text-[14px] text-[var(--color-neutral-900)] truncate">{a.bank}</span>
+                      {a.primary && (
+                        <span className="text-[10px] text-white bg-[#0088ff] px-3 py-1 rounded shrink-0">
+                          ค่าเริ่มต้น
+                        </span>
+                      )}
                     </div>
+                    <span className="flex-1 text-right text-[14px] text-[var(--color-neutral-700)]">{a.masked}</span>
                   </div>
                 ))}
               </div>
@@ -349,7 +356,7 @@ export default function WithdrawCommission() {
                 <DateRangePicker />
                 <button
                   type="button"
-                  className="inline-flex items-center gap-2 h-10 px-4 rounded-lg bg-[var(--color-primary-100)] text-[var(--color-primary-700)] text-[14px] font-medium hover:brightness-95 transition"
+                  className="inline-flex items-center gap-2 h-10 px-4 rounded-lg bg-[var(--color-primary)] text-white text-[14px] font-medium hover:brightness-110 transition"
                 >
                   <Icon name="download" size={18} />
                   ดาวน์โหลด
@@ -357,21 +364,22 @@ export default function WithdrawCommission() {
               </div>
             </div>
 
-            <div className="overflow-x-auto rounded-xl border border-[var(--color-neutral-200)]">
+            <hr className="border-t border-[var(--color-neutral-200)]" />
+            <div className="overflow-x-auto">
               <table className="w-full min-w-[920px] border-collapse">
                 <thead>
-                  <tr className="bg-[#f1f6fc] text-left">
-                    <th className={TH}>ประเภท</th>
+                  <tr className="text-left">
+                    <th className={`${TH} rounded-l-lg`}>ประเภท</th>
                     <th className={TH}>วันที่-เวลา</th>
                     <th className={`${TH} text-right`}>ยอดเงิน</th>
                     <th className={TH}>หมายเลขอ้างอิง</th>
                     <th className={TH}>สถานะ</th>
-                    <th className={`${TH} text-right`}>การดำเนินการ</th>
+                    <th className={`${TH} text-right rounded-r-lg`}>การดำเนินการ</th>
                   </tr>
                 </thead>
                 <tbody>
                   {TXS.map((t) => (
-                    <tr key={t.id} className="border-t border-[var(--color-neutral-200)]">
+                    <tr key={t.id} className={TR_DATA}>
                       <td className={TD}>{t.type}</td>
                       <td className={`${TD} whitespace-nowrap`}>{t.date}</td>
                       <td className={`${TD} text-right whitespace-nowrap`}>
@@ -379,9 +387,7 @@ export default function WithdrawCommission() {
                       </td>
                       <td className={`${TD} whitespace-nowrap`}>{t.ref}</td>
                       <td className={TD}>
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[12px] font-medium ${TONE_BADGE[t.status.tone]}`}>
-                          {t.status.label}
-                        </span>
+                        <StatusBadge tone={t.status.tone}>{t.status.label}</StatusBadge>
                       </td>
                       <td className={`${TD} text-right`}>
                         <button
@@ -398,57 +404,7 @@ export default function WithdrawCommission() {
               </table>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-              <div className="flex items-center gap-3 text-[14px] text-[var(--color-neutral-600)]">
-                <span>10,488 รายการ</span>
-                <span className="flex items-center gap-1">
-                  แสดง
-                  <span className="inline-flex items-center gap-2 h-8 px-2.5 rounded-lg border border-[var(--color-neutral-300)] text-[var(--color-neutral-900)] font-medium">
-                    20
-                    <Icon name="chevron-down" size={14} className="text-[var(--color-neutral-600)]" />
-                  </span>
-                </span>
-              </div>
-              <div className="flex items-center gap-1">
-                <button
-                  type="button"
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className="min-w-8 h-8 px-2 rounded-lg text-[var(--color-neutral-700)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)] flex items-center justify-center"
-                >
-                  <Icon name="chevron-left" size={16} />
-                </button>
-                {[1, 2, 3, 4, 5].map((n) => (
-                  <button
-                    key={n}
-                    type="button"
-                    onClick={() => setPage(n)}
-                    className={[
-                      "min-w-8 h-8 px-2 rounded-lg text-[14px] flex items-center justify-center transition-colors",
-                      n === page
-                        ? "bg-[var(--color-primary)] text-white font-medium"
-                        : "text-[var(--color-neutral-700)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)]",
-                    ].join(" ")}
-                  >
-                    {n}
-                  </button>
-                ))}
-                <span className="px-1 text-[var(--color-neutral-500)]">…</span>
-                <button
-                  type="button"
-                  onClick={() => setPage(12)}
-                  className="min-w-8 h-8 px-2 rounded-lg text-[14px] text-[var(--color-neutral-700)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)] flex items-center justify-center"
-                >
-                  12
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPage((p) => p + 1)}
-                  className="min-w-8 h-8 px-2 rounded-lg text-[var(--color-neutral-700)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)] flex items-center justify-center"
-                >
-                  <Icon name="chevron-right" size={16} />
-                </button>
-              </div>
-            </div>
+            <Pagination page={page} onPageChange={setPage} />
           </section>
         </main>
       </div>

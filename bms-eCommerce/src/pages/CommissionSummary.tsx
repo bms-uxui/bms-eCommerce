@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Icon from "../components/landing/Icon";
+import Pagination from "../components/Pagination";
 import { AffiliateHeader, AffiliateSidebar } from "../components/AffiliateChrome";
 import DateRangePicker from "../components/DateRangePicker";
 import { ChangeBadge, type BadgeTone } from "./SellerOverview";
@@ -19,12 +20,12 @@ type PlatformStat = {
 };
 
 const PLATFORMS: PlatformStat[] = [
-  { name: "Facebook", logo: facebookLogo, value: "1,250", change: "12.5%", tone: "positive" },
-  { name: "Instagram", logo: instagramLogo, value: "2,456", change: "8.0%", tone: "positive" },
-  { name: "Youtube", logo: youtubeLogo, value: "790", change: "12.5%", tone: "critical" },
-  { name: "TikTok", logo: tiktokLogo, value: "5,908", change: "0.0%", tone: "neutral" },
-  { name: "X", logo: xLogo, value: "1,250", change: "12.5%", tone: "positive" },
-  { name: "ช่องทางอื่นๆ", value: "580", change: "0.0%", tone: "neutral" },
+  { name: "Facebook", logo: facebookLogo, value: "790", change: "12.5%", tone: "critical" },
+  { name: "Instagram", logo: instagramLogo, value: "1,250", change: "12.5%", tone: "critical" },
+  { name: "Youtube", logo: youtubeLogo, value: "2,456", change: "12.5%", tone: "positive" },
+  { name: "Tiktok", logo: tiktokLogo, value: "1,250", change: "12.5%", tone: "critical" },
+  { name: "X", logo: xLogo, value: "5,908", change: "0.0%", tone: "neutral" },
+  { name: "อื่นๆ", value: "580", change: "12.5%", tone: "positive" },
 ];
 
 const ROW_PLATFORMS = ["Facebook", "Instagram", "Facebook", "Youtube", "Facebook", "TikTok"];
@@ -49,29 +50,32 @@ const ROWS = makeProducts(SHOPS.length).map((p, i) => {
   };
 });
 
-const TH = "px-3 py-3 text-[12px] font-medium text-[var(--color-neutral-500)] align-bottom whitespace-nowrap";
+const TH = "px-3 py-2.5 text-[12px] font-medium text-[var(--color-neutral-500)] align-bottom bg-[#EFF9FE]";
 const TD = "px-3 py-3 text-[13px] text-[var(--color-neutral-900)] align-top";
 
 function PlatformTile({ stat }: { stat: PlatformStat }) {
   return (
-    <div className="bg-white border border-[var(--color-neutral-300)] rounded-2xl p-4 flex flex-col gap-3">
-      <div className="flex items-center gap-2">
-        {stat.logo ? (
-          <img src={stat.logo} alt="" className="w-7 h-7 rounded-full object-cover shrink-0" />
-        ) : (
-          <span className="w-7 h-7 rounded-full bg-[var(--color-neutral-200)] flex items-center justify-center shrink-0">
-            <Icon name="world" size={14} className="text-[var(--color-neutral-700)]" />
-          </span>
-        )}
-        <span className="text-[14px] text-[var(--color-neutral-900)] truncate">{stat.name}</span>
+    <div className="bg-white rounded-xl p-4 flex gap-4 items-start shadow-[0_2px_4px_rgba(29,33,45,0.08),0_0_2px_rgba(29,33,45,0.08),0_0_1px_rgba(29,33,45,0.2)]">
+      <div className="flex-1 min-w-0 flex flex-col gap-3">
+        <p className="text-[12px] text-[var(--color-neutral-500)] leading-snug">
+          ค่าคอมมิชชันจาก {stat.name}
+        </p>
+        <div className="flex items-end gap-2">
+          <span className="text-[24px] font-bold text-black leading-none">{stat.value}</span>
+          <span className="text-[16px] text-[var(--color-neutral-900)] leading-none">บาท</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <ChangeBadge value={stat.change} tone={stat.tone} />
+          <span className="text-[12px] text-[var(--color-neutral-500)]">เปลี่ยนแปลงจากวันก่อน</span>
+        </div>
       </div>
-      <div className="flex items-end justify-between gap-2">
-        <span className="text-[24px] font-semibold text-[var(--color-neutral-900)] leading-tight">
-          {stat.value}
-          <span className="text-[14px] font-normal text-[var(--color-neutral-600)]"> บาท</span>
+      {stat.logo ? (
+        <img src={stat.logo} alt="" className="w-9 h-9 rounded-lg object-cover shrink-0" />
+      ) : (
+        <span className="w-9 h-9 rounded-lg bg-[var(--color-neutral-200)] flex items-center justify-center shrink-0">
+          <Icon name="world" size={18} className="text-[var(--color-neutral-700)]" />
         </span>
-        <ChangeBadge value={stat.change} tone={stat.tone} />
-      </div>
+      )}
     </div>
   );
 }
@@ -102,29 +106,33 @@ export default function CommissionSummary() {
           </div>
 
           {/* Revenue + platform stats */}
-          <section
-            className="rounded-2xl border border-white p-4 sm:p-5 flex flex-col gap-4 shadow-[0_2px_2px_rgba(29,33,45,0.08),0_0_1px_rgba(29,33,45,0.08),0_0_2.5px_rgba(29,33,45,0.02)]"
-            style={{
-              background: "linear-gradient(117.48deg, #b5e1fe 9.83%, #f7fcfe 49.82%, #94ddff 105.71%)",
-            }}
-          >
+          <div className="flex flex-col gap-4">
             {/* Big total card */}
             <div
-              className="rounded-xl p-6 text-white flex flex-col gap-4 shadow-[0_2px_4px_rgba(29,33,45,0.08)]"
+              className="relative rounded-xl h-[189px] overflow-hidden shadow-[0_16px_32px_rgba(29,33,45,0.1),0_1px_4px_rgba(29,33,45,0.15),0_0_1px_rgba(29,33,45,0.2)]"
               style={{
-                background: "linear-gradient(108deg, #abe6ff 0%, #21bdff 14%, #0485f7 48%, #036ac6 88%)",
+                background: "linear-gradient(160deg, #5cc6ff 0%, #0a8df7 42%, #025094 100%)",
               }}
             >
-              <p className="text-[16px]">รายได้คอมมิชชันสะสม</p>
-              <div className="flex items-baseline gap-2">
-                <span className="text-[18px]">฿</span>
-                <span className="text-[36px] font-bold leading-none [text-shadow:0_1px_4px_rgba(0,0,0,0.15)]">
-                  10,586
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <ChangeBadge value="12.5%" tone="positive" size="lg" />
-                <span className="text-[16px] whitespace-nowrap">เปรียบเทียบจากช่วงก่อน</span>
+              <div
+                className="pointer-events-none absolute inset-0"
+                style={{
+                  background:
+                    "linear-gradient(115deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 22%), linear-gradient(245deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 22%)",
+                }}
+              />
+              <div className="relative h-full flex flex-col items-center justify-center gap-5 text-white text-center px-4">
+                <p className="text-[16px]">รายได้ทั้งหมดของคุณ</p>
+                <div className="flex items-baseline gap-3">
+                  <span className="text-[40px] leading-none">฿</span>
+                  <span className="text-[40px] font-bold leading-none [text-shadow:0_4px_8px_rgba(29,33,45,0.2)]">
+                    10,586
+                  </span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <ChangeBadge value="12.5%" tone="positive" size="lg" />
+                  <span className="text-[16px]">เปลี่ยนแปลงจากวันก่อน</span>
+                </div>
               </div>
             </div>
 
@@ -134,7 +142,7 @@ export default function CommissionSummary() {
                 <PlatformTile key={p.name} stat={p} />
               ))}
             </div>
-          </section>
+          </div>
 
           {/* History table */}
           <section className="bg-white rounded-2xl border border-[var(--color-neutral-300)] p-4 sm:p-5 flex flex-col gap-4">
@@ -144,28 +152,29 @@ export default function CommissionSummary() {
               </h2>
               <button
                 type="button"
-                className="inline-flex items-center gap-2 h-9 px-4 rounded-lg bg-[var(--color-primary-100)] text-[var(--color-primary-700)] text-[14px] font-medium hover:brightness-95 transition"
+                className="inline-flex items-center gap-2 h-9 px-4 rounded-lg bg-[var(--color-primary)] text-white text-[14px] font-medium hover:brightness-110 transition"
               >
                 <Icon name="download" size={18} />
                 ดาวน์โหลดรายงาน
               </button>
             </div>
 
-            <div className="overflow-x-auto rounded-xl border border-[var(--color-neutral-200)]">
+            <hr className="border-t border-[var(--color-neutral-200)]" />
+            <div className="overflow-x-auto">
               <table className="w-full min-w-[980px] border-collapse">
                 <thead>
-                  <tr className="bg-[#f1f6fc] text-left">
-                    <th className={TH}>เลขที่รายการ</th>
+                  <tr className="text-left">
+                    <th className={`${TH} rounded-l-lg`}>เลขที่รายการ</th>
                     <th className={TH}>แพลตฟอร์ม</th>
                     <th className={TH}>ข้อมูลร้านค้า</th>
                     <th className={TH}>ข้อมูลสินค้า</th>
-                    <th className={`${TH} text-right`}>มูลค่าค่าสั่งซื้อ (฿)</th>
-                    <th className={`${TH} text-right`}>ค่าคอมมิชชัน (฿)</th>
+                    <th className={`${TH} text-center`}>มูลค่าค่าสั่งซื้อ (฿)</th>
+                    <th className={`${TH} text-center rounded-r-lg`}>ค่าคอมมิชชัน (฿)</th>
                   </tr>
                 </thead>
                 <tbody>
                   {ROWS.map((r) => (
-                    <tr key={r.id} className="border-t border-[var(--color-neutral-200)]">
+                    <tr key={r.id} className="border-b border-[var(--color-neutral-200)] last:border-b-0">
                       <td className={TD}>
                         <div className="font-medium text-[var(--color-neutral-900)]">{r.no}</div>
                         <div className="text-[12px] text-[var(--color-neutral-500)] mt-0.5">{r.date}</div>
@@ -189,10 +198,10 @@ export default function CommissionSummary() {
                           </div>
                         </div>
                       </td>
-                      <td className={`${TD} text-right whitespace-nowrap`}>
+                      <td className={`${TD} text-center whitespace-nowrap`}>
                         {r.value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </td>
-                      <td className={`${TD} text-right whitespace-nowrap text-[var(--color-positive-700)] font-medium`}>
+                      <td className={`${TD} text-center whitespace-nowrap text-[var(--color-positive-700)] font-medium`}>
                         +{r.commission.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </td>
                     </tr>
@@ -201,57 +210,7 @@ export default function CommissionSummary() {
               </table>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-              <div className="flex items-center gap-3 text-[14px] text-[var(--color-neutral-600)]">
-                <span>10,488 รายการ</span>
-                <span className="flex items-center gap-1">
-                  แสดง
-                  <span className="inline-flex items-center gap-2 h-8 px-2.5 rounded-lg border border-[var(--color-neutral-300)] text-[var(--color-neutral-900)] font-medium">
-                    20
-                    <Icon name="chevron-down" size={14} className="text-[var(--color-neutral-600)]" />
-                  </span>
-                </span>
-              </div>
-              <div className="flex items-center gap-1">
-                <button
-                  type="button"
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className="min-w-8 h-8 px-2 rounded-lg text-[var(--color-neutral-700)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)] flex items-center justify-center"
-                >
-                  <Icon name="chevron-left" size={16} />
-                </button>
-                {[1, 2, 3, 4, 5].map((n) => (
-                  <button
-                    key={n}
-                    type="button"
-                    onClick={() => setPage(n)}
-                    className={[
-                      "min-w-8 h-8 px-2 rounded-lg text-[14px] flex items-center justify-center transition-colors",
-                      n === page
-                        ? "bg-[var(--color-primary)] text-white font-medium"
-                        : "text-[var(--color-neutral-700)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)]",
-                    ].join(" ")}
-                  >
-                    {n}
-                  </button>
-                ))}
-                <span className="px-1 text-[var(--color-neutral-500)]">…</span>
-                <button
-                  type="button"
-                  onClick={() => setPage(12)}
-                  className="min-w-8 h-8 px-2 rounded-lg text-[14px] text-[var(--color-neutral-700)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)] flex items-center justify-center"
-                >
-                  12
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPage((p) => p + 1)}
-                  className="min-w-8 h-8 px-2 rounded-lg text-[var(--color-neutral-700)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)] flex items-center justify-center"
-                >
-                  <Icon name="chevron-right" size={16} />
-                </button>
-              </div>
-            </div>
+            <Pagination page={page} onPageChange={setPage} />
           </section>
         </main>
       </div>

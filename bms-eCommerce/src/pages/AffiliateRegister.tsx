@@ -14,43 +14,25 @@ import {
   ModalBody,
   ModalFooter,
 } from "@heroui/react";
-import {
-  Plus,
-  Trash2,
-  Globe,
-  ChevronDown,
-  Check,
-} from "lucide-react";
+import { ChevronDown, Check } from "lucide-react";
 import LanguageSelect from "../components/LanguageSelect";
 import HelpSelect from "../components/HelpSelect";
 import NotificationBell from "../components/NotificationBell";
-import facebookLogo from "../assets/social/facebook.png";
-import tiktokLogo from "../assets/social/tiktok.png";
-import instagramLogo from "../assets/social/instagram.png";
-import xLogo from "../assets/social/x.png";
-import youtubeLogo from "../assets/social/youtube.png";
+import {
+  PlatformGrid,
+  ConnectedAccountsList,
+  SOCIAL_PLATFORMS,
+  type SocialPlatform,
+  type ConnectedSocialAccount,
+} from "../components/SocialPlatformPicker";
 import avatar from "../assets/avatar.jpg";
 
 const BG_GRADIENT =
   "linear-gradient(116.5deg, #b4e1ff 0%, #e9f8ff 24.9%, #f7fcfe 52.2%, #e9f8ff 74.9%, #55c9ff 109%)";
 
-type Platform = {
-  key: string;
-  label: string;
-  logo?: string;
-  bg?: string;
-};
-
-const PLATFORMS: Platform[] = [
-  { key: "facebook", label: "Facebook", logo: facebookLogo, bg: "bg-white" },
-  { key: "tiktok", label: "Tiktok", logo: tiktokLogo, bg: "bg-black" },
-  { key: "instagram", label: "Instagram", logo: instagramLogo, bg: "bg-white" },
-  { key: "x", label: "X", logo: xLogo, bg: "bg-black" },
-  { key: "youtube", label: "Youtube", logo: youtubeLogo, bg: "bg-white" },
-  { key: "other", label: "Other" },
-];
-
-type ConnectedAccount = { id: string; platform: Platform; name: string };
+type Platform = SocialPlatform;
+type ConnectedAccount = ConnectedSocialAccount;
+const PLATFORMS = SOCIAL_PLATFORMS;
 
 const PLATFORM_EXAMPLE: Record<string, string> = {
   facebook: "ตัวอย่าง: https://www.facebook.com/?locale=th_TH",
@@ -215,38 +197,6 @@ const inputClassNames = {
     "text-[16px] text-[var(--color-neutral-900)] placeholder:text-[var(--color-neutral-500)]",
 };
 
-function PlatformButton({
-  platform,
-  onAdd,
-}: {
-  platform: Platform;
-  onAdd: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onAdd}
-      className="bg-white border border-[var(--color-neutral-300)] rounded-xl h-[62px] px-4 flex items-center justify-between gap-2 hover:border-[var(--color-primary)] transition"
-    >
-      <span className="flex items-center gap-2">
-        <span
-          className={`w-9 h-9 rounded-xl overflow-hidden shrink-0 flex items-center justify-center ${platform.bg ?? "bg-[var(--color-neutral-200)]"}`}
-        >
-          {platform.logo ? (
-            <img src={platform.logo} alt="" className="w-9 h-9 object-cover" />
-          ) : (
-            <Globe size={20} className="text-[var(--color-neutral-700)]" />
-          )}
-        </span>
-        <span className="text-[16px] font-bold text-[#18181b]">
-          {platform.label}
-        </span>
-      </span>
-      <Plus size={24} className="text-[var(--color-neutral-700)]" />
-    </button>
-  );
-}
-
 function RegistrationForm({ onSubmit }: { onSubmit: () => void }) {
   const [accountType, setAccountType] = useState<"individual" | "company">(
     "individual"
@@ -326,56 +276,12 @@ function RegistrationForm({ onSubmit }: { onSubmit: () => void }) {
           </>
         }
       >
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {PLATFORMS.map((p) => (
-            <PlatformButton
-              key={p.key}
-              platform={p}
-              onAdd={() => setPendingPlatform(p)}
-            />
-          ))}
-        </div>
+        <PlatformGrid onAddPlatform={(p) => setPendingPlatform(p)} />
       </FormRow>
 
       {/* Connected accounts */}
       <FormRow label="บัญชีที่เชื่อมต่อแล้ว">
-        {connected.length === 0 ? (
-          <p className="text-[14px] text-[var(--color-neutral-500)] py-2">
-            ยังไม่ได้เชื่อมต่อบัญชี
-          </p>
-        ) : (
-          <div className="flex flex-col gap-4">
-            {connected.map((a) => (
-              <div
-                key={a.id}
-                className="bg-[var(--color-primary-100)] rounded-lg flex items-center justify-between px-3 py-2"
-              >
-                <span className="flex items-center gap-2">
-                  <span
-                    className={`w-9 h-9 rounded-xl overflow-hidden shrink-0 flex items-center justify-center ${a.platform.bg ?? "bg-[var(--color-neutral-200)]"}`}
-                  >
-                    {a.platform.logo ? (
-                      <img src={a.platform.logo} alt="" className="w-9 h-9 object-cover" />
-                    ) : (
-                      <Globe size={20} className="text-[var(--color-neutral-700)]" />
-                    )}
-                  </span>
-                  <span className="text-[16px] text-[var(--color-neutral-900)] leading-4">
-                    {a.name}
-                  </span>
-                </span>
-                <button
-                  type="button"
-                  onClick={() => removeAccount(a.id)}
-                  aria-label="ลบบัญชี"
-                  className="text-[var(--color-neutral-700)] hover:text-[var(--color-critical)] transition"
-                >
-                  <Trash2 size={22} />
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
+        <ConnectedAccountsList accounts={connected} onRemove={removeAccount} />
       </FormRow>
 
       <hr className="border-t border-[var(--color-neutral-200)] mx-4 sm:mx-12 lg:mx-24" />

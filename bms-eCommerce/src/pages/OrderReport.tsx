@@ -1,18 +1,20 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import Icon from "../components/landing/Icon";
+import Pagination from "../components/Pagination";
+import StatusBadge, { type StatusTone } from "../components/StatusBadge";
 import { AffiliateHeader, AffiliateSidebar } from "../components/AffiliateChrome";
 import DateRangePicker from "../components/DateRangePicker";
 import { makeProducts } from "../components/landing/mockData";
 
-type Status = { label: string; tone: "positive" | "critical" | "neutral" };
+type Status = { label: string; tone: StatusTone };
 const STATUSES: Status[] = [
-  { label: "ได้รับสินค้าแล้ว", tone: "positive" },
-  { label: "ได้รับสินค้าแล้ว", tone: "positive" },
-  { label: "ได้รับสินค้าแล้ว", tone: "positive" },
-  { label: "ยกเลิกออเดอร์", tone: "critical" },
-  { label: "กำลังจัดส่ง", tone: "neutral" },
-  { label: "ได้รับสินค้าแล้ว", tone: "positive" },
+  { label: "ได้รับสินค้าแล้ว", tone: "success" },
+  { label: "ได้รับสินค้าแล้ว", tone: "success" },
+  { label: "ได้รับสินค้าแล้ว", tone: "success" },
+  { label: "ยกเลิกออเดอร์", tone: "danger" },
+  { label: "กำลังจัดส่ง", tone: "info" },
+  { label: "ได้รับสินค้าแล้ว", tone: "success" },
 ];
 const SHOPS = ["ร้านเสื้อชิคเด็นิม By ชนิกา", "ร้านแฟชั่นพาราไดซ์ By อลิสา", "ร้านสไตล์มินิมอล By พิชญา", "ร้านของดีราคาถูก By ธนากร", "ร้านนาฬิกาแบรนด์ By ณัฐพล", "ร้านกระเป๋าหนังแท้ By ศศิธร"];
 const RATES = [2, 3, 1.5, 2.5, 1.8, 3];
@@ -32,15 +34,9 @@ const ROWS = makeProducts(SHOPS.length).map((p, i) => {
     image: p.image,
     rate,
     value,
-    commission: status.tone === "critical" ? 0 : Number((value * (rate / 100) + 5).toFixed(2)),
+    commission: status.tone === "danger" ? 0 : Number((value * (rate / 100) + 5).toFixed(2)),
   };
 });
-
-const TONE_BADGE: Record<Status["tone"], string> = {
-  positive: "bg-[#d6fc92] text-[#317a06]",
-  critical: "bg-[#feeaed] text-[#dd214f]",
-  neutral: "bg-[#e9f0f4] text-[#5d6c87]",
-};
 
 function FilterField({
   label,
@@ -78,7 +74,7 @@ function FakeSelect({ placeholder }: { placeholder: string }) {
   );
 }
 
-const TH = "px-3 py-3 text-[12px] font-medium text-[var(--color-neutral-500)] align-bottom whitespace-nowrap";
+const TH = "px-3 py-2.5 text-[12px] font-medium text-[var(--color-neutral-500)] align-bottom bg-[#EFF9FE]";
 const TD = "px-3 py-3 text-[13px] text-[var(--color-neutral-900)] align-top";
 
 export default function OrderReport() {
@@ -107,7 +103,7 @@ export default function OrderReport() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-3">
               <FilterField label="วันที่คำสั่งซื้อ">
-                <DateRangePicker className="!flex" />
+                <DateRangePicker className="!flex w-full" />
               </FilterField>
               <FilterField label="สถานะการคำสั่งซื้อ">
                 <FakeSelect placeholder="เลือกสถานะ" />
@@ -126,7 +122,7 @@ export default function OrderReport() {
               </FilterField>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center gap-3">
               <button
                 type="button"
                 className="h-10 px-8 rounded-lg bg-[var(--color-primary)] text-white text-[14px] font-medium hover:brightness-110 transition"
@@ -148,29 +144,30 @@ export default function OrderReport() {
               <h2 className="text-[18px] font-bold text-[var(--color-primary-700)]">แสดงผลแบบตาราง</h2>
               <button
                 type="button"
-                className="inline-flex items-center gap-2 h-9 px-4 rounded-lg bg-[var(--color-primary-100)] text-[var(--color-primary-700)] text-[14px] font-medium hover:brightness-95 transition"
+                className="inline-flex items-center gap-2 h-9 px-4 rounded-lg bg-[var(--color-primary)] text-white text-[14px] font-medium hover:brightness-110 transition"
               >
                 <Icon name="download" size={18} />
                 ดาวน์โหลดรายงาน
               </button>
             </div>
 
-            <div className="overflow-x-auto rounded-xl border border-[var(--color-neutral-200)]">
+            <hr className="border-t border-[var(--color-neutral-200)]" />
+            <div className="overflow-x-auto">
               <table className="w-full min-w-[1000px] border-collapse">
                 <thead>
-                  <tr className="bg-[#f1f6fc] text-left">
-                    <th className={TH}>หมายเลขคำสั่งซื้อ</th>
+                  <tr className="text-left">
+                    <th className={`${TH} rounded-l-lg`}>หมายเลขคำสั่งซื้อ</th>
                     <th className={TH}>สถานะการสั่งซื้อ</th>
                     <th className={TH}>ข้อมูลร้านค้า</th>
                     <th className={TH}>ข้อมูลสินค้า</th>
                     <th className={TH}>รายละเอียดคอมมิชชัน</th>
-                    <th className={`${TH} text-right`}>มูลค่าค่าสั่งซื้อ (฿)</th>
-                    <th className={`${TH} text-right`}>ค่าคอมมิชชัน (฿)</th>
+                    <th className={`${TH} text-center`}>มูลค่าค่าสั่งซื้อ (฿)</th>
+                    <th className={`${TH} text-center rounded-r-lg`}>ค่าคอมมิชชัน (฿)</th>
                   </tr>
                 </thead>
                 <tbody>
                   {ROWS.map((r) => (
-                    <tr key={r.id} className="border-t border-[var(--color-neutral-200)]">
+                    <tr key={r.id} className="border-b border-[var(--color-neutral-200)] last:border-b-0">
                       <td className={TD}>
                         <div className="font-medium text-[var(--color-neutral-900)]">{r.orderNo}</div>
                         <div className="text-[12px] text-[var(--color-neutral-500)] mt-0.5">
@@ -178,11 +175,7 @@ export default function OrderReport() {
                         </div>
                       </td>
                       <td className={TD}>
-                        <span
-                          className={`inline-flex items-center px-2 py-0.5 rounded-full text-[12px] font-medium ${TONE_BADGE[r.status.tone]}`}
-                        >
-                          {r.status.label}
-                        </span>
+                        <StatusBadge tone={r.status.tone}>{r.status.label}</StatusBadge>
                       </td>
                       <td className={TD}>
                         <div className="flex items-start gap-2 min-w-0">
@@ -203,10 +196,10 @@ export default function OrderReport() {
                         </div>
                       </td>
                       <td className={TD}>คอมมิชชันรับจากการซื้อ {r.rate}%</td>
-                      <td className={`${TD} text-right whitespace-nowrap`}>
+                      <td className={`${TD} text-center whitespace-nowrap`}>
                         {r.value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </td>
-                      <td className={`${TD} text-right whitespace-nowrap`}>
+                      <td className={`${TD} text-center whitespace-nowrap`}>
                         {r.commission.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </td>
                     </tr>
@@ -215,57 +208,7 @@ export default function OrderReport() {
               </table>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-              <div className="flex items-center gap-3 text-[14px] text-[var(--color-neutral-600)]">
-                <span>10,488 รายการ</span>
-                <span className="flex items-center gap-1">
-                  แสดง
-                  <span className="inline-flex items-center gap-2 h-8 px-2.5 rounded-lg border border-[var(--color-neutral-300)] text-[var(--color-neutral-900)] font-medium">
-                    20
-                    <Icon name="chevron-down" size={14} className="text-[var(--color-neutral-600)]" />
-                  </span>
-                </span>
-              </div>
-              <div className="flex items-center gap-1">
-                <button
-                  type="button"
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className="min-w-8 h-8 px-2 rounded-lg text-[var(--color-neutral-700)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)] flex items-center justify-center"
-                >
-                  <Icon name="chevron-left" size={16} />
-                </button>
-                {[1, 2, 3, 4, 5].map((n) => (
-                  <button
-                    key={n}
-                    type="button"
-                    onClick={() => setPage(n)}
-                    className={[
-                      "min-w-8 h-8 px-2 rounded-lg text-[14px] flex items-center justify-center transition-colors",
-                      n === page
-                        ? "bg-[var(--color-primary)] text-white font-medium"
-                        : "text-[var(--color-neutral-700)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)]",
-                    ].join(" ")}
-                  >
-                    {n}
-                  </button>
-                ))}
-                <span className="px-1 text-[var(--color-neutral-500)]">…</span>
-                <button
-                  type="button"
-                  onClick={() => setPage(12)}
-                  className="min-w-8 h-8 px-2 rounded-lg text-[14px] text-[var(--color-neutral-700)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)] flex items-center justify-center"
-                >
-                  12
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPage((p) => p + 1)}
-                  className="min-w-8 h-8 px-2 rounded-lg text-[var(--color-neutral-700)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)] flex items-center justify-center"
-                >
-                  <Icon name="chevron-right" size={16} />
-                </button>
-              </div>
-            </div>
+            <Pagination page={page} onPageChange={setPage} />
           </section>
         </main>
       </div>

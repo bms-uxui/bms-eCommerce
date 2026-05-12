@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Calendar as CalendarIcon } from "lucide-react";
 import Icon from "./landing/Icon";
 
 const WEEK_DAYS = ["อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"];
@@ -135,7 +136,7 @@ export default function DateRangePicker({
         aria-haspopup="dialog"
         aria-expanded={open}
         className={[
-          "flex items-center gap-2 h-10 px-3 rounded-lg border bg-white text-[14px] text-[var(--color-neutral-900)] transition-colors",
+          "flex w-full items-center justify-between gap-2 h-10 px-3 rounded-lg border bg-white text-[14px] text-[var(--color-neutral-900)] transition-colors",
           open
             ? "border-[var(--color-primary)]"
             : "border-[var(--color-neutral-300)] hover:border-[var(--color-primary-400)]",
@@ -144,7 +145,7 @@ export default function DateRangePicker({
         <span className="whitespace-nowrap">
           {fmt(start)} - {fmt(end)}
         </span>
-        <Icon name="calendar" size={18} className="text-[var(--color-primary)]" />
+        <CalendarIcon size={18} className="text-[var(--color-primary)]" />
       </button>
 
       {open && (

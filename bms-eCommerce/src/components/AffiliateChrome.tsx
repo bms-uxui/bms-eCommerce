@@ -4,7 +4,7 @@ import Icon from "./landing/Icon";
 import LanguageSelect from "./LanguageSelect";
 import NotificationBell from "./NotificationBell";
 import HelpSelect from "./HelpSelect";
-import SellerProfile from "./SellerProfile";
+import AffiliateProfile from "./AffiliateProfile";
 
 function BrightifyLogo({ size = 36 }: { size?: number }) {
   return (
@@ -47,7 +47,7 @@ export function AffiliateHeader() {
           </div>
           <span className="hidden md:block w-px h-[18.5px] bg-[var(--color-neutral-300)]" />
           <NotificationBell />
-          <SellerProfile />
+          <AffiliateProfile />
         </div>
       </div>
     </header>

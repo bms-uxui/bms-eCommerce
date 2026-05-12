@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import Icon from "../components/landing/Icon";
+import Pagination from "../components/Pagination";
 import { AffiliateHeader, AffiliateSidebar } from "../components/AffiliateChrome";
+import CommissionBulkBar from "../components/CommissionBulkBar";
 import { makeProducts } from "../components/landing/mockData";
 
 const OWNERS = ["อลิสา", "ชนิกา", "ณัฐพล", "พิชญา", "ธนากร", "ศศิธร", "วรินทร์", "กิตติพงษ์"];
@@ -29,7 +31,7 @@ function Breadcrumb() {
   );
 }
 
-const TH = "px-3 py-3 text-[12px] font-medium text-[var(--color-neutral-500)] align-bottom";
+const TH = "px-3 py-2.5 text-[12px] font-medium text-[var(--color-neutral-500)] align-bottom bg-[#EFF9FE]";
 const TD = "px-3 py-3 text-[14px] text-[var(--color-neutral-900)] align-middle";
 
 export default function ShopCommission() {
@@ -104,11 +106,12 @@ export default function ShopCommission() {
               </div>
             </div>
 
-            <div className="overflow-x-auto rounded-xl border border-[var(--color-neutral-200)]">
+            <hr className="border-t border-[var(--color-neutral-200)]" />
+            <div className="overflow-x-auto">
               <table className="w-full min-w-[760px] border-collapse">
                 <thead>
-                  <tr className="bg-[#f1f6fc] text-left">
-                    <th className={`${TH} w-10`}>
+                  <tr className="text-left">
+                    <th className={`${TH} rounded-l-lg w-10`}>
                       <input
                         type="checkbox"
                         checked={allOnPage}
@@ -119,12 +122,12 @@ export default function ShopCommission() {
                     <th className={TH}>ชื่อร้านค้า</th>
                     <th className={TH}>ระยะเวลาคอมมิชชัน</th>
                     <th className={TH}>อัตราคอมมิชชัน</th>
-                    <th className={`${TH} text-right`}>การดำเนินการ</th>
+                    <th className={`${TH} rounded-r-lg text-right`}>การดำเนินการ</th>
                   </tr>
                 </thead>
                 <tbody>
                   {rows.map((p) => (
-                    <tr key={p.id} className="border-t border-[var(--color-neutral-200)]">
+                    <tr key={p.id} className="border-b border-[var(--color-neutral-200)] last:border-b-0">
                       <td className={TD}>
                         <input
                           type="checkbox"
@@ -172,83 +175,11 @@ export default function ShopCommission() {
               </table>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-              <div className="flex items-center gap-3 text-[14px] text-[var(--color-neutral-600)]">
-                <span>10,488 รายการ</span>
-                <span className="flex items-center gap-1">
-                  แสดง
-                  <span className="inline-flex items-center gap-2 h-8 px-2.5 rounded-lg border border-[var(--color-neutral-300)] text-[var(--color-neutral-900)] font-medium">
-                    20
-                    <Icon name="chevron-down" size={14} className="text-[var(--color-neutral-600)]" />
-                  </span>
-                </span>
-              </div>
-              <div className="flex items-center gap-1">
-                <button
-                  type="button"
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className="min-w-8 h-8 px-2 rounded-lg text-[var(--color-neutral-700)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)] flex items-center justify-center"
-                >
-                  <Icon name="chevron-left" size={16} />
-                </button>
-                {[1, 2, 3, 4, 5].map((n) => (
-                  <button
-                    key={n}
-                    type="button"
-                    onClick={() => setPage(n)}
-                    className={[
-                      "min-w-8 h-8 px-2 rounded-lg text-[14px] flex items-center justify-center transition-colors",
-                      n === page
-                        ? "bg-[var(--color-primary)] text-white font-medium"
-                        : "text-[var(--color-neutral-700)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)]",
-                    ].join(" ")}
-                  >
-                    {n}
-                  </button>
-                ))}
-                <span className="px-1 text-[var(--color-neutral-500)]">…</span>
-                <button
-                  type="button"
-                  onClick={() => setPage(12)}
-                  className="min-w-8 h-8 px-2 rounded-lg text-[14px] text-[var(--color-neutral-700)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)] flex items-center justify-center"
-                >
-                  12
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPage((p) => p + 1)}
-                  className="min-w-8 h-8 px-2 rounded-lg text-[var(--color-neutral-700)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)] flex items-center justify-center"
-                >
-                  <Icon name="chevron-right" size={16} />
-                </button>
-              </div>
-            </div>
+            <Pagination page={page} onPageChange={setPage} />
           </section>
         </main>
       </div>
-
-      <div className="sticky bottom-0 z-20 bg-[var(--color-primary)] text-white">
-        <div className="flex items-center justify-between gap-4 px-4 sm:px-8 py-3 ml-0 lg:ml-[232px]">
-          <label className="flex items-center gap-2 text-[14px] cursor-pointer">
-            <input
-              type="checkbox"
-              checked={allOnPage}
-              onChange={toggleAll}
-              className="accent-white w-4 h-4"
-            />
-            เลือกสินค้าคอมมิชชันทั้งหมดในหน้านี้
-          </label>
-          <div className="flex items-center gap-4">
-            <span className="text-[14px]">{selectedCount}/100</span>
-            <button
-              type="button"
-              className="h-9 px-4 rounded-lg bg-white text-[var(--color-primary)] text-[14px] font-medium hover:bg-white/90 transition"
-            >
-              รับลิงก์แบบทันทีทั้งหมด
-            </button>
-          </div>
-        </div>
-      </div>
+      <CommissionBulkBar selectedCount={selectedCount} allChecked={allOnPage} onToggleAll={toggleAll} />
     </div>
   );
 }
