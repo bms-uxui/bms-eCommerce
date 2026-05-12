@@ -134,7 +134,7 @@ const SIDEBAR_ENTRIES: SidebarEntry[] = [
     ],
   },
   { kind: "leaf", icon: "wallet", label: "กระเป๋าเงิน", to: "/seller/wallet" },
-  { kind: "leaf", icon: "cog", label: "การตั้งค่าร้านค้า" },
+  { kind: "leaf", icon: "cog", label: "การตั้งค่าร้านค้า", to: "/seller/settings" },
 ];
 
 type BadgeVariant = "default" | "white" | "primary";
