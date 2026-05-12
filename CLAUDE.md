@@ -15,7 +15,9 @@ App code lives in [`bms-eCommerce/`](./bms-eCommerce/). React 19 + TS + Vite + `
 - `AddProductModal` — product picker (`catalog: CatalogProduct[]` → `onConfirm(QuoteProduct[])`); reuse for any "+ เพิ่มสินค้า" picker. `MARKETING_CATALOG` (exported from `CreatePromotionModal.tsx`) is a ready mock catalog.
 - `CopyButton` — copy + green-check swap + "คัดลอกแล้ว" tooltip. Use for any copy-to-clipboard icon.
 - `DatePickerField` — wraps HeroUI `DatePicker`. **Always use this for date fields — never `<input type="date">`.**
-- `SignaturePad` — drawable canvas (mouse/touch) + image upload, reports via `onChange`. Used by `SelectNameModal`, `OwnSignatureModal`.
+- `SignaturePad` — drawable canvas (mouse/touch, DPR-aware) + image upload; reports `SignatureResult` ( `{kind:"drawn",dataUrl}` | `{kind:"uploaded",filename}` ) via `onChange`. Used by `SelectNameModal`, `OwnSignatureModal`.
+- `SelectNameModal` ("เลือกรายชื่อ") — name picker with built-in "เพิ่มรายชื่อ" sub-view (embeds `SignaturePad`); exports `NAME_BOOK`, `type NameEntry`. `OwnSignatureModal` ("เซ็นด้วยตนเอง") — wraps `SignaturePad`, "บันทึก" disabled until signed.
+- Seller marketing/logistics modals (`components/landing/`): `CreatePromotionModal` (also exports `MARKETING_CATALOG`), `CreateDiscountModal`, `AddFlashSaleProductModal`, `FlashSaleTermsModal` (red-gradient terms popup), `AddWarehouseAddressModal`. All follow the modal recipe below; reuse `AddProductModal` for their "+ เพิ่มสินค้า" pickers and `DatePickerField` for date ranges.
 - `OrderCard`, `ProductCard` (variant/flashSale), `QuoteRequestModal`, `AddressModals`, `PaymentModals`, `AddSocialLinkModal`, `Header`, `Footer`, etc.
 - `Icon` (`components/landing/`) = Lineicons webfont (`lni lni-<name>`); some names don't render — prefer **lucide-react** for new icons.
 - Animations: keyframes live in `src/index.css` (`animate-dropdown`, `page-section-in`, `dock-bar-in`, `drawer-overlay-in`, `drawer-panel-in`, `step-row-in`, `drop-bounce`). Add new ones there.

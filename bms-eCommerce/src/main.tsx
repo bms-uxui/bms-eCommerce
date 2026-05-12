@@ -12,6 +12,19 @@ import SellerOverview from "./pages/SellerOverview.tsx";
 import SellerOrders from "./pages/SellerOrders.tsx";
 import SellerOrderDetail from "./pages/SellerOrderDetail.tsx";
 import SellerProducts from "./pages/SellerProducts.tsx";
+import SellerProductsManage from "./pages/SellerProductsManage.tsx";
+import SellerProductForm from "./pages/SellerProductForm.tsx";
+import SellerRefunds from "./pages/SellerRefunds.tsx";
+import SellerRefundDetail from "./pages/SellerRefundDetail.tsx";
+import SellerPromotions from "./pages/SellerPromotions.tsx";
+import SellerDiscounts from "./pages/SellerDiscounts.tsx";
+import SellerFlashSale from "./pages/SellerFlashSale.tsx";
+import SellerFlashSaleDetail from "./pages/SellerFlashSaleDetail.tsx";
+import SellerLogistics from "./pages/SellerLogistics.tsx";
+import SellerReviews from "./pages/SellerReviews.tsx";
+import SellerReviewDetail from "./pages/SellerReviewDetail.tsx";
+import SellerChat from "./pages/SellerChat.tsx";
+import SellerWallet from "./pages/SellerWallet.tsx";
 import SellerQuotes from "./pages/SellerQuotes.tsx";
 import SellerQuoteDetail from "./pages/SellerQuoteDetail.tsx";
 import AffiliateRegister from "./pages/AffiliateRegister.tsx";
@@ -29,6 +42,7 @@ import Notifications from "./pages/Notifications.tsx";
 import Coupons from "./pages/Coupons.tsx";
 import Favorites from "./pages/Favorites.tsx";
 import Playground from "./pages/Playground.tsx";
+import ChatFab from "./components/landing/ChatFab.tsx";
 import DocsIndex from "./pages/docs/DocsIndex.tsx";
 import DocEmbed from "./pages/docs/DocEmbed.tsx";
 import "./index.css";
@@ -106,6 +120,19 @@ createRoot(document.getElementById("root")!).render(
               <Route path="/seller/orders" element={<SellerOrders />} />
               <Route path="/seller/orders/detail" element={<SellerOrderDetail />} />
               <Route path="/seller/shop" element={<SellerProducts />} />
+              <Route path="/seller/products" element={<SellerProductsManage />} />
+              <Route path="/seller/products/new" element={<SellerProductForm />} />
+              <Route path="/seller/refunds" element={<SellerRefunds />} />
+              <Route path="/seller/refunds/:id" element={<SellerRefundDetail />} />
+              <Route path="/seller/promotions" element={<SellerPromotions />} />
+              <Route path="/seller/discounts" element={<SellerDiscounts />} />
+              <Route path="/seller/flashsale" element={<SellerFlashSale />} />
+              <Route path="/seller/flashsale/:id" element={<SellerFlashSaleDetail />} />
+              <Route path="/seller/logistics" element={<SellerLogistics />} />
+              <Route path="/seller/reviews" element={<SellerReviews />} />
+              <Route path="/seller/reviews/:id" element={<SellerReviewDetail />} />
+              <Route path="/seller/chat" element={<SellerChat />} />
+              <Route path="/seller/wallet" element={<SellerWallet />} />
               <Route path="/seller/quotes" element={<SellerQuotes />} />
               <Route path="/seller/quotes/:id" element={<SellerQuoteDetail />} />
               <Route path="/affiliate/register" element={<AffiliateRegister />} />
@@ -132,6 +159,7 @@ createRoot(document.getElementById("root")!).render(
                 />
               ))}
             </Routes>
+            <ChatFab />
           </RadixTheme>
         </ThemeProvider>
       </HeroUIProvider>
