@@ -65,7 +65,7 @@ import "@radix-ui/themes/styles.css";
 // MUI theme with Google Sans
 const muiTheme = createTheme({
   typography: {
-    fontFamily: '"Google Sans", "Google Sans Text", "Google Sans Display", "Noto Sans Thai", system-ui, sans-serif',
+    fontFamily: '"Google Sans", "Google Sans Text", "Google Sans Display", "Sarabun", "Noto Sans Thai", system-ui, sans-serif',
   },
   palette: {
     primary: { main: "#4285F4" },

@@ -123,7 +123,7 @@ export default function ChatPanel({ onClose }: { onClose: () => void }) {
   const addEmoji = (e: string) => { setDraft((d) => d + e); setEmojiOpen(false); inputRef.current?.focus(); };
 
   return (
-    <div className="fixed bottom-24 right-6 z-40 w-[384px] max-w-[calc(100vw-2rem)] h-[560px] max-h-[calc(100vh-8rem)] flex flex-col rounded-2xl bg-white shadow-[0_16px_48px_rgba(29,33,45,0.24),0_0_1px_rgba(29,33,45,0.2)] overflow-hidden drawer-panel-in">
+    <div className="fixed inset-0 z-[60] w-full h-full sm:inset-auto sm:bottom-24 sm:right-6 sm:w-[384px] sm:max-w-[calc(100vw-2rem)] sm:h-[560px] sm:max-h-[calc(100vh-8rem)] flex flex-col rounded-none sm:rounded-2xl bg-white shadow-[0_16px_48px_rgba(29,33,45,0.24),0_0_1px_rgba(29,33,45,0.2)] overflow-hidden drawer-panel-in">
       {/* Header */}
       <div className="flex items-center gap-2 px-4 h-14 shrink-0 bg-[var(--color-primary)] text-white">
         {active && <button type="button" onClick={() => setOpenId(null)} aria-label="ย้อนกลับ" className="w-7 h-7 -ml-1 flex items-center justify-center rounded-full hover:bg-white/15 transition"><ChevronLeft size={20} /></button>}
@@ -211,7 +211,7 @@ export default function ChatPanel({ onClose }: { onClose: () => void }) {
       )}
 
       {lightbox && (
-        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-6 drawer-overlay-in" onClick={() => setLightbox(null)}>
+        <div className="fixed inset-0 z-[70] bg-black/70 flex items-center justify-center p-6 drawer-overlay-in" onClick={() => setLightbox(null)}>
           <button type="button" aria-label="ปิด" className="absolute top-5 right-5 w-9 h-9 rounded-full bg-white/15 text-white flex items-center justify-center hover:bg-white/25 transition" onClick={() => setLightbox(null)}><X size={18} /></button>
           <img src={lightbox} alt="" onClick={(e) => e.stopPropagation()} className="max-w-[90vw] max-h-[85vh] rounded-lg object-contain shadow-2xl" />
         </div>

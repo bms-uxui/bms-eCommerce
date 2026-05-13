@@ -19,7 +19,7 @@ export default function ChatFab() {
         type="button"
         aria-label="แชท"
         onClick={() => setOpen((o) => !o)}
-        className="group fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-[var(--color-primary)] text-white shadow-[0_8px_24px_rgba(4,133,247,0.4)] flex items-center justify-center hover:bg-[var(--color-primary-600)] active:scale-95 transition-all"
+        className="group fixed bottom-6 right-6 z-[60] w-14 h-14 rounded-full bg-[var(--color-primary)] text-white shadow-[0_8px_24px_rgba(4,133,247,0.4)] flex items-center justify-center hover:bg-[var(--color-primary-600)] active:scale-95 transition-all"
       >
         {open ? <X size={26} /> : <MessageCircle size={26} />}
         {!open && UNREAD > 0 && (
