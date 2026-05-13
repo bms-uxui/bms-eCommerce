@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Icon from "../components/landing/Icon";
+import FlipNumber from "../components/landing/FlipNumber";
 import { SellerHeader, SellerSidebar } from "../components/SellerChrome";
 
 export type BadgeTone = "positive" | "critical" | "neutral";
@@ -57,9 +58,7 @@ function RevenueCard({
     >
       <p className="text-[18px] text-white leading-6">{title}</p>
       <div className="flex items-baseline gap-3 text-white">
-        <span className="text-[32px] font-bold leading-6 [text-shadow:0_16px_32px_rgba(29,33,45,0.1),0_1px_4px_rgba(29,33,45,0.15),0_0_1px_rgba(29,33,45,0.2)]">
-          {value}
-        </span>
+        <FlipNumber value={value} className="text-[32px] font-bold leading-none [text-shadow:0_16px_32px_rgba(29,33,45,0.1),0_1px_4px_rgba(29,33,45,0.15),0_0_1px_rgba(29,33,45,0.2)]" />
         <span className="text-[32px] leading-6">{unit}</span>
       </div>
       <div className="flex items-center gap-3">
@@ -86,10 +85,10 @@ function StatCard({
   period: string;
 }) {
   return (
-    <div className="bg-white rounded-xl px-4 py-3.5 flex flex-col gap-3 shadow-[0_2px_2px_rgba(29,33,45,0.08),0_0_1px_rgba(29,33,45,0.08),0_0_0.5px_rgba(29,33,45,0.2)]">
+    <div className="bg-white rounded-xl px-4 py-3.5 flex flex-col gap-3 justify-between shadow-[0_2px_2px_rgba(29,33,45,0.08),0_0_1px_rgba(29,33,45,0.08),0_0_0.5px_rgba(29,33,45,0.2)]">
       <p className="text-[12px] text-[var(--color-neutral-500)]">{title}</p>
       <div className="flex items-end gap-3">
-        <span className="text-[24px] font-bold text-black leading-6">{value}</span>
+        <FlipNumber value={value} className="text-[24px] font-bold text-black leading-none" />
         <span className="text-[16px] text-[var(--color-neutral-900)] leading-6">{unit}</span>
       </div>
       <div className="flex items-center gap-1">
@@ -489,7 +488,7 @@ export default function SellerOverview() {
                   gradient="linear-gradient(-87deg, #21bdff 0%, #0485f7 40%, #036ac6 100%)"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 grid-rows-2 gap-4 flex-1 min-h-0">
                 <StatCard
                   title="จำนวนคำสั่งซื้อ"
                   value="790"

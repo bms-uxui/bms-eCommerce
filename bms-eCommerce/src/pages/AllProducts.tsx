@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router";
-import { Checkbox } from "@heroui/react";
+import { Checkbox, Select, SelectItem, Tooltip } from "@heroui/react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -71,31 +71,80 @@ function CheckboxRow({
   );
 }
 
-function StarRow({
-  count,
-  checked,
+const filterSelectCN = {
+  trigger:
+    "h-10 min-h-10 bg-white border border-[var(--color-neutral-300)] data-[hover=true]:border-[var(--color-primary-400)] shadow-none rounded-lg",
+  value: "text-[14px] text-[var(--color-neutral-900)] data-[has-value=false]:text-[var(--color-neutral-500)]",
+};
+
+function FilterSelect({
+  items,
+  placeholder,
+  selected,
   onChange,
 }: {
-  count: number;
-  checked: boolean;
-  onChange: (v: boolean) => void;
+  items: string[];
+  placeholder: string;
+  selected: Record<string, boolean>;
+  onChange: (next: Record<string, boolean>) => void;
 }) {
+  const selectedKeys = items.filter((i) => selected[i]);
   return (
-    <Checkbox
-      size="sm"
-      isSelected={checked}
-      onValueChange={onChange}
-      classNames={checkboxClassNames}
+    <Select
+      aria-label={placeholder}
+      placeholder={placeholder}
+      selectionMode="multiple"
+      radius="sm"
+      classNames={filterSelectCN}
+      listboxProps={{
+        itemClasses: {
+          base: "data-[hover=true]:bg-[var(--color-primary-100)] data-[hover=true]:text-[var(--color-primary)] data-[focus=true]:bg-[var(--color-primary-100)] data-[focus=true]:text-[var(--color-primary)] data-[selectable=true]:focus:bg-[var(--color-primary-100)] data-[selectable=true]:focus:text-[var(--color-primary)] data-[selected=true]:text-[var(--color-primary)] data-[selected=true]:font-medium",
+          selectedIcon: "text-[var(--color-primary)]",
+        },
+      }}
+      selectedKeys={new Set(selectedKeys)}
+      onSelectionChange={(keys) => {
+        const set = keys === "all" ? new Set(items) : new Set(Array.from(keys as Set<React.Key>, String));
+        const next = { ...selected };
+        items.forEach((i) => { next[i] = set.has(i); });
+        onChange(next);
+      }}
     >
-      <span className="flex items-center gap-0.5 mr-1">
-        {Array.from({ length: count }).map((_, i) => (
-          <Star key={i} size={12} className="fill-[#FFB800] text-[#FFB800]" />
-        ))}
-      </span>
-      <span className="text-[14px] text-[var(--color-neutral-900)]">
-        {count} ดาว
-      </span>
-    </Checkbox>
+      {items.map((i) => (
+        <SelectItem key={i}>{i}</SelectItem>
+      ))}
+    </Select>
+  );
+}
+
+function StarRating({
+  value,
+  onChange,
+}: {
+  value: number;
+  onChange: (v: number) => void;
+}) {
+  const [hover, setHover] = useState(0);
+  const shown = hover || value;
+  return (
+    <div className="flex items-center justify-between w-full" onMouseLeave={() => setHover(0)}>
+      {[1, 2, 3, 4, 5].map((n) => (
+        <Tooltip key={n} content={`${n} ดาว`} placement="top" size="sm" closeDelay={0}>
+          <button
+            type="button"
+            aria-label={`${n} ดาว`}
+            onMouseEnter={() => setHover(n)}
+            onClick={() => onChange(value === n ? 0 : n)}
+            className="transition-transform hover:scale-110"
+          >
+            <Star
+              size={26}
+              className={n <= shown ? "fill-[#FFB800] text-[#FFB800]" : "fill-transparent text-[var(--color-neutral-300)]"}
+            />
+          </button>
+        </Tooltip>
+      ))}
+    </div>
   );
 }
 
@@ -111,7 +160,7 @@ function PriceInput({
   return (
     <div className="h-10 flex items-center gap-1 rounded-lg border border-[var(--color-neutral-300)] px-3 focus-within:border-[var(--color-primary)] focus-within:ring-2 focus-within:ring-[var(--color-primary)]/20 transition-colors">
       <input
-        value={value}
+        value={value ? Number(value).toLocaleString("en-US") : ""}
         onChange={(e) => onChange(e.target.value.replace(/\D/g, ""))}
         placeholder={placeholder}
         inputMode="numeric"
@@ -133,70 +182,67 @@ const FILTERS = {
 
 function FiltersSidebar() {
   const [checked, setChecked] = useState<Record<string, boolean>>({});
-  const [stars, setStars] = useState<Record<number, boolean>>({});
+  const [rating, setRating] = useState(0);
   const [priceMin, setPriceMin] = useState("");
   const [priceMax, setPriceMax] = useState("");
 
   const toggle = (key: string) => (v: boolean) =>
     setChecked((s) => ({ ...s, [key]: v }));
 
+  const hasActive =
+    Object.values(checked).some(Boolean) || rating > 0 || !!priceMin || !!priceMax;
+
+  const resetAll = () => {
+    setChecked({});
+    setRating(0);
+    setPriceMin("");
+    setPriceMax("");
+  };
+
   return (
-    <aside className="w-full lg:w-[216px] shrink-0 bg-white rounded-xl border border-[var(--color-neutral-300)] p-4 self-start">
-      <div className="flex items-center gap-2">
-        <ListFilter size={20} className="text-[var(--color-neutral-900)]" />
-        <h3 className="text-[20px] font-bold leading-6 text-[var(--color-neutral-900)]">
-          ตัวกรอง
-        </h3>
+    <aside className="w-full lg:w-[216px] shrink-0 bg-white rounded-xl border border-[var(--color-neutral-300)] p-4 self-start lg:sticky lg:top-[124px] lg:max-h-[calc(100vh-140px)] lg:overflow-y-auto scrollbar-none">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <ListFilter size={20} className="text-[var(--color-neutral-900)]" />
+          <h3 className="text-[20px] font-bold leading-6 text-[var(--color-neutral-900)]">
+            ตัวกรอง
+          </h3>
+        </div>
+        <button
+          type="button"
+          onClick={resetAll}
+          disabled={!hasActive}
+          className="text-[13px] font-medium text-[var(--color-primary)] hover:underline disabled:text-[var(--color-neutral-400)] disabled:no-underline disabled:cursor-default"
+        >
+          ล้างทั้งหมด
+        </button>
       </div>
 
-      <FilterSection title="บริการและโปรโมชัน">
-        {FILTERS.promo.map((l) => (
-          <CheckboxRow key={l} label={l} checked={!!checked[l]} onChange={toggle(l)} />
-        ))}
+      <FilterSection title="บริการและโปรโมชัน" pad={false}>
+        <FilterSelect items={FILTERS.promo} placeholder="เลือกบริการ/โปรโมชัน" selected={checked} onChange={setChecked} />
       </FilterSection>
 
-      <FilterSection title="พื้นที่การจัดส่ง">
-        {FILTERS.shipping.map((l) => (
-          <CheckboxRow key={l} label={l} checked={!!checked[l]} onChange={toggle(l)} />
-        ))}
+      <FilterSection title="พื้นที่การจัดส่ง" pad={false}>
+        <FilterSelect items={FILTERS.shipping} placeholder="เลือกพื้นที่จัดส่ง" selected={checked} onChange={setChecked} />
       </FilterSection>
 
-      <FilterSection title="ระดับดาว">
-        {[5, 4, 3, 2, 1].map((n) => (
-          <StarRow
-            key={n}
-            count={n}
-            checked={!!stars[n]}
-            onChange={(v) => setStars((s) => ({ ...s, [n]: v }))}
-          />
-        ))}
+      <FilterSection title="ระดับดาว" pad={false}>
+        <StarRating value={rating} onChange={setRating} />
       </FilterSection>
 
       <FilterSection title="ราคา" pad={false}>
         <div className="flex flex-col gap-3">
-          <PriceInput
-            value={priceMin}
-            onChange={setPriceMin}
-            placeholder="ราคาต่ำสุด"
-          />
-          <PriceInput
-            value={priceMax}
-            onChange={setPriceMax}
-            placeholder="ราคาสูงสุด"
-          />
+          <PriceInput value={priceMin} onChange={setPriceMin} placeholder="ราคาต่ำสุด" />
+          <PriceInput value={priceMax} onChange={setPriceMax} placeholder="ราคาสูงสุด" />
         </div>
       </FilterSection>
 
-      <FilterSection title="สภาพสินค้า">
-        {FILTERS.condition.map((l) => (
-          <CheckboxRow key={l} label={l} checked={!!checked[l]} onChange={toggle(l)} />
-        ))}
+      <FilterSection title="สภาพสินค้า" pad={false}>
+        <CheckboxRow label="สินค้ามือหนึ่ง" checked={!!checked["สินค้ามือหนึ่ง"]} onChange={toggle("สินค้ามือหนึ่ง")} />
       </FilterSection>
 
-      <FilterSection title="ช่องทางการชำระ">
-        {FILTERS.payment.map((l) => (
-          <CheckboxRow key={l} label={l} checked={!!checked[l]} onChange={toggle(l)} />
-        ))}
+      <FilterSection title="ช่องทางการชำระ" pad={false}>
+        <FilterSelect items={FILTERS.payment} placeholder="เลือกช่องทางชำระ" selected={checked} onChange={setChecked} />
       </FilterSection>
     </aside>
   );
