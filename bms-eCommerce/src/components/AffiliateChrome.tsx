@@ -1,10 +1,30 @@
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { useNavigate } from "react-router";
+import { Menu, X } from "lucide-react";
 import Icon from "./landing/Icon";
 import LanguageSelect from "./LanguageSelect";
 import NotificationBell from "./NotificationBell";
 import HelpSelect from "./HelpSelect";
 import AffiliateProfile from "./AffiliateProfile";
+
+/* ---- mobile sidebar drawer state (shared between header trigger and sidebar) ---- */
+let drawerOpen = false;
+const drawerListeners = new Set<() => void>();
+function setDrawerOpen(v: boolean) {
+  if (drawerOpen === v) return;
+  drawerOpen = v;
+  drawerListeners.forEach((l) => l());
+}
+function useDrawerOpen() {
+  return useSyncExternalStore(
+    (cb) => {
+      drawerListeners.add(cb);
+      return () => drawerListeners.delete(cb);
+    },
+    () => drawerOpen,
+    () => false,
+  );
+}
 
 function BrightifyLogo({ size = 36 }: { size?: number }) {
   return (
@@ -25,20 +45,30 @@ function BrightifyLogo({ size = 36 }: { size?: number }) {
 
 export function AffiliateHeader() {
   return (
-    <header className="sticky top-0 z-30 bg-white border-b border-[var(--color-neutral-300)] px-6 py-[18px]">
-      <div className="flex items-center justify-between gap-6 w-full">
-        <a href="/affiliate/overview" className="flex items-center gap-4 sm:gap-6 h-9 shrink-0">
-          <span className="flex items-center gap-2">
-            <BrightifyLogo size={36} />
-            <span className="text-[22px] sm:text-[24px] font-medium leading-none text-[var(--color-primary)]">
-              BRIGHTIFY
+    <header className="sticky top-0 z-30 bg-white border-b border-[var(--color-neutral-300)] px-4 sm:px-6 py-[18px]">
+      <div className="flex items-center justify-between gap-3 sm:gap-6 w-full">
+        <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+          <button
+            type="button"
+            aria-label="เปิดเมนู"
+            onClick={() => setDrawerOpen(true)}
+            className="lg:hidden w-9 h-9 -ml-1 shrink-0 flex items-center justify-center rounded-lg text-[var(--color-neutral-700)] hover:bg-[var(--color-neutral-100,#f5f8fa)]"
+          >
+            <Menu size={22} />
+          </button>
+          <a href="/affiliate/overview" className="flex items-center gap-4 sm:gap-6 h-9 min-w-0 shrink">
+            <span className="flex items-center gap-2 min-w-0">
+              <BrightifyLogo size={36} />
+              <span className="hidden min-[420px]:block text-[22px] sm:text-[24px] font-medium leading-none text-[var(--color-primary)] truncate">
+                BRIGHTIFY
+              </span>
             </span>
-          </span>
-          <span className="hidden sm:block w-px h-6 bg-[var(--color-neutral-300)]" />
-          <span className="hidden sm:block text-[20px] font-semibold leading-none text-[var(--color-neutral-900)]">
-            Affiliate
-          </span>
-        </a>
+            <span className="hidden sm:block w-px h-6 bg-[var(--color-neutral-300)]" />
+            <span className="hidden sm:block text-[20px] font-semibold leading-none text-[var(--color-neutral-900)]">
+              Affiliate
+            </span>
+          </a>
+        </div>
 
         <div className="flex items-center gap-3 sm:gap-6 shrink-0">
           <div className="hidden md:flex items-center gap-1">
@@ -191,6 +221,7 @@ function GroupRow({
 
 export function AffiliateSidebar({ active }: { active?: string }) {
   const navigate = useNavigate();
+  const drawerIsOpen = useDrawerOpen();
   const groupOfActive = SIDEBAR_ENTRIES.findIndex(
     (e) => e.kind === "group" && e.children.some((c) => c.label === active)
   );
@@ -199,11 +230,14 @@ export function AffiliateSidebar({ active }: { active?: string }) {
   );
 
   const go = (leaf: SidebarLeaf) => {
-    if (leaf.to) navigate(leaf.to);
+    if (leaf.to) {
+      navigate(leaf.to);
+      setDrawerOpen(false);
+    }
   };
 
-  return (
-    <aside className="w-[232px] shrink-0 bg-white border-r border-[var(--color-neutral-300)] sticky top-[72px] self-start h-[calc(100vh-72px)] overflow-y-auto scrollbar-none flex flex-col justify-between py-4">
+  const navContent = (
+    <>
       <nav className="px-4 flex flex-col gap-2">
         {SIDEBAR_ENTRIES.map((entry, i) => {
           if (entry.kind === "leaf") {
@@ -258,6 +292,42 @@ export function AffiliateSidebar({ active }: { active?: string }) {
           </button>
         </div>
       </div>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      {/* Desktop sidebar */}
+      <aside className="hidden lg:flex w-[232px] shrink-0 bg-white border-r border-[var(--color-neutral-300)] sticky top-[72px] self-start h-[calc(100vh-72px)] overflow-y-auto scrollbar-none flex-col justify-between py-4">
+        {navContent}
+      </aside>
+
+      {/* Mobile drawer */}
+      <div className={`lg:hidden fixed inset-0 z-40 ${drawerIsOpen ? "" : "pointer-events-none"}`}>
+        <div
+          onClick={() => setDrawerOpen(false)}
+          className={`absolute inset-0 bg-black/40 transition-opacity duration-200 ${drawerIsOpen ? "opacity-100" : "opacity-0"}`}
+        />
+        <aside
+          className={`absolute top-0 left-0 h-full w-[280px] max-w-[85vw] bg-white shadow-xl flex flex-col transition-transform duration-200 ${drawerIsOpen ? "translate-x-0" : "-translate-x-full"}`}
+        >
+          <div className="flex items-center justify-between px-4 h-[60px] shrink-0 border-b border-[var(--color-neutral-200)]">
+            <span className="flex items-center gap-2">
+              <BrightifyLogo size={28} />
+              <span className="text-[18px] font-medium text-[var(--color-primary)]">BRIGHTIFY</span>
+            </span>
+            <button
+              type="button"
+              aria-label="ปิดเมนู"
+              onClick={() => setDrawerOpen(false)}
+              className="w-8 h-8 flex items-center justify-center rounded-full bg-[var(--color-neutral-200)]"
+            >
+              <X size={14} strokeWidth={2.5} />
+            </button>
+          </div>
+          <div className="flex-1 overflow-y-auto scrollbar-none flex flex-col justify-between py-4">{navContent}</div>
+        </aside>
+      </div>
+    </>
   );
 }

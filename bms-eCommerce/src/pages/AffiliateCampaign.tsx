@@ -1,4 +1,3 @@
-import Icon from "../components/landing/Icon";
 import { AffiliateHeader, AffiliateSidebar } from "../components/AffiliateChrome";
 import DateRangePicker from "../components/DateRangePicker";
 import { makeProducts } from "../components/landing/mockData";
@@ -42,17 +41,16 @@ function CampaignCard({ campaign }: { campaign: (typeof CAMPAIGNS)[number] }) {
           {campaign.name}
         </p>
         <div className="text-[12px] text-[var(--color-neutral-600)] leading-relaxed">
-          <div>เริ่ม: {campaign.start}</div>
-          <div>สิ้นสุด: {campaign.end}</div>
+          <div className="flex"><span className="w-14 shrink-0">เริ่ม:</span><span>{campaign.start}</span></div>
+          <div className="flex"><span className="w-14 shrink-0">สิ้นสุด:</span><span>{campaign.end}</span></div>
         </div>
-        <p className="text-[12px] text-[var(--color-positive-700)] font-medium">
+        <p className="text-[12px] text-[#449C0A] font-medium">
           คอมมิชชัน สูงสุด {campaign.rate.toFixed(1)}%
         </p>
         <button
           type="button"
-          className="mt-1 h-8 rounded-lg bg-[var(--color-primary)] text-white text-[13px] font-medium inline-flex items-center justify-center gap-1 hover:brightness-110 transition"
+          className="mt-1 h-8 rounded-lg bg-[var(--color-primary)] text-white text-[13px] font-medium inline-flex items-center justify-center hover:brightness-110 transition"
         >
-          <Icon name="link" size={14} />
           เข้าร่วมแคมเปญ
         </button>
       </div>

@@ -312,7 +312,7 @@ function RegistrationForm({ onSubmit }: { onSubmit: () => void }) {
             inputMode="tel"
             radius="sm"
             classNames={inputClassNames}
-            className="w-[250px]"
+            className="w-full sm:w-[250px]"
           />
         </div>
       </FormRow>
@@ -328,7 +328,7 @@ function RegistrationForm({ onSubmit }: { onSubmit: () => void }) {
               type="email"
               radius="sm"
               classNames={inputClassNames}
-              className="w-[342px]"
+              className="w-full sm:w-[342px]"
             />
             <Button
               radius="sm"
@@ -351,7 +351,7 @@ function RegistrationForm({ onSubmit }: { onSubmit: () => void }) {
           inputMode="numeric"
           radius="sm"
           classNames={inputClassNames}
-          className="w-[342px]"
+          className="w-full sm:w-[342px]"
         />
       </FormRow>
 

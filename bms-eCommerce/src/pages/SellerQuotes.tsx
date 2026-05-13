@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { Ban, Check, Mail, Pencil, Phone, X } from "lucide-react";
+import { Ban, Mail, Pencil, Phone, X } from "lucide-react";
 import Icon from "../components/landing/Icon";
 import { SellerHeader, SellerSidebar } from "../components/SellerChrome";
+import CheckBox from "../components/CheckBox";
 
 type QuoteStatus =
   | "pending"
@@ -80,30 +81,6 @@ function StatusBadge({ status }: { status: QuoteStatus }) {
   );
 }
 
-function CheckBox({
-  checked,
-  onChange,
-}: {
-  checked: boolean;
-  onChange: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      role="checkbox"
-      aria-checked={checked}
-      onClick={onChange}
-      className={[
-        "w-4 h-4 rounded border flex items-center justify-center transition-colors",
-        checked
-          ? "bg-[var(--color-primary)] border-[var(--color-primary)] text-white"
-          : "bg-white border-[var(--color-neutral-300)] hover:border-[var(--color-primary)]",
-      ].join(" ")}
-    >
-      {checked && <Check size={12} strokeWidth={3} />}
-    </button>
-  );
-}
 
 // Steps 1-6 are the linear progression; step 7 (ยกเลิกคำขอ) is a terminal state
 // that "ดำเนินการต่อ" never advances into.

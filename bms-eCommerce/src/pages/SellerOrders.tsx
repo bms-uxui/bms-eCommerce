@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import Icon from "../components/landing/Icon";
 import { SellerHeader, SellerSidebar } from "../components/SellerChrome";
+import CheckBox from "../components/CheckBox";
 
 type StatusKey =
   | "pending"
@@ -49,32 +50,6 @@ const ORDERS: OrderRow[] = [
 ];
 
 const COLS = "grid-cols-[48px_1fr_1fr_1fr_1fr_1fr_1fr_1fr]";
-
-function CheckBox({ checked, onChange }: { checked: boolean; onChange: () => void }) {
-  return (
-    <button
-      type="button"
-      role="checkbox"
-      aria-checked={checked}
-      onClick={(e) => {
-        e.stopPropagation();
-        onChange();
-      }}
-      className={[
-        "w-4 h-4 rounded shrink-0 flex items-center justify-center transition-colors",
-        checked
-          ? "bg-[var(--color-primary)]"
-          : "bg-white border border-[var(--color-neutral-300)] hover:border-[var(--color-primary-400)]",
-      ].join(" ")}
-    >
-      {checked && (
-        <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden>
-          <path d="M2.5 6.2 4.8 8.5 9.5 3.5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      )}
-    </button>
-  );
-}
 
 const BULK_ACTIONS = [
   { id: "update", icon: "download", label: "อัปเดตคำสั่งซื้อ" },
