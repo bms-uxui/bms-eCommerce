@@ -275,9 +275,9 @@ function BankRow({
   trailing: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center gap-3 rounded-xl px-3 py-2.5">
+    <div className="flex flex-wrap items-center gap-3 rounded-xl px-3 py-2.5">
       <img src={logo} alt="" className="w-9 h-9 rounded-md object-cover shrink-0 border border-[var(--color-neutral-200)]" />
-      <div className="w-[240px] shrink-0 flex items-center gap-2 min-w-0">
+      <div className="w-full sm:w-[240px] sm:shrink-0 flex items-center gap-2 min-w-0">
         <span className="text-[14px] text-[var(--color-neutral-900)] truncate">{name}</span>
         {primary && (
           <span className="text-[10px] text-white bg-[#0088ff] px-3 py-1 rounded shrink-0">
@@ -375,7 +375,7 @@ function MyBankAccountsModal({ onClose, onAddNew }: { onClose: () => void; onAdd
         {BANK_ACCOUNTS.map((a) => (
           <label
             key={a.id}
-            className="flex items-center gap-3 py-3 border-b border-[var(--color-neutral-200)] last:border-b-0 cursor-pointer"
+            className="flex flex-wrap items-center gap-3 py-3 border-b border-[var(--color-neutral-200)] last:border-b-0 cursor-pointer"
           >
             <input
               type="radio"
@@ -385,7 +385,7 @@ function MyBankAccountsModal({ onClose, onAddNew }: { onClose: () => void; onAdd
               className="accent-[var(--color-primary)]"
             />
             <img src={a.logo} alt="" className="w-9 h-9 rounded-md object-cover shrink-0 border border-[var(--color-neutral-200)]" />
-            <div className="w-[240px] shrink-0 flex items-center gap-2 min-w-0">
+            <div className="w-full sm:w-[240px] sm:shrink-0 flex items-center gap-2 min-w-0">
               <span className="text-[14px] text-[var(--color-neutral-900)] truncate">{a.name}</span>
               {a.primary && (
                 <span className="text-[10px] text-white bg-[#0088ff] px-3 py-1 rounded shrink-0">
