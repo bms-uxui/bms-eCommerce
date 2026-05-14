@@ -12,6 +12,7 @@ import {
   ModalFooter,
 } from "@heroui/react";
 import { X } from "lucide-react";
+import { inputClassNames as inputCN } from "../inputStyles";
 
 const PROVINCES = ["กรุงเทพมหานคร", "นนทบุรี", "ปทุมธานี", "สมุทรปราการ", "เชียงใหม่"];
 const DISTRICTS = ["ราษฎร์บูรณะ", "บางกอกน้อย", "ดินแดง", "ห้วยขวาง", "บางพลัด"];
@@ -21,10 +22,6 @@ const POSTCODES = ["10140", "10160", "10170", "10310", "11000"];
 const selectCN = {
   trigger: "h-10 bg-white border border-[var(--color-neutral-300)] data-[hover=true]:border-[var(--color-primary-400)] shadow-none rounded-lg",
   value: "text-[14px] text-[var(--color-neutral-900)] data-[has-value=false]:text-[var(--color-neutral-500)]",
-};
-const inputCN = {
-  inputWrapper: "h-10 bg-white border border-[var(--color-neutral-300)] data-[hover=true]:border-[var(--color-primary-400)] group-data-[focus=true]:border-[var(--color-primary)] shadow-none",
-  input: "text-[14px] text-[var(--color-neutral-900)] placeholder:text-[var(--color-neutral-500)]",
 };
 
 export default function AddWarehouseAddressModal({

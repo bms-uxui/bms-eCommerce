@@ -1,12 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { Input, Button } from "@heroui/react";
+import { inputClassNames } from "../components/inputStyles";
 import Icon from "../components/landing/Icon";
 import LanguageSelect from "../components/LanguageSelect";
-import NotificationBell from "../components/NotificationBell";
 import HelpSelect from "../components/HelpSelect";
-import GuestProfile from "../components/GuestProfile";
-import SellerProfile from "../components/SellerProfile";
 
 function BrightifyLogo({ size = 36 }: { size?: number }) {
   return (
@@ -131,17 +129,20 @@ function OtpStep({
   const ss = String(seconds % 60).padStart(2, "0");
 
   return (
-    <div className="px-10 pb-10 flex flex-col items-center">
-      <div
-        className="login-item-in w-full flex flex-col items-center gap-6 pt-6"
-        style={{ animationDelay: "60ms" }}
-      >
-        <h1 className="text-[20px] font-bold text-[var(--color-neutral-900)] text-center">
-          ยืนยันรหัส OTP
-        </h1>
-        <span className="block w-full h-px bg-[var(--color-neutral-300)]" />
+    <>
+      <div className="px-10 pt-6">
+        <div
+          className="login-item-in w-full flex flex-col items-center"
+          style={{ animationDelay: "60ms" }}
+        >
+          <h1 className="text-[20px] font-bold text-[var(--color-neutral-900)] text-center">
+            ยืนยันรหัส OTP
+          </h1>
+        </div>
       </div>
+      <span className="mt-6 block w-full h-px bg-[var(--color-neutral-300)]" />
 
+      <div className="px-10 pb-10 flex flex-col items-center">
       <div
         className="login-item-in mt-8 flex flex-col items-center gap-3 text-center"
         style={{ animationDelay: "140ms" }}
@@ -223,6 +224,7 @@ function OtpStep({
         </Button>
       </div>
     </div>
+    </>
   );
 }
 
@@ -232,8 +234,6 @@ export default function SellerLogin() {
   const [phoneTouched, setPhoneTouched] = useState(false);
   const [step, setStep] = useState<"phone" | "otp">("phone");
   const phoneValid = /^0\d{9}$/.test(phone);
-  const sellerLoggedIn =
-    typeof window !== "undefined" && sessionStorage.getItem("sellerLoggedIn") === "1";
 
   return (
     <div
@@ -274,9 +274,6 @@ export default function SellerLogin() {
           <div className="flex items-center gap-4">
             <LanguageSelect />
             <HelpSelect />
-            <span className="w-px h-[18px] bg-[var(--color-neutral-300)]" />
-            <NotificationBell />
-            {sellerLoggedIn ? <SellerProfile /> : <GuestProfile compact to="/seller/login" />}
           </div>
         </div>
       </header>
@@ -297,20 +294,23 @@ export default function SellerLogin() {
               }}
             />
           ) : (
-          <div className="px-10 pt-0 flex flex-col items-center gap-10">
-            <div
-              className="login-item-in w-full flex flex-col items-center gap-6 pt-6"
-              style={{ animationDelay: "380ms" }}
-            >
-              <h1
-                id="seller-login-title"
-                className="text-[20px] font-bold text-[var(--color-neutral-900)] text-center leading-tight"
+          <>
+            <div className="px-10 pt-6">
+              <div
+                className="login-item-in w-full flex flex-col items-center"
+                style={{ animationDelay: "380ms" }}
               >
-                เข้าสู่ระบบ Seller
-              </h1>
-              <span className="block w-full h-px bg-[var(--color-neutral-300)]" />
+                <h1
+                  id="seller-login-title"
+                  className="text-[20px] font-bold text-[var(--color-neutral-900)] text-center leading-tight"
+                >
+                  เข้าสู่ระบบ Seller
+                </h1>
+              </div>
             </div>
+            <span className="mt-6 block w-full h-px bg-[var(--color-neutral-300)]" />
 
+            <div className="px-10 pt-8 pb-0 flex flex-col items-center gap-10">
             <form
               className="login-item-in w-full flex flex-col gap-8"
               style={{ animationDelay: "460ms" }}
@@ -335,12 +335,7 @@ export default function SellerLogin() {
                     : undefined
                 }
                 onBlur={() => setPhoneTouched(true)}
-                classNames={{
-                  inputWrapper:
-                    "h-10 bg-white border border-[var(--color-neutral-300)] data-[hover=true]:bg-white data-[hover=true]:border-[var(--color-primary-400)] group-data-[focus=true]:border-[var(--color-primary)] group-data-[focus=true]:ring-2 group-data-[focus=true]:ring-[var(--color-primary)]/20 group-data-[invalid=true]:border-[var(--color-critical)] shadow-none",
-                  input:
-                    "text-[16px] text-[var(--color-neutral-900)] placeholder:text-[var(--color-neutral-500)] tracking-wide",
-                }}
+                classNames={inputClassNames}
               />
 
               <Button
@@ -408,6 +403,7 @@ export default function SellerLogin() {
               </a>
             </p>
           </div>
+          </>
           )}
         </section>
       </main>

@@ -9,6 +9,7 @@ import {
   ModalFooter,
 } from "@heroui/react";
 import { Search, X } from "lucide-react";
+import { inputClassNames, inputClassNamesSm } from "../inputStyles";
 import SignaturePad from "./SignaturePad";
 
 export type NameEntry = { id: string; name: string; hasSignature: boolean };
@@ -72,12 +73,6 @@ export default function SelectNameModal({
     setQuery("");
   };
 
-  const inputClassNames = {
-    inputWrapper:
-      "h-10 bg-white border border-[var(--color-neutral-300)] data-[hover=true]:border-[var(--color-primary-400)] group-data-[focus=true]:border-[var(--color-primary)] shadow-none",
-    input:
-      "text-[14px] text-[var(--color-neutral-900)] placeholder:text-[var(--color-neutral-500)]",
-  };
 
   return (
     <Modal
@@ -112,12 +107,7 @@ export default function SelectNameModal({
                 placeholder="ค้นหา"
                 radius="sm"
                 endContent={<Search size={16} className="text-[var(--color-neutral-700)]" />}
-                classNames={{
-                  inputWrapper:
-                    "h-9 bg-white border border-[var(--color-neutral-300)] data-[hover=true]:border-[var(--color-primary-400)] group-data-[focus=true]:border-[var(--color-primary)] shadow-none",
-                  input:
-                    "text-[14px] text-[var(--color-neutral-900)] placeholder:text-[var(--color-neutral-800)]",
-                }}
+                classNames={inputClassNamesSm}
               />
             </ModalBody>
 

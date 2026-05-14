@@ -15,11 +15,7 @@ import AddProductModal from "./AddProductModal";
 import DatePickerField from "./DatePickerField";
 import { MARKETING_CATALOG } from "./CreatePromotionModal";
 import type { QuoteProduct } from "./QuoteRequestModal";
-
-const inputCN = {
-  inputWrapper: "h-10 bg-white border border-[var(--color-neutral-300)] data-[hover=true]:border-[var(--color-primary-400)] group-data-[focus=true]:border-[var(--color-primary)] shadow-none",
-  input: "text-[14px] text-[var(--color-neutral-900)] placeholder:text-[var(--color-neutral-500)]",
-};
+import { inputClassNames as inputCN } from "../inputStyles";
 const selectCN = {
   trigger: "h-10 bg-white border border-[var(--color-neutral-300)] data-[hover=true]:border-[var(--color-primary-400)] shadow-none rounded-lg",
   value: "text-[14px] text-[var(--color-neutral-900)] data-[has-value=false]:text-[var(--color-neutral-500)]",

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import { Switch, Tooltip } from "@heroui/react";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import Icon from "../components/landing/Icon";
+import SearchIcon from "../components/SearchIcon";
 import { SellerHeader, SellerSidebar } from "../components/SellerChrome";
 import paracetamol from "../assets/products/p02-paracetamol.jpg";
 
@@ -75,7 +76,7 @@ export default function SellerProductsManage() {
                   className="h-10 w-[360px] bg-white border border-[var(--color-neutral-300)] rounded-l-lg px-4 text-[16px] text-[var(--color-neutral-900)] placeholder:text-[var(--color-neutral-500)] focus:outline-none focus:border-[var(--color-primary)]"
                 />
                 <button type="button" aria-label="ค้นหา" className="h-10 px-4 flex items-center justify-center rounded-r-lg bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-600)] transition-colors">
-                  <Icon name="search" size={20} />
+                  <SearchIcon size={20} />
                 </button>
               </div>
               <button

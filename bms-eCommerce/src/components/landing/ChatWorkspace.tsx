@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Star, Image as ImageIcon, Store, Send, Smile, X } from "lucide-react";
 import EmojiPicker, { EmojiStyle, Theme } from "emoji-picker-react";
 import Icon from "./Icon";
+import SearchIcon from "../SearchIcon";
 
 export type ChatProductRef = { img: string; name: string; price: number; oldPrice?: number; rating: number; sold: string };
 
@@ -125,7 +126,7 @@ export default function ChatWorkspace({
           <div className="p-3 border-b border-[var(--color-neutral-200)]">
             <div className="flex items-center">
               <input value={query} onChange={(e) => setQuery(e.target.value)} type="text" placeholder="ค้นหา" className="h-9 flex-1 min-w-0 bg-white border border-[var(--color-neutral-300)] rounded-l-lg px-3 text-[14px] text-[var(--color-neutral-900)] placeholder:text-[var(--color-neutral-500)] focus:outline-none focus:border-[var(--color-primary)]" />
-              <button type="button" aria-label="ค้นหา" className="h-9 px-3 flex items-center justify-center rounded-r-lg bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-600)] transition-colors"><Icon name="search" size={16} /></button>
+              <button type="button" aria-label="ค้นหา" className="h-9 px-3 flex items-center justify-center rounded-r-lg bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-600)] transition-colors"><SearchIcon size={16} /></button>
             </div>
           </div>
           <div className="flex-1 overflow-y-auto">

@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import Icon from "./landing/Icon";
+import CartIcon from "./CartIcon";
+import QuoteIcon from "./QuoteIcon";
+import avatar from "../assets/avatar.jpg";
 
 const SELLER_MENU = [
-  { icon: "user", label: "บัญชีของฉัน" },
-  { icon: "cart", label: "คำสั่งซื้อ" },
-  { icon: "files", label: "ใบเสนอราคา" },
-  { icon: "delivery", label: "โลจิสติกส์" },
-  { icon: "wallet", label: "กระเป๋าเงิน" },
-  { icon: "cog", label: "การตั้งค่าร้านค้า" },
+  { icon: "cart", label: "คำสั่งซื้อ", to: "/seller/orders" },
+  { icon: "files", label: "ใบเสนอราคา", to: "/seller/quotes" },
+  { icon: "delivery", label: "โลจิสติกส์", to: "/seller/logistics" },
+  { icon: "wallet", label: "กระเป๋าเงิน", to: "/seller/wallet" },
+  { icon: "cog", label: "การตั้งค่าร้านค้า", to: "/seller/settings" },
 ] as const;
 
 export default function SellerProfile() {
@@ -53,9 +55,7 @@ export default function SellerProfile() {
           open ? "bg-[var(--color-primary-100)]" : "hover:bg-[var(--color-primary)]/5",
         ].join(" ")}
       >
-        <span className="w-9 h-9 rounded-full bg-[var(--color-neutral-200)] flex items-center justify-center text-[var(--color-neutral-600)] overflow-hidden">
-          <Icon name="user" size={20} />
-        </span>
+        <img src={avatar} alt="Profile" className="w-9 h-9 rounded-full object-cover" />
         <Icon
           name="chevron-down"
           size={20}
@@ -79,9 +79,7 @@ export default function SellerProfile() {
             }}
           >
             <div className="relative shrink-0 w-[50px] h-[50px]">
-              <span className="block w-[50px] h-[50px] rounded-full bg-[var(--color-neutral-200)] overflow-hidden flex items-center justify-center text-[var(--color-neutral-600)] shadow-[0_2px_2px_rgba(29,33,45,0.08),0_0_1px_rgba(29,33,45,0.08),0_0_0.5px_rgba(29,33,45,0.2)]">
-                <Icon name="user" size={28} />
-              </span>
+              <img src={avatar} alt="Profile" className="block w-[50px] h-[50px] rounded-full object-cover shadow-[0_2px_2px_rgba(29,33,45,0.08),0_0_1px_rgba(29,33,45,0.08),0_0_0.5px_rgba(29,33,45,0.2)]" />
               <span className="absolute bottom-0 right-0 bg-white rounded-full p-[3px] flex items-center justify-center">
                 <Icon name="camera" size={10} className="text-[var(--color-neutral-700)]" />
               </span>
@@ -108,7 +106,7 @@ export default function SellerProfile() {
                   onClick={() => {
                     setActive(i);
                     setOpen(false);
-                    navigate("/seller/overview");
+                    navigate(item.to);
                   }}
                   className={[
                     "w-full flex items-center gap-2 px-2 py-1 rounded text-left text-[14px] leading-6 tracking-[-0.006em] transition-colors",
@@ -117,7 +115,7 @@ export default function SellerProfile() {
                       : "text-[var(--color-neutral-900)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)]",
                   ].join(" ")}
                 >
-                  <Icon name={item.icon} size={16} />
+                  {item.icon === "cart" ? <CartIcon size={16} /> : item.icon === "files" ? <QuoteIcon size={16} /> : <Icon name={item.icon} size={16} />}
                   <span className="flex-1">{item.label}</span>
                   <Icon name="chevron-right" size={16} className="opacity-60" />
                 </button>

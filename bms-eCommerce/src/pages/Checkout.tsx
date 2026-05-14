@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router";
 import { Input } from "@heroui/react";
 import { ChevronRight, Truck, Ticket } from "lucide-react";
 import paracetamol from "../assets/products/p02-paracetamol.jpg";
-import avatar from "../assets/avatar.jpg";
 import brigtifyLogo from "../assets/checkout/brigtify-logo.svg";
 import bmsMemberLogo from "../assets/checkout/bms-member.png";
 import promptpayIcon from "../assets/checkout/promptpay-icon.png";
@@ -15,6 +14,9 @@ import cardArt from "../assets/checkout/card-art.png";
 import codIcon from "../assets/checkout/cod-icon.png";
 import codArt from "../assets/checkout/cod-art.png";
 import CartItemRow from "../components/landing/CartItemRow";
+import { ProfileMenu } from "../components/landing/Header";
+import LanguageSelect from "../components/LanguageSelect";
+import HelpSelect from "../components/HelpSelect";
 import {
   AddCardModal,
   AddBankModal,
@@ -63,16 +65,10 @@ function SlimHeader() {
           การชำระเงิน
         </h1>
         <div className="ml-auto flex items-center gap-4">
-          <button className="flex items-center gap-1 text-[14px] text-[var(--color-neutral-900)] hover:text-[var(--color-primary)] transition-colors">
-            <span>🌐</span>
-            <span>ภาษาไทย</span>
-          </button>
+          <LanguageSelect />
           <span className="hidden sm:block w-px h-5 bg-[var(--color-neutral-300)]" />
-          <button className="hidden sm:flex items-center gap-1 text-[14px] text-[var(--color-neutral-900)] hover:text-[var(--color-primary)] transition-colors">
-            <span>?</span>
-            <span>ช่วยเหลือ</span>
-          </button>
-          <img src={avatar} alt="" className="w-9 h-9 rounded-full object-cover" />
+          <HelpSelect className="hidden sm:flex" />
+          <ProfileMenu />
         </div>
       </div>
     </header>

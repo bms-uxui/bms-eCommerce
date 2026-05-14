@@ -3,27 +3,48 @@ import { createPortal } from "react-dom";
 import { Link, useNavigate } from "react-router";
 import { Input } from "@heroui/react";
 import Icon from "./Icon";
+import CartIcon from "../CartIcon";
+import BellIcon from "../BellIcon";
+import HeartIcon from "../HeartIcon";
+import QuoteIcon from "../QuoteIcon";
+import OrderIcon from "../OrderIcon";
+import UserIcon from "../UserIcon";
+import SearchIcon from "../SearchIcon";
+import HelpSelect from "../HelpSelect";
 import GuestProfile from "../GuestProfile";
 import paracetamol from "../../assets/products/p02-paracetamol.jpg";
 import avatar from "../../assets/avatar.jpg";
 
 function StorefrontIcon({ size = 16 }: { size?: number }) {
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      style={{ flexShrink: 0 }}
-    >
-      <path d="M3 9l1.5-5h15L21 9" />
-      <path d="M3 9v0a3 3 0 0 0 6 0v0a3 3 0 0 0 6 0v0a3 3 0 0 0 6 0" />
-      <path d="M4 9.5V20h16V9.5" />
-      <path d="M10 20v-5h4v5" />
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
+      <g clipPath="url(#store-clip)">
+        <path d="M1.33203 4.66659L4.27203 1.72659C4.39607 1.60181 4.54358 1.50281 4.70605 1.4353C4.86853 1.3678 5.04276 1.33311 5.2187 1.33325H10.7787C10.9546 1.33311 11.1289 1.3678 11.2913 1.4353C11.4538 1.50281 11.6013 1.60181 11.7254 1.72659L14.6654 4.66659" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M2.66797 8V13.3333C2.66797 13.687 2.80844 14.0261 3.05849 14.2761C3.30854 14.5262 3.64768 14.6667 4.0013 14.6667H12.0013C12.3549 14.6667 12.6941 14.5262 12.9441 14.2761C13.1942 14.0261 13.3346 13.687 13.3346 13.3333V8" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M10 14.6667V12.0001C10 11.6465 9.85952 11.3073 9.60948 11.0573C9.35943 10.8072 9.02029 10.6667 8.66667 10.6667H7.33333C6.97971 10.6667 6.64057 10.8072 6.39052 11.0573C6.14048 11.3073 6 11.6465 6 12.0001V14.6667" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M1.33203 4.66675H14.6654" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M14.6654 4.66675V6.66675C14.6654 7.02037 14.5249 7.35951 14.2748 7.60956C14.0248 7.85961 13.6857 8.00008 13.332 8.00008C12.9425 7.97864 12.5705 7.83124 12.272 7.58008C12.1925 7.5226 12.0968 7.49166 11.9987 7.49166C11.9006 7.49166 11.8049 7.5226 11.7254 7.58008C11.4269 7.83124 11.0549 7.97864 10.6654 8.00008C10.2759 7.97864 9.90385 7.83124 9.60536 7.58008C9.52582 7.5226 9.43017 7.49166 9.33203 7.49166C9.23389 7.49166 9.13824 7.5226 9.0587 7.58008C8.76021 7.83124 8.38821 7.97864 7.9987 8.00008C7.60919 7.97864 7.23718 7.83124 6.9387 7.58008C6.85915 7.5226 6.76351 7.49166 6.66536 7.49166C6.56722 7.49166 6.47158 7.5226 6.39203 7.58008C6.09354 7.83124 5.72154 7.97864 5.33203 8.00008C4.94252 7.97864 4.57052 7.83124 4.27203 7.58008C4.19248 7.5226 4.09684 7.49166 3.9987 7.49166C3.90056 7.49166 3.80491 7.5226 3.72536 7.58008C3.42688 7.83124 3.05487 7.97864 2.66536 8.00008C2.31174 8.00008 1.9726 7.85961 1.72256 7.60956C1.47251 7.35951 1.33203 7.02037 1.33203 6.66675V4.66675" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+      </g>
+      <defs><clipPath id="store-clip"><rect width="16" height="16" fill="white"/></clipPath></defs>
+    </svg>
+  );
+}
+
+function CoinIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
+      <g clipPath="url(#coin-clip)">
+        <path d="M6.33203 4.99992H9.16536C9.99379 4.99992 10.6654 5.67149 10.6654 6.49992C10.6654 7.32835 9.99379 7.99992 9.16536 7.99992H6.33203H9.4987C10.3271 7.99992 10.9987 8.67149 10.9987 9.49992C10.9987 10.3283 10.3271 10.9999 9.4987 10.9999H6.33203M6.33203 4.99992H5.33203M6.33203 4.99992V10.9999M6.33203 10.9999H5.33203M6.66536 3.99992V4.99992M6.66536 10.9999V11.9999M8.66536 3.99992V4.99992M8.66536 10.9999V11.9999M14.6654 7.99992C14.6654 11.6818 11.6806 14.6666 7.9987 14.6666C4.3168 14.6666 1.33203 11.6818 1.33203 7.99992C1.33203 4.31802 4.3168 1.33325 7.9987 1.33325C11.6806 1.33325 14.6654 4.31802 14.6654 7.99992Z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+      </g>
+      <defs><clipPath id="coin-clip"><rect width="16" height="16" fill="white"/></clipPath></defs>
+    </svg>
+  );
+}
+
+function UserCheckIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
+      <path d="M10.6654 12L11.9987 13.3333L14.6654 10.6667M7.9987 10H5.33203C4.08952 10 3.46826 10 2.97821 10.203C2.3248 10.4736 1.80567 10.9928 1.53502 11.6462C1.33203 12.1362 1.33203 12.7575 1.33203 14M10.332 2.19384C11.3093 2.58943 11.9987 3.54754 11.9987 4.66667C11.9987 5.78579 11.3093 6.7439 10.332 7.13949M8.9987 4.66667C8.9987 6.13943 7.80479 7.33333 6.33203 7.33333C4.85927 7.33333 3.66536 6.13943 3.66536 4.66667C3.66536 3.19391 4.85927 2 6.33203 2C7.80479 2 8.9987 3.19391 8.9987 4.66667Z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   );
 }
@@ -200,114 +221,6 @@ function LanguageSwitcher() {
   );
 }
 
-const HELP_ITEMS = [
-  { icon: "book", label: "คู่มือการใช้งาน" },
-  { icon: "comments", label: "แชทกับเจ้าหน้าที่" },
-  { icon: "phone-set", label: "โทร 02-427-9991" },
-  { icon: "question-circle", label: "คำถามที่พบบ่อย FAQ" },
-] as const;
-
-function HelpSwitcher() {
-  const [open, setOpen] = useState(false);
-  const [active, setActive] = useState<number | null>(null);
-  const [pos, setPos] = useState({ top: 0, right: 0 });
-  const ref = useRef<HTMLDivElement>(null);
-  const panelRef = useRef<HTMLDivElement>(null);
-
-  useLayoutEffect(() => {
-    if (!open || !ref.current) return;
-    const update = () => {
-      const r = ref.current!.getBoundingClientRect();
-      setPos({ top: r.bottom + 8, right: window.innerWidth - r.right });
-    };
-    update();
-    window.addEventListener("scroll", update, true);
-    window.addEventListener("resize", update);
-    return () => {
-      window.removeEventListener("scroll", update, true);
-      window.removeEventListener("resize", update);
-    };
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    const onDoc = (e: MouseEvent) => {
-      const t = e.target as Node;
-      if (ref.current?.contains(t) || panelRef.current?.contains(t)) return;
-      setOpen(false);
-    };
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("mousedown", onDoc);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("mousedown", onDoc);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [open]);
-
-  return (
-    <div ref={ref} className="relative shrink-0">
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-haspopup="menu"
-        aria-expanded={open}
-        className={[
-          "flex items-center gap-1 px-1.5 py-1 rounded-lg",
-          "text-white text-[13px] lg:text-[14px] font-medium leading-[18px]",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 transition-colors whitespace-nowrap",
-          open
-            ? "bg-[rgba(0,66,221,0.4)]"
-            : "hover:bg-white/15 active:bg-white/20",
-        ].join(" ")}
-      >
-        <Icon name="question-circle" size={16} />
-        <span>ช่วยเหลือ</span>
-        <Icon
-          name="chevron-down"
-          size={16}
-          className={open ? "rotate-180 transition-transform" : "transition-transform"}
-        />
-      </button>
-
-      {open && createPortal(
-        <div
-          ref={panelRef}
-          role="menu"
-          style={{ top: pos.top, right: pos.right }}
-          className="animate-dropdown fixed w-[220px] z-[1000] bg-white rounded-xl p-2 flex flex-col shadow-[0_0_1px_rgba(29,33,45,0.2),0_1px_4px_rgba(29,33,45,0.15),0_16px_32px_rgba(29,33,45,0.1)]"
-        >
-          {HELP_ITEMS.map((item, i) => {
-            const selected = i === active;
-            return (
-              <button
-                key={item.label}
-                type="button"
-                role="menuitem"
-                onClick={() => {
-                  setActive(i);
-                  setOpen(false);
-                }}
-                className={[
-                  "w-full flex items-center gap-2 px-2 py-1.5 rounded text-left text-[14px] leading-6 transition-colors",
-                  selected
-                    ? "bg-[var(--color-primary-100)] text-[var(--color-primary)]"
-                    : "text-[var(--color-neutral-900)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)]",
-                ].join(" ")}
-              >
-                <Icon name={item.icon} size={16} />
-                <span>{item.label}</span>
-              </button>
-            );
-          })}
-        </div>,
-        document.body
-      )}
-    </div>
-  );
-}
 
 const CART_ITEMS = [
   {
@@ -372,7 +285,7 @@ function CartButton() {
             : "text-[var(--color-neutral-600)] hover:bg-[var(--color-primary)]/10 hover:text-[var(--color-primary)] hover:border-[var(--color-primary)]/15",
         ].join(" ")}
       >
-        <Icon name="cart" size={22} />
+        <CartIcon size={22} />
         {CART_ITEMS.length > 0 && (
           <span data-cart-badge className="absolute -top-0.5 right-0 min-w-[16px] h-[16px] px-1 rounded-full bg-[var(--color-critical)] text-[9px] font-semibold text-white flex items-center justify-center leading-none ring-2 ring-white">
             {CART_ITEMS.length}
@@ -517,7 +430,9 @@ function NotificationButton() {
             : "text-[var(--color-neutral-600)] hover:bg-[var(--color-primary)]/10 hover:text-[var(--color-primary)] hover:border-[var(--color-primary)]/15",
         ].join(" ")}
       >
-        <Icon name="alarm" size={22} />
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M14.9987 19C14.9987 20.6569 13.6556 22 11.9987 22C10.3419 22 8.99874 20.6569 8.99874 19M13.7952 6.23856C14.2307 5.78864 14.4987 5.17562 14.4987 4.5C14.4987 3.11929 13.3795 2 11.9987 2C10.618 2 9.49874 3.11929 9.49874 4.5C9.49874 5.17562 9.76675 5.78864 10.2022 6.23856M17.9987 11.2C17.9987 9.82087 17.3666 8.49823 16.2414 7.52304C15.1162 6.54786 13.59 6 11.9987 6C10.4074 6 8.88132 6.54786 7.7561 7.52304C6.63089 8.49823 5.99874 9.82087 5.99874 11.2C5.99874 13.4818 5.43288 15.1506 4.72681 16.3447C3.92208 17.7056 3.51972 18.3861 3.53561 18.5486C3.55379 18.7346 3.58726 18.7933 3.73808 18.9036C3.86991 19 4.53225 19 5.85693 19H18.1406C19.4652 19 20.1276 19 20.2594 18.9036C20.4102 18.7933 20.4437 18.7346 20.4619 18.5486C20.4778 18.3861 20.0754 17.7056 19.2707 16.3447C18.5646 15.1506 17.9987 13.4818 17.9987 11.2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
         {unreadCount > 0 && (
           <span className="absolute -top-0.5 right-0 min-w-[16px] h-[16px] px-1 rounded-full bg-[var(--color-critical)] text-[9px] font-semibold text-white flex items-center justify-center leading-none ring-2 ring-white">
             {unreadCount > 99 ? "99+" : unreadCount}
@@ -610,7 +525,7 @@ const PROFILE_ITEMS = [
   { icon: "cog", label: "การตั้งค่า", href: "/settings" },
 ] as const;
 
-function ProfileMenu() {
+export function ProfileMenu() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<number | null>(null);
@@ -735,7 +650,15 @@ function ProfileMenu() {
                         : "text-[var(--color-neutral-900)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)]",
                     ].join(" ")}
                   >
-                    <Icon name={item.icon} size={18} />
+                    {item.icon === "alarm" ? (
+                      <BellIcon size={18} />
+                    ) : item.icon === "user" ? (
+                      <UserIcon size={18} />
+                    ) : item.icon === "package" ? (
+                      <OrderIcon size={18} />
+                    ) : (
+                      <Icon name={item.icon} size={18} />
+                    )}
                     <span className="flex-1 text-left">{item.label}</span>
                     <Icon name="chevron-right" size={16} className="opacity-60" />
                   </button>
@@ -785,7 +708,7 @@ function HeaderIcon({
   ].join(" ");
   const inner = (
     <>
-      <Icon name={iconName} size={22} />
+      {iconName === "heart" ? <HeartIcon size={22} /> : iconName === "clipboard" ? <QuoteIcon size={22} /> : iconName === "alarm" ? <BellIcon size={22} /> : <Icon name={iconName} size={22} />}
       {badge !== undefined && (
         <span className="absolute -top-0.5 right-0 min-w-[16px] h-[16px] px-1 rounded-full bg-[var(--color-critical)] text-[9px] font-semibold text-white flex items-center justify-center leading-none ring-2 ring-white">
           {badge > 99 ? "99+" : badge}
@@ -901,7 +824,7 @@ function SearchBar() {
               className="px-3 h-full flex items-center text-[var(--color-neutral-500)] hover:text-[var(--color-primary)] active:scale-95 transition-all"
               aria-label="ค้นหา"
             >
-              <Icon name="search" size={16} />
+              <SearchIcon size={16} />
             </button>
           </div>
         }
@@ -1043,16 +966,16 @@ export default function Header() {
               สร้างร้านค้า
             </MenuLink>
             <VDivider />
-            <MenuLink iconName="users" to="/affiliate/register">สมัคร Affiliate</MenuLink>
+            <MenuLink customIcon={<UserCheckIcon size={16} />} to="/affiliate/register">สมัคร Affiliate</MenuLink>
             <VDivider />
-            <MenuLink iconName="coin" to="/bms-member">สมัครสมาชิก BMS Member</MenuLink>
+            <MenuLink customIcon={<CoinIcon size={16} />} to="/bms-member">สมัครสมาชิก BMS Member</MenuLink>
           </div>
           <div className="flex items-center gap-3">
             {!isLoggedIn && <MenuLink iconName="user">สร้างบัญชีใหม่</MenuLink>}
             <VDivider />
             <LanguageSwitcher />
             <VDivider />
-            <HelpSwitcher />
+            <HelpSelect variant="dark" />
           </div>
         </div>
 
@@ -1062,7 +985,7 @@ export default function Header() {
             สร้างร้านค้า
           </MenuLink>
           <VDivider />
-          <MenuLink iconName="users" to="/affiliate/register">สมัคร Affiliate</MenuLink>
+          <MenuLink customIcon={<UserCheckIcon size={16} />} to="/affiliate/register">สมัคร Affiliate</MenuLink>
           <VDivider />
           <MenuLink iconName="coin" to="/bms-member">BMS Member</MenuLink>
           <VDivider />
@@ -1070,7 +993,7 @@ export default function Header() {
           <VDivider />
           <LanguageSwitcher />
           <VDivider />
-          <HelpSwitcher />
+          <HelpSelect variant="dark" />
         </div>
 
         {/* Mobile rich menu — collapsible drawer */}
@@ -1079,11 +1002,11 @@ export default function Header() {
             <MenuLink customIcon={<StorefrontIcon size={16} />} onClick={goToSeller}>
               สร้างร้านค้า
             </MenuLink>
-            <MenuLink iconName="users" to="/affiliate/register">สมัคร Affiliate</MenuLink>
-            <MenuLink iconName="coin" to="/bms-member">สมัครสมาชิก BMS Member</MenuLink>
+            <MenuLink customIcon={<UserCheckIcon size={16} />} to="/affiliate/register">สมัคร Affiliate</MenuLink>
+            <MenuLink customIcon={<CoinIcon size={16} />} to="/bms-member">สมัครสมาชิก BMS Member</MenuLink>
             {!isLoggedIn && <MenuLink iconName="user">สร้างบัญชีใหม่</MenuLink>}
             <LanguageSwitcher />
-            <HelpSwitcher />
+            <HelpSelect variant="dark" />
           </div>
         )}
       </div>

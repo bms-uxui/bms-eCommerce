@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import Icon from "./Icon";
+import CartIcon from "../CartIcon";
 import QuoteRequestModal from "./QuoteRequestModal";
 
 export type Product = {
@@ -142,7 +143,7 @@ export default function ProductCard({
               onClick={(e) => e.preventDefault()}
               className="w-[29px] shrink-0 flex items-center justify-center rounded border-[0.5px] border-[var(--color-primary)] bg-[var(--color-primary-100)] text-[var(--color-primary)] hover:bg-[var(--color-primary)]/10 transition-colors"
             >
-              <Icon name="cart" size={16} />
+              <CartIcon size={16} />
             </button>
             <button
               type="button"

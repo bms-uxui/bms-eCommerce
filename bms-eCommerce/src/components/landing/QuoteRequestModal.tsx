@@ -13,6 +13,7 @@ import {
 } from "@heroui/react";
 import { Minus, Plus, Trash2, X } from "lucide-react";
 import AddProductModal, { type CatalogProduct } from "./AddProductModal";
+import { inputClassNames } from "../inputStyles";
 
 export type QuoteProduct = {
   id: string;
@@ -29,12 +30,6 @@ const baht = (n: number) =>
     maximumFractionDigits: 2,
   })}`;
 
-const inputClassNames = {
-  inputWrapper:
-    "h-10 bg-white border border-[var(--color-neutral-300)] data-[hover=true]:border-[var(--color-primary-400)] group-data-[focus=true]:border-[var(--color-primary)] shadow-none",
-  input:
-    "text-[16px] text-[var(--color-neutral-900)] placeholder:text-[var(--color-neutral-500)]",
-};
 
 const selectClassNames = {
   trigger:

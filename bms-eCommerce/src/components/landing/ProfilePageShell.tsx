@@ -1,20 +1,19 @@
 import { useNavigate, useLocation } from "react-router";
-import type { ReactNode } from "react";
-import type { LucideIcon } from "lucide-react";
+import type { ReactNode, ComponentType } from "react";
 import {
-  User as UserIcon,
-  Package,
-  ClipboardList,
-  Crown,
-  Bell,
-  Tag,
   Heart,
   CreditCard,
   Settings as SettingsIcon,
   LogOut,
 } from "lucide-react";
+import CouponIcon from "../CouponIcon";
 import Header from "./Header";
 import Footer from "./Footer";
+import UserIcon from "../UserIcon";
+import OrderIcon from "../OrderIcon";
+import QuoteIcon from "../QuoteIcon";
+import CrownIcon from "../CrownIcon";
+import BellIcon from "../BellIcon";
 import avatar from "../../assets/avatar.jpg";
 import profileBanner from "../../assets/banners/profile-banner.png";
 
@@ -30,7 +29,7 @@ export type SidebarKey =
   | "settings";
 
 export type SidebarItem = {
-  icon: LucideIcon;
+  icon: ComponentType<{ size?: number; className?: string }>;
   label: string;
   key: SidebarKey;
   path?: string;
@@ -38,11 +37,11 @@ export type SidebarItem = {
 
 export const SIDEBAR_ITEMS: SidebarItem[] = [
   { icon: UserIcon, label: "บัญชีของฉัน", key: "account", path: "/settings" },
-  { icon: Package, label: "การสั่งซื้อ", key: "orders", path: "/delivery" },
-  { icon: ClipboardList, label: "ใบเสนอราคา", key: "quotes", path: "/quotation" },
-  { icon: Crown, label: "BMS Member", key: "member", path: "/bms-member" },
-  { icon: Bell, label: "การแจ้งเตือน", key: "notifications", path: "/notifications" },
-  { icon: Tag, label: "โค้ดส่วนลด", key: "coupons", path: "/coupons" },
+  { icon: OrderIcon, label: "การสั่งซื้อ", key: "orders", path: "/delivery" },
+  { icon: QuoteIcon, label: "ใบเสนอราคา", key: "quotes", path: "/quotation" },
+  { icon: CrownIcon, label: "BMS Member", key: "member", path: "/bms-member" },
+  { icon: BellIcon, label: "การแจ้งเตือน", key: "notifications", path: "/notifications" },
+  { icon: CouponIcon, label: "โค้ดส่วนลด", key: "coupons", path: "/coupons" },
   { icon: Heart, label: "สิ่งที่ถูกใจ", key: "wishlist", path: "/favorites" },
   { icon: CreditCard, label: "วิธีการชำระเงิน", key: "payment", path: "/settings" },
   { icon: SettingsIcon, label: "การตั้งค่า", key: "settings", path: "/settings" },

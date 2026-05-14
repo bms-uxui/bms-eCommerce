@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import Icon from "../components/landing/Icon";
+import SearchIcon from "../components/SearchIcon";
 import CopyButton from "../components/landing/CopyButton";
 import { SellerHeader, SellerSidebar } from "../components/SellerChrome";
 
@@ -76,7 +77,7 @@ export default function SellerRefunds() {
             <h1 className="text-[20px] font-semibold text-[var(--color-primary-700)]">คำขอคืนเงิน/คืนสินค้า</h1>
             <div className="flex items-center">
               <input type="text" placeholder="ค้นหาหมายเลขคำขอ, เลขคำสั่งซื้อ" className="h-10 w-[400px] bg-white border border-[var(--color-neutral-300)] rounded-l-lg px-4 text-[16px] text-[var(--color-neutral-900)] placeholder:text-[var(--color-neutral-500)] focus:outline-none focus:border-[var(--color-primary)]" />
-              <button type="button" aria-label="ค้นหา" className="h-10 px-4 flex items-center justify-center rounded-r-lg bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-600)] transition-colors"><Icon name="search" size={20} /></button>
+              <button type="button" aria-label="ค้นหา" className="h-10 px-4 flex items-center justify-center rounded-r-lg bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-600)] transition-colors"><SearchIcon size={20} /></button>
             </div>
           </div>
 
