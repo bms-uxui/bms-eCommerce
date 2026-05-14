@@ -7,12 +7,12 @@ import {
   Store,
   MessageCircle,
   MapPin,
-  ShoppingBag,
   Users,
   CalendarHeart,
   CheckCircle2,
   Package,
 } from "lucide-react";
+import CartIcon from "../components/CartIcon";
 import Header from "../components/landing/Header";
 import Footer from "../components/landing/Footer";
 import ProductCard, { type Product } from "../components/landing/ProductCard";
@@ -28,7 +28,7 @@ function InfoChip({
   icon: Icon,
   children,
 }: {
-  icon: typeof MapPin;
+  icon: React.ComponentType<{ size?: number; className?: string }>;
   children: React.ReactNode;
 }) {
   return (
@@ -82,7 +82,7 @@ export function ShopCard() {
           <InfoChip icon={CalendarHeart}>เข้าร่วม กุมภาพันธ์ 2567</InfoChip>
           <InfoChip icon={MessageCircle}>ภายใน 10 นาที</InfoChip>
           <InfoChip icon={Users}>ผู้ติดตาม 2,589 คน</InfoChip>
-          <InfoChip icon={ShoppingBag}>ขายแล้ว 10,453+</InfoChip>
+          <InfoChip icon={CartIcon}>ขายแล้ว 10,453+</InfoChip>
         </div>
       </div>
     </section>

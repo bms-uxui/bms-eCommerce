@@ -12,6 +12,7 @@ import {
   ModalFooter,
 } from "@heroui/react";
 import { Plus, ShieldCheck, X } from "lucide-react";
+import { inputClassNamesLg as inputClassNames } from "../inputStyles";
 import visaLogo from "../../assets/payments/visa.png";
 import mcLogo from "../../assets/payments/mastercard.png";
 import kasikornLogo from "../../assets/payments/kasikorn.png";
@@ -42,12 +43,6 @@ function SecurityBanner({ subject }: { subject: string }) {
   );
 }
 
-const inputClassNames = {
-  inputWrapper:
-    "h-11 bg-white border border-[var(--color-neutral-300)] data-[hover=true]:bg-white data-[hover=true]:border-[var(--color-primary-400)] group-data-[focus=true]:border-[var(--color-primary)] group-data-[focus=true]:ring-2 group-data-[focus=true]:ring-[var(--color-primary)]/20 shadow-none",
-  input:
-    "text-[14px] text-[var(--color-neutral-900)] placeholder:text-[var(--color-neutral-500)]",
-};
 
 function FieldLabel({
   label,

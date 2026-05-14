@@ -6,11 +6,11 @@ import {
   MessageCircle,
   Package,
   Plus,
-  ShoppingBag,
   Star,
   Users,
   Clock,
 } from "lucide-react";
+import CartIcon from "../components/CartIcon";
 import Header from "../components/landing/Header";
 import Footer from "../components/landing/Footer";
 import ProductCard from "../components/landing/ProductCard";
@@ -24,7 +24,7 @@ function InfoChip({
   icon: Icon,
   children,
 }: {
-  icon: typeof MapPin;
+  icon: React.ComponentType<{ size?: number; className?: string }>;
   children: React.ReactNode;
 }) {
   return (
@@ -111,7 +111,7 @@ export function StoreHero() {
               <InfoChip icon={CalendarHeart}>เข้าร่วม กุมภาพันธ์ 2567</InfoChip>
               <InfoChip icon={Clock}>ภายใน 10 นาที</InfoChip>
               <InfoChip icon={Users}>ผู้ติดตาม 2,589 คน</InfoChip>
-              <InfoChip icon={ShoppingBag}>ขายแล้ว 10,453+</InfoChip>
+              <InfoChip icon={CartIcon}>ขายแล้ว 10,453+</InfoChip>
             </div>
           </div>
         </div>

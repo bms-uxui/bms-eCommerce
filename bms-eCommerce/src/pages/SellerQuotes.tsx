@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Ban, Mail, Pencil, Phone, X } from "lucide-react";
 import Icon from "../components/landing/Icon";
+import SearchIcon from "../components/SearchIcon";
 import { SellerHeader, SellerSidebar } from "../components/SellerChrome";
 import CheckBox from "../components/CheckBox";
 
@@ -316,7 +317,7 @@ export default function SellerQuotes() {
                 aria-label="ค้นหา"
                 className="h-10 px-4 flex items-center justify-center rounded-r-lg bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-600)] transition-colors"
               >
-                <Icon name="search" size={20} />
+                <SearchIcon size={20} />
               </button>
             </div>
           </div>

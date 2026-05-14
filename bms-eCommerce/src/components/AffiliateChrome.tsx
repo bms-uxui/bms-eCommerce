@@ -2,6 +2,7 @@ import { useState, useSyncExternalStore } from "react";
 import { useNavigate } from "react-router";
 import { Menu, X } from "lucide-react";
 import Icon from "./landing/Icon";
+import CartIcon from "./CartIcon";
 import LanguageSelect from "./LanguageSelect";
 import NotificationBell from "./NotificationBell";
 import HelpSelect from "./HelpSelect";
@@ -133,7 +134,7 @@ function IconBadge({ icon, variant = "default" }: { icon: string; variant?: Badg
   };
   return (
     <span className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center ${styles[variant]}`}>
-      <Icon name={icon} size={14} />
+      {icon === "cart" ? <CartIcon size={14} /> : <Icon name={icon} size={14} />}
     </span>
   );
 }

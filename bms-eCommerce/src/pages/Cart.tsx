@@ -11,8 +11,10 @@ import {
   Plus,
 } from "lucide-react";
 import paracetamol from "../assets/products/p02-paracetamol.jpg";
-import avatar from "../assets/avatar.jpg";
 import CartItemRow from "../components/landing/CartItemRow";
+import { ProfileMenu } from "../components/landing/Header";
+import LanguageSelect from "../components/LanguageSelect";
+import HelpSelect from "../components/HelpSelect";
 
 type CartItem = {
   id: string;
@@ -118,16 +120,10 @@ function SlimHeader() {
           ตะกร้าสินค้า
         </h1>
         <div className="ml-auto flex items-center gap-4">
-          <button className="flex items-center gap-1 text-[14px] text-[var(--color-neutral-900)] hover:text-[var(--color-primary)] transition-colors">
-            <span>🌐</span>
-            <span>ภาษาไทย</span>
-          </button>
+          <LanguageSelect />
           <span className="hidden sm:block w-px h-5 bg-[var(--color-neutral-300)]" />
-          <button className="hidden sm:flex items-center gap-1 text-[14px] text-[var(--color-neutral-900)] hover:text-[var(--color-primary)] transition-colors">
-            <span>?</span>
-            <span>ช่วยเหลือ</span>
-          </button>
-          <img src={avatar} alt="" className="w-9 h-9 rounded-full object-cover" />
+          <HelpSelect className="hidden sm:flex" />
+          <ProfileMenu />
         </div>
       </div>
     </header>

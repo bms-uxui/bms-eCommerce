@@ -12,6 +12,7 @@ import {
   ModalFooter,
 } from "@heroui/react";
 import { X } from "lucide-react";
+import { inputClassNames } from "../inputStyles";
 
 export type AddressData = {
   id: string;
@@ -175,12 +176,6 @@ export function SelectAddressModal({
   );
 }
 
-const inputClassNames = {
-  inputWrapper:
-    "h-10 bg-white border border-[var(--color-neutral-300)] data-[hover=true]:bg-white data-[hover=true]:border-[var(--color-primary-400)] group-data-[focus=true]:border-[var(--color-primary)] shadow-none",
-  input:
-    "text-[16px] text-[var(--color-neutral-900)] placeholder:text-[var(--color-neutral-500)]",
-};
 
 const selectClassNames = {
   trigger:

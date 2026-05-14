@@ -1,9 +1,10 @@
-import { useEffect, useState, type ReactNode } from "react";
-import { Select, SelectItem, Switch, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, RangeCalendar, type RangeValue } from "@heroui/react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Input, Select, SelectItem, Switch, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, RangeCalendar, type RangeValue } from "@heroui/react";
 import { parseDate, type DateValue } from "@internationalized/date";
 import { Info, Pencil, Trash2, Plus, X } from "lucide-react";
+import { inputClassNames } from "../components/inputStyles";
 import { SellerHeader, SellerSidebar } from "../components/SellerChrome";
-import storeAvatar from "../assets/store-avatar.png";
+import storeAvatarDefault from "../assets/store-avatar.png";
 import kasikorn from "../assets/payments/kasikorn.png";
 import krungthai from "../assets/payments/krungthai.png";
 
@@ -68,6 +69,9 @@ function HolidayModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
 
 export default function SellerStoreSettings() {
   const [tab, setTab] = useState<TabKey>("store");
+  const [logoSrc, setLogoSrc] = useState(storeAvatarDefault);
+  const logoInputRef = useRef<HTMLInputElement>(null);
+  const pickLogo = () => logoInputRef.current?.click();
   const [autoWithdraw, setAutoWithdraw] = useState(true);
   const [holidayOpen, setHolidayOpen] = useState(false);
   const [holidays, setHolidays] = useState([
@@ -106,31 +110,57 @@ export default function SellerStoreSettings() {
               </section>
 
               {/* Store info */}
-              <section className={`${CARD} p-6 flex flex-col gap-4`}>
+              <section className={`${CARD} p-6 flex flex-col gap-6`}>
                 <h2 className="text-[18px] font-medium text-[var(--color-neutral-900)]">ข้อมูลร้านค้า</h2>
-                <div className="flex flex-col items-center gap-1.5 py-2">
-                  <img src={storeAvatar} alt="" className="w-24 h-24 rounded-full object-cover" />
-                  <button type="button" className="text-[13px] text-[var(--color-neutral-500)] hover:text-[var(--color-primary)] hover:underline">คลิกเพื่อเปลี่ยนโลโก้</button>
+                <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-8">
+                  {/* Logo column */}
+                  <div className="flex flex-col items-center gap-4">
+                    <input ref={logoInputRef} type="file" accept="image/jpeg,image/png" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) { const url = URL.createObjectURL(f); setLogoSrc(url); } e.target.value = ""; }} />
+                    <img src={logoSrc} alt="โลโก้ร้านค้า" className="w-[150px] h-[150px] rounded-full object-cover ring-1 ring-[var(--color-neutral-300)]" />
+                    <div className="flex items-center gap-2">
+                      <button type="button" onClick={pickLogo} className="h-9 px-4 rounded-md border border-[var(--color-primary)] text-[var(--color-primary)] text-[13px] font-medium hover:bg-[var(--color-primary-100)] transition">
+                        อัปโหลดรูป
+                      </button>
+                      <button type="button" onClick={() => setLogoSrc(storeAvatarDefault)} disabled={logoSrc === storeAvatarDefault} className="h-9 px-4 rounded-md border border-[var(--color-critical)] text-[var(--color-critical)] text-[13px] font-medium hover:bg-[var(--color-critical)]/10 disabled:opacity-50 disabled:cursor-not-allowed transition">
+                        ลบรูป
+                      </button>
+                    </div>
+                    <div className="text-center text-[12px] text-[var(--color-neutral-500)] leading-relaxed">
+                      <p>ขนาดไฟล์: สูงสุด 1 MB</p>
+                      <p>ไฟล์ที่รองรับ: JPEG, .PNG</p>
+                    </div>
+                  </div>
+                  {/* Fields column */}
+                  <div className="flex flex-col gap-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
+                      <Field label="ชื่อร้านค้า">
+                        <Input radius="sm" defaultValue="นโลมหาบารี" classNames={inputClassNames} />
+                      </Field>
+                      <Field label="หมวดหมู่สินค้า">
+                        <Select aria-label="หมวดหมู่สินค้า" defaultSelectedKeys={["เครื่องมือการแพทย์"]} radius="sm" classNames={selectCN}>{CATEGORIES.map((c) => <SelectItem key={c}>{c}</SelectItem>)}</Select>
+                      </Field>
+                    </div>
+                    <Field label="คำอธิบายรายละเอียดร้านค้า">
+                      <Input radius="sm" placeholder="ระบุรายละเอียดร้านค้า" classNames={inputClassNames} />
+                    </Field>
+                    <Field label="เบอร์โทรศัพท์">
+                      <div className="flex items-center gap-2">
+                        <Input radius="sm" defaultValue="09*****904" classNames={inputClassNames} />
+                        <button type="button" className="h-10 px-3 rounded-lg border border-[var(--color-primary)] text-[var(--color-primary)] text-[13px] font-medium hover:bg-[var(--color-primary-100)] transition-colors shrink-0">เปลี่ยน</button>
+                      </div>
+                    </Field>
+                    <Field label="อีเมล">
+                      <div className="flex items-center gap-2">
+                        <Input radius="sm" placeholder="กรุณาระบุอีเมล" classNames={inputClassNames} />
+                        <button type="button" className="h-10 px-3 rounded-lg border border-[var(--color-primary)] text-[var(--color-primary)] text-[13px] font-medium hover:bg-[var(--color-primary-100)] transition-colors shrink-0">เปลี่ยน</button>
+                      </div>
+                    </Field>
+                    <Field label="ที่อยู่คลังสินค้า">
+                      <Input radius="sm" defaultValue="เลขที่ 2 ชั้นที่ 2 ซอยสุขสวัสดิ์ 33 แขวงราษฎร์บูรณะ, เขตราษฎร์บูรณะ กรุงเทพมหานคร 10140" classNames={inputClassNames} />
+                    </Field>
+                    <button type="button" className="h-10 px-6 rounded-lg bg-[var(--color-primary)] text-white text-[14px] font-medium hover:bg-[var(--color-primary-600)] transition-colors w-fit">บันทึก</button>
+                  </div>
                 </div>
-                <Field label="ชื่อร้านค้า"><input className={inputCls} defaultValue="นโลมหาบารี" /></Field>
-                <Field label="คำอธิบายรายละเอียดร้านค้า"><input className={inputCls} placeholder="ระบุรายละเอียดร้านค้า" /></Field>
-                <Field label="หมวดหมู่สินค้า">
-                  <Select aria-label="หมวดหมู่สินค้า" defaultSelectedKeys={["เครื่องมือการแพทย์"]} radius="sm" classNames={selectCN}>{CATEGORIES.map((c) => <SelectItem key={c}>{c}</SelectItem>)}</Select>
-                </Field>
-                <Field label="เบอร์โทรศัพท์">
-                  <div className="flex items-center gap-2">
-                    <input className={inputCls} defaultValue="09*****904" />
-                    <button type="button" className="h-8 px-3 rounded-lg border border-[var(--color-primary)] text-[var(--color-primary)] text-[13px] font-medium hover:bg-[var(--color-primary-100)] transition-colors shrink-0">เปลี่ยน</button>
-                  </div>
-                </Field>
-                <Field label="อีเมล">
-                  <div className="flex items-center gap-2">
-                    <input className={inputCls} placeholder="กรุณาระบุอีเมล" />
-                    <button type="button" className="h-8 px-3 rounded-lg border border-[var(--color-primary)] text-[var(--color-primary)] text-[13px] font-medium hover:bg-[var(--color-primary-100)] transition-colors shrink-0">เปลี่ยน</button>
-                  </div>
-                </Field>
-                <Field label="ที่อยู่คลังสินค้า"><input className={inputCls} defaultValue="เลขที่ 2 ชั้นที่ 2 ซอยสุขสวัสดิ์ 33 แขวงราษฎร์บูรณะ, เขตราษฎร์บูรณะ กรุงเทพมหานคร 10140" /></Field>
-                <button type="button" className="h-10 px-6 rounded-lg bg-[var(--color-primary)] text-white text-[14px] font-medium hover:bg-[var(--color-primary-600)] transition-colors w-fit">บันทึก</button>
               </section>
 
               {/* Business / company / committee (read only) */}

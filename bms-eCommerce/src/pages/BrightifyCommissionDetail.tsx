@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router";
 import Icon from "../components/landing/Icon";
+import SearchIcon from "../components/SearchIcon";
 import Pagination from "../components/Pagination";
 import { AffiliateHeader, AffiliateSidebar } from "../components/AffiliateChrome";
 import CommissionBulkBar from "../components/CommissionBulkBar";
@@ -85,7 +86,7 @@ export default function BrightifyCommissionDetail() {
             <div className="flex flex-col lg:flex-row lg:items-center gap-3">
               <div className="flex items-center gap-3 lg:w-[492px]">
                 <div className="flex-1 flex items-center gap-2 h-10 px-3 rounded-lg border border-[var(--color-neutral-300)] bg-white">
-                  <Icon name="search" size={18} className="text-[var(--color-neutral-500)]" />
+                  <SearchIcon size={18} className="text-[var(--color-neutral-500)]" />
                   <input
                     placeholder="ค้นหาสินค้าคอมมิชชันที่สนใจ"
                     className="flex-1 min-w-0 bg-transparent text-[14px] text-[var(--color-neutral-900)] placeholder:text-[var(--color-neutral-500)] outline-none"

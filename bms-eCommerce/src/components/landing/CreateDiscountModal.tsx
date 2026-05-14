@@ -12,6 +12,7 @@ import {
 } from "@heroui/react";
 import { X } from "lucide-react";
 import DatePickerField from "./DatePickerField";
+import { inputClassNames as inputCN } from "../inputStyles";
 
 type DiscType = "percent" | "amount" | "fixed";
 const DISC_TYPES: { key: DiscType; label: string; valueLabel: string; valuePh: string }[] = [
@@ -23,10 +24,6 @@ const DISC_TYPES: { key: DiscType; label: string; valueLabel: string; valuePh: s
 const selectCN = {
   trigger: "h-10 bg-white border border-[var(--color-neutral-300)] data-[hover=true]:border-[var(--color-primary-400)] shadow-none rounded-lg",
   value: "text-[14px] text-[var(--color-neutral-900)] data-[has-value=false]:text-[var(--color-neutral-500)]",
-};
-const inputCN = {
-  inputWrapper: "h-10 bg-white border border-[var(--color-neutral-300)] data-[hover=true]:border-[var(--color-primary-400)] group-data-[focus=true]:border-[var(--color-primary)] shadow-none",
-  input: "text-[14px] text-[var(--color-neutral-900)] placeholder:text-[var(--color-neutral-500)]",
 };
 function Lab({ children, required }: { children: React.ReactNode; required?: boolean }) {
   return <span className="text-[14px] text-[var(--color-neutral-700)]">{children}{required && <span className="text-[var(--color-critical)]"> *</span>}</span>;

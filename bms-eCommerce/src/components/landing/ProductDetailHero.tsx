@@ -4,7 +4,6 @@ import { Button } from "@heroui/react";
 import QuoteRequestModal from "./QuoteRequestModal";
 import {
   Star,
-  ShoppingBag,
   Truck,
   PackageCheck,
   Minus,
@@ -17,6 +16,7 @@ import {
   Link as LinkIcon,
   Zap,
 } from "lucide-react";
+import CartIcon from "../CartIcon";
 
 export type ProductDetail = {
   name: string;
@@ -186,7 +186,7 @@ export default function ProductDetailHero({
             </span>
             <span className="w-px h-5 bg-[var(--color-neutral-300)]" />
             <span className="flex items-center gap-2">
-              <ShoppingBag size={16} />
+              <CartIcon size={16} />
               <span>ขายแล้ว {product.sold}</span>
             </span>
             <span className="w-px h-5 bg-[var(--color-neutral-300)]" />
@@ -290,7 +290,7 @@ export default function ProductDetailHero({
         <div className="flex gap-4 w-full">
           <Button
             radius="md"
-            startContent={<ShoppingBag size={16} />}
+            startContent={<CartIcon size={16} />}
             onPress={() => flyToCart(mainImgRef.current)}
             className="flex-1 h-11 bg-[var(--color-primary-100)] border border-[var(--color-primary)] text-[var(--color-primary)] text-[16px] font-medium tracking-[-0.011em] hover:bg-[var(--color-primary-100)]/80 transition"
           >

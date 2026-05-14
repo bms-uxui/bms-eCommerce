@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import Icon from "./landing/Icon";
+import { LogIn } from "lucide-react";
 
 type GuestProfileProps = {
   compact?: boolean;
@@ -13,30 +13,22 @@ export default function GuestProfile({
   className = "",
 }: GuestProfileProps) {
   const navigate = useNavigate();
-  const size = compact ? 36 : 40;
   return (
     <button
       type="button"
-      aria-label="เข้าสู่ระบบ"
       onClick={() => navigate(to)}
       className={[
-        "flex items-center gap-2 pr-2 py-0.5 rounded-full",
-        "transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/30",
-        "hover:bg-[var(--color-primary)]/5 active:bg-[var(--color-primary)]/10",
+        "flex items-center gap-1 px-[10px] h-9 rounded-lg shrink-0",
+        "bg-[var(--color-primary)] text-white",
+        "text-[14px] font-semibold whitespace-nowrap",
+        "transition-opacity hover:opacity-90 active:opacity-80",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/40",
+        compact ? "text-[13px]" : "",
         className,
       ].join(" ")}
     >
-      <span
-        className="flex items-center justify-center rounded-full bg-[var(--color-neutral-200)] text-[var(--color-neutral-600)] shrink-0"
-        style={{ width: size, height: size }}
-      >
-        <Icon name="user" size={Math.round(size * 0.55)} />
-      </span>
-      <Icon
-        name="chevron-down"
-        size={compact ? 18 : 20}
-        className="text-[var(--color-neutral-600)]"
-      />
+      <LogIn size={14} strokeWidth={2.5} />
+      เข้าสู่ระบบ
     </button>
   );
 }

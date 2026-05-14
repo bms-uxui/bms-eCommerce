@@ -15,6 +15,7 @@ import {
   ModalFooter,
 } from "@heroui/react";
 import { ChevronDown, Check } from "lucide-react";
+import { inputClassNames } from "../components/inputStyles";
 import LanguageSelect from "../components/LanguageSelect";
 import HelpSelect from "../components/HelpSelect";
 import NotificationBell from "../components/NotificationBell";
@@ -190,12 +191,6 @@ function FormRow({
   );
 }
 
-const inputClassNames = {
-  inputWrapper:
-    "h-10 bg-white border border-[var(--color-neutral-300)] data-[hover=true]:border-[var(--color-primary-400)] group-data-[focus=true]:border-[var(--color-primary)] shadow-none",
-  input:
-    "text-[16px] text-[var(--color-neutral-900)] placeholder:text-[var(--color-neutral-500)]",
-};
 
 function RegistrationForm({ onSubmit }: { onSubmit: () => void }) {
   const [accountType, setAccountType] = useState<"individual" | "company">(
@@ -284,7 +279,7 @@ function RegistrationForm({ onSubmit }: { onSubmit: () => void }) {
         <ConnectedAccountsList accounts={connected} onRemove={removeAccount} />
       </FormRow>
 
-      <hr className="border-t border-[var(--color-neutral-200)] mx-4 sm:mx-12 lg:mx-24" />
+      <hr className="border-t border-[var(--color-neutral-200)]" />
 
       {/* Phone */}
       <FormRow label="เบอร์โทรศัพท์ติดต่อ" required>
@@ -355,7 +350,7 @@ function RegistrationForm({ onSubmit }: { onSubmit: () => void }) {
         />
       </FormRow>
 
-      <hr className="border-t border-[var(--color-neutral-200)] mx-4 sm:mx-12 lg:mx-24" />
+      <hr className="border-t border-[var(--color-neutral-200)]" />
 
       {/* Consent + submit — aligned under the input column on desktop */}
       <div className="px-4 sm:px-12 lg:pl-[460px] lg:pr-24 flex flex-col gap-8">

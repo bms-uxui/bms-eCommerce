@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Switch } from "@heroui/react";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import Icon from "../components/landing/Icon";
+import SearchIcon from "../components/SearchIcon";
 import { SellerHeader, SellerSidebar } from "../components/SellerChrome";
 import CreatePromotionModal from "../components/landing/CreatePromotionModal";
 import paracetamol from "../assets/products/p02-paracetamol.jpg";
@@ -54,7 +55,7 @@ export default function SellerPromotions() {
             <div className="flex items-center gap-3">
               <div className="flex items-center">
                 <input type="text" placeholder="ค้นหาโปรโมชั่น" className="h-10 w-[360px] bg-white border border-[var(--color-neutral-300)] rounded-l-lg px-4 text-[16px] text-[var(--color-neutral-900)] placeholder:text-[var(--color-neutral-500)] focus:outline-none focus:border-[var(--color-primary)]" />
-                <button type="button" aria-label="ค้นหา" className="h-10 px-4 flex items-center justify-center rounded-r-lg bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-600)] transition-colors"><Icon name="search" size={20} /></button>
+                <button type="button" aria-label="ค้นหา" className="h-10 px-4 flex items-center justify-center rounded-r-lg bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-600)] transition-colors"><SearchIcon size={20} /></button>
               </div>
               <button type="button" onClick={() => setCreateOpen(true)} className="h-10 px-4 rounded-lg bg-[var(--color-primary)] text-white text-[14px] font-medium flex items-center gap-2 hover:bg-[var(--color-primary-600)] transition-colors shrink-0"><Plus size={16} />สร้างโปรโมชั่น</button>
             </div>

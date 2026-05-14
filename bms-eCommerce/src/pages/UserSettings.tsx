@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { Input, Button, Select, SelectItem, Switch } from "@heroui/react";
+import { inputClassNames } from "../components/inputStyles";
 import BirthdayPicker, { type BirthdayValue } from "../components/BirthdayPicker";
 import {
   User as UserIcon,
@@ -576,12 +577,6 @@ function BankCardsTab() {
   );
 }
 
-const inputClassNames = {
-  inputWrapper:
-    "h-10 bg-white border border-[var(--color-neutral-300)] data-[hover=true]:bg-white data-[hover=true]:border-[var(--color-primary-400)] group-data-[focus=true]:border-[var(--color-primary)] group-data-[focus=true]:ring-2 group-data-[focus=true]:ring-[var(--color-primary)]/20 shadow-none",
-  input:
-    "text-[14px] text-[var(--color-neutral-900)] placeholder:text-[var(--color-neutral-500)]",
-};
 
 function Field({
   label,

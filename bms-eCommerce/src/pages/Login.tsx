@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { Input, Button } from "@heroui/react";
+import { inputClassNames } from "../components/inputStyles";
 import LanguageSelect from "../components/LanguageSelect";
 import HelpSelect from "../components/HelpSelect";
 import loginBg from "../assets/banners/login-bg.png";
@@ -129,14 +130,16 @@ function OtpStep({
   const ss = String(seconds % 60).padStart(2, "0");
 
   return (
-    <div className="px-10 pb-10 flex flex-col items-center">
-      <div className="login-item-in w-full flex flex-col items-center gap-6 pt-6" style={{ animationDelay: "60ms" }}>
-        <h1 className="text-[20px] font-bold text-[var(--color-neutral-900)] text-center">
-          ยืนยันรหัส OTP
-        </h1>
-        <span className="block w-full h-px bg-[var(--color-neutral-300)]" />
+    <>
+      <div className="px-10 pt-6">
+        <div className="login-item-in w-full flex flex-col items-center" style={{ animationDelay: "60ms" }}>
+          <h1 className="text-[20px] font-bold text-[var(--color-neutral-900)] text-center">
+            ยืนยันรหัส OTP
+          </h1>
+        </div>
       </div>
-
+      <span className="mt-6 block w-full h-px bg-[var(--color-neutral-300)]" />
+      <div className="px-10 pb-10 flex flex-col items-center">
       <div className="login-item-in mt-8 flex flex-col items-center gap-3 text-center" style={{ animationDelay: "140ms" }}>
         <p className="text-[14px] text-[var(--color-neutral-500)]">
           รหัส OTP จะถูกส่งไปยัง SMS ที่หมายเลข
@@ -209,6 +212,7 @@ function OtpStep({
         </Button>
       </div>
     </div>
+    </>
   );
 }
 
@@ -266,17 +270,19 @@ export default function Login() {
               }}
             />
           ) : (
-          <div className="px-10 pt-10 flex flex-col items-center gap-8">
-            <div className="login-item-in w-full flex flex-col items-center gap-6" style={{ animationDelay: "380ms" }}>
-              <h1
-                id="login-title"
-                className="text-[20px] font-bold text-[var(--color-neutral-900)] text-center leading-tight"
-              >
-                เข้าสู่ระบบ/สมัครสมาชิก BMS Member
-              </h1>
-              <span className="block w-full h-px bg-[var(--color-neutral-300)]" />
+          <>
+            <div className="px-10 pt-10">
+              <div className="login-item-in w-full flex flex-col items-center" style={{ animationDelay: "380ms" }}>
+                <h1
+                  id="login-title"
+                  className="text-[20px] font-bold text-[var(--color-neutral-900)] text-center leading-tight"
+                >
+                  เข้าสู่ระบบ/สมัครสมาชิก BMS Member
+                </h1>
+              </div>
             </div>
-
+            <span className="mt-6 block w-full h-px bg-[var(--color-neutral-300)]" />
+            <div className="px-10 pt-8 pb-0 flex flex-col items-center gap-8">
             <form
               className="login-item-in w-full flex flex-col gap-8"
               style={{ animationDelay: "460ms" }}
@@ -301,12 +307,7 @@ export default function Login() {
                     : undefined
                 }
                 onBlur={() => setPhoneTouched(true)}
-                classNames={{
-                  inputWrapper:
-                    "h-10 bg-white border border-[var(--color-neutral-300)] data-[hover=true]:bg-white data-[hover=true]:border-[var(--color-primary-400)] group-data-[focus=true]:border-[var(--color-primary)] group-data-[focus=true]:ring-2 group-data-[focus=true]:ring-[var(--color-primary)]/20 group-data-[invalid=true]:border-[var(--color-critical)] shadow-none",
-                  input:
-                    "text-[16px] text-[var(--color-neutral-900)] placeholder:text-[var(--color-neutral-500)] tracking-wide",
-                }}
+                classNames={inputClassNames}
               />
 
               <Button
@@ -353,7 +354,8 @@ export default function Login() {
                 นโยบายความคุ้มครองข้อมูลส่วนบุคคล
               </a>
             </p>
-          </div>
+            </div>
+          </>
           )}
         </section>
       </main>

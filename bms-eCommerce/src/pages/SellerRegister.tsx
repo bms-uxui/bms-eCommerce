@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { Button, Input, Textarea, Select, SelectItem } from "@heroui/react";
+import { inputClassNames } from "../components/inputStyles";
 import Icon from "../components/landing/Icon";
 import LanguageSelect from "../components/LanguageSelect";
 import NotificationBell from "../components/NotificationBell";
@@ -139,14 +140,6 @@ function FieldLabel({
   );
 }
 
-function inputClasses() {
-  return {
-    inputWrapper:
-      "h-10 bg-white border border-[var(--color-neutral-300)] data-[hover=true]:bg-white data-[hover=true]:border-[var(--color-primary-400)] group-data-[focus=true]:border-[var(--color-primary)] group-data-[focus=true]:ring-2 group-data-[focus=true]:ring-[var(--color-primary)]/20 shadow-none rounded-lg",
-    input:
-      "text-[16px] text-[var(--color-neutral-900)] placeholder:text-[var(--color-neutral-500)]",
-  };
-}
 
 function UploadArea({
   file,
@@ -313,7 +306,7 @@ function Step1Form({
           value={data.shopName}
           onValueChange={(v) => setData({ ...data, shopName: v })}
           radius="sm"
-          classNames={inputClasses()}
+          classNames={inputClassNames}
         />
       </div>
 
@@ -325,7 +318,7 @@ function Step1Form({
           value={data.shopDesc}
           onValueChange={(v) => setData({ ...data, shopDesc: v })}
           radius="sm"
-          classNames={inputClasses()}
+          classNames={inputClassNames}
         />
       </div>
 
@@ -362,7 +355,7 @@ function Step1Form({
             onValueChange={(v) => setData({ ...data, phone: v.replace(/\D/g, "").slice(0, 10) })}
             radius="sm"
             inputMode="numeric"
-            classNames={inputClasses()}
+            classNames={inputClassNames}
             endContent={
               <button
                 type="button"
@@ -382,7 +375,7 @@ function Step1Form({
             onValueChange={(v) => setData({ ...data, phoneOtp: v.replace(/\D/g, "").slice(0, 6) })}
             radius="sm"
             inputMode="numeric"
-            classNames={inputClasses()}
+            classNames={inputClassNames}
             endContent={
               <button
                 type="button"
@@ -405,7 +398,7 @@ function Step1Form({
             onValueChange={(v) => setData({ ...data, email: v })}
             radius="sm"
             type="email"
-            classNames={inputClasses()}
+            classNames={inputClassNames}
             endContent={
               <button
                 type="button"
@@ -425,7 +418,7 @@ function Step1Form({
             onValueChange={(v) => setData({ ...data, emailOtp: v.replace(/\D/g, "").slice(0, 6) })}
             radius="sm"
             inputMode="numeric"
-            classNames={inputClasses()}
+            classNames={inputClassNames}
             endContent={
               <button
                 type="button"
@@ -446,7 +439,7 @@ function Step1Form({
           value={data.warehouseAddress}
           onValueChange={(v) => setData({ ...data, warehouseAddress: v })}
           radius="sm"
-          classNames={inputClasses()}
+          classNames={inputClassNames}
         />
       </div>
 
@@ -600,7 +593,7 @@ function Step2Form({
               value={data.companyName}
               onValueChange={(v) => setData({ ...data, companyName: v })}
               radius="sm"
-              classNames={inputClasses()}
+              classNames={inputClassNames}
             />
           </div>
           <div className="flex-1 flex flex-col gap-2">
@@ -610,7 +603,7 @@ function Step2Form({
               value={data.companyRegNumber}
               onValueChange={(v) => setData({ ...data, companyRegNumber: v })}
               radius="sm"
-              classNames={inputClasses()}
+              classNames={inputClassNames}
             />
           </div>
         </div>
@@ -624,7 +617,7 @@ function Step2Form({
             value={data.companyAddress}
             onValueChange={(v) => setData({ ...data, companyAddress: v })}
             radius="sm"
-            classNames={inputClasses()}
+            classNames={inputClassNames}
           />
         </div>
       )}
@@ -655,7 +648,7 @@ function Step2Form({
             value={data.ownerFirstName}
             onValueChange={(v) => setData({ ...data, ownerFirstName: v })}
             radius="sm"
-            classNames={inputClasses()}
+            classNames={inputClassNames}
           />
         </div>
         <div className="flex-1 flex flex-col gap-2">
@@ -665,7 +658,7 @@ function Step2Form({
             value={data.ownerLastName}
             onValueChange={(v) => setData({ ...data, ownerLastName: v })}
             radius="sm"
-            classNames={inputClasses()}
+            classNames={inputClassNames}
           />
         </div>
       </div>
@@ -679,7 +672,7 @@ function Step2Form({
             onValueChange={(v) => setData({ ...data, idNumber: v.replace(/\D/g, "").slice(0, 13) })}
             radius="sm"
             inputMode="numeric"
-            classNames={inputClasses()}
+            classNames={inputClassNames}
           />
         </div>
         <div className="flex-1 flex flex-col gap-2">
@@ -708,7 +701,7 @@ function Step2Form({
           value={data.idAddress}
           onValueChange={(v) => setData({ ...data, idAddress: v })}
           radius="sm"
-          classNames={inputClasses()}
+          classNames={inputClassNames}
         />
       </div>
 

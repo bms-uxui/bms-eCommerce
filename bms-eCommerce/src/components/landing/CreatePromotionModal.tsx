@@ -10,6 +10,7 @@ import {
 } from "@heroui/react";
 import { ImagePlus, Minus, Plus, Trash2, X } from "lucide-react";
 import paracetamol from "../../assets/products/p02-paracetamol.jpg";
+import { inputClassNames as inputCls } from "../inputStyles";
 import AddProductModal, { type CatalogProduct } from "./AddProductModal";
 import type { QuoteProduct } from "./QuoteRequestModal";
 
@@ -22,10 +23,6 @@ export const MARKETING_CATALOG: CatalogProduct[] = [
 
 const baht = (n: number) => `฿ ${n.toLocaleString("th-TH", { minimumFractionDigits: 2 })}`;
 
-const inputCls = {
-  inputWrapper: "h-10 bg-white border border-[var(--color-neutral-300)] data-[hover=true]:border-[var(--color-primary-400)] group-data-[focus=true]:border-[var(--color-primary)] shadow-none",
-  input: "text-[14px] text-[var(--color-neutral-900)] placeholder:text-[var(--color-neutral-500)]",
-};
 
 function QtyStepper({ value, onChange, max }: { value: number; onChange: (v: number) => void; max?: number }) {
   return (

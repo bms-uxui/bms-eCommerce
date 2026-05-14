@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Star as StarIcon, LifeBuoy, Store as StoreIcon } from "lucide-react";
 import Icon from "./landing/Icon";
+import CartIcon from "./CartIcon";
+import QuoteIcon from "./QuoteIcon";
 import LanguageSelect from "./LanguageSelect";
 import NotificationBell from "./NotificationBell";
 import HelpSelect from "./HelpSelect";
@@ -119,7 +121,7 @@ const SIDEBAR_ENTRIES: SidebarEntry[] = [
     icon: "bar-chart",
     label: "การวิเคราะห์",
     children: [
-      { kind: "leaf", icon: "dollar", label: "การวิเคราะห์รายได้" },
+      { kind: "leaf", icon: "dollar", label: "การวิเคราะห์รายได้", to: "/seller/analytics/revenue" },
       { kind: "leaf", icon: "users", label: "การวิเคราะห์ลูกค้า" },
       { kind: "leaf", icon: "package", label: "การวิเคราะห์สินค้า" },
       { kind: "leaf", icon: "bullhorn", label: "การวิเคราะห์การตลาด" },
@@ -139,7 +141,7 @@ function IconBadge({ icon, variant = "default" }: { icon: string; variant?: Badg
   };
   return (
     <span className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center ${styles[variant]}`}>
-      {icon === "star" ? <StarIcon size={14} /> : <Icon name={icon} size={14} />}
+      {icon === "star" ? <StarIcon size={14} /> : icon === "cart" ? <CartIcon size={14} /> : icon === "files" ? <QuoteIcon size={14} /> : <Icon name={icon} size={14} />}
     </span>
   );
 }
