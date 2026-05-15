@@ -2,7 +2,7 @@ import { useState } from "react";
 import Icon from "../components/landing/Icon";
 import Pagination from "../components/Pagination";
 import { AffiliateHeader, AffiliateSidebar } from "../components/AffiliateChrome";
-import DateRangePicker from "../components/DateRangePicker";
+import { CustomRangeField } from "../components/CustomRangeCalendar";
 
 const SOURCES = ["Facebook", "Facebook", "Facebook", "Facebook", "Youtube", "Facebook", "Instagram"];
 const SUB_IDS = ["paiboon", "paiboon", "paiboon", "-", "-", "paiboon", "paiboon"];
@@ -62,7 +62,7 @@ export default function ClickReport() {
                 </button>
               </FilterField>
               <FilterField label="วันที่คลิก">
-                <DateRangePicker className="!flex w-full" />
+                <CustomRangeField className="w-full" />
               </FilterField>
               <FilterField label="Sub_id">
                 <input

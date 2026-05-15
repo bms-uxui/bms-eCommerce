@@ -5,7 +5,7 @@ import Icon from "../components/landing/Icon";
 import Pagination from "../components/Pagination";
 import StatusBadge, { type StatusTone } from "../components/StatusBadge";
 import { AffiliateHeader, AffiliateSidebar } from "../components/AffiliateChrome";
-import DateRangePicker from "../components/DateRangePicker";
+import { CustomRangeField } from "../components/CustomRangeCalendar";
 import kasikornLogo from "../assets/payments/kasikorn.png";
 
 type TxStatus = { label: string; tone: StatusTone };
@@ -353,7 +353,7 @@ export default function WithdrawCommission() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <h2 className="text-[18px] font-bold text-[var(--color-primary-700)]">ประวัติการทำธุรกรรม</h2>
               <div className="flex flex-wrap items-center gap-3">
-                <DateRangePicker />
+                <CustomRangeField />
                 <button
                   type="button"
                   className="inline-flex items-center gap-2 h-10 px-4 rounded-lg bg-[var(--color-primary)] text-white text-[14px] font-medium hover:brightness-110 transition"

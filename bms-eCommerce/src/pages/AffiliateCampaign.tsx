@@ -1,5 +1,5 @@
 import { AffiliateHeader, AffiliateSidebar } from "../components/AffiliateChrome";
-import DateRangePicker from "../components/DateRangePicker";
+import { CustomRangeField } from "../components/CustomRangeCalendar";
 import { makeProducts } from "../components/landing/mockData";
 
 const NAMES = [
@@ -72,7 +72,7 @@ export default function AffiliateCampaign() {
                 แนะนำแคมเปญที่กำลังเป็นที่นิยม เพื่อเพิ่มยอดขายของคุณ
               </p>
             </div>
-            <DateRangePicker />
+            <CustomRangeField />
           </div>
 
           <section className="bg-white rounded-2xl border border-[var(--color-neutral-300)] p-4 sm:p-5">

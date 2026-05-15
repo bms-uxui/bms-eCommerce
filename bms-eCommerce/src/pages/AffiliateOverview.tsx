@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Icon from "../components/landing/Icon";
 import { AffiliateHeader, AffiliateSidebar } from "../components/AffiliateChrome";
-import DateRangePicker from "../components/DateRangePicker";
+import { CustomRangeField } from "../components/CustomRangeCalendar";
 import Pagination from "../components/Pagination";
 import { ChangeBadge, type BadgeTone } from "./SellerOverview";
 import { makeProducts } from "../components/landing/mockData";
@@ -201,7 +201,7 @@ export default function AffiliateOverview() {
                 ข้อมูลอัปเดตล่าสุด: วันนี้ เวลา 00:00 น.
               </p>
             </div>
-            <DateRangePicker />
+            <CustomRangeField />
           </div>
 
           {/* Summary stats */}
