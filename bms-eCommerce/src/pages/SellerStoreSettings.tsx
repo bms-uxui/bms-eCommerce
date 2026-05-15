@@ -4,6 +4,8 @@ import { parseDate, type DateValue } from "@internationalized/date";
 import { Info, Pencil, Trash2, Plus, X } from "lucide-react";
 import { inputClassNames } from "../components/inputStyles";
 import { SellerHeader, SellerSidebar } from "../components/SellerChrome";
+import { AddBankModal } from "../components/landing/PaymentModals";
+import PasswordSetupModal from "../components/PasswordSetupModal";
 import storeAvatarDefault from "../assets/store-avatar.png";
 import kasikorn from "../assets/payments/kasikorn.png";
 import krungthai from "../assets/payments/krungthai.png";
@@ -45,6 +47,48 @@ function BankLogo({ src }: { src: string }) {
   return <img src={src} alt="" className="w-9 h-9 rounded-lg object-contain shrink-0" />;
 }
 
+const BANK_ACCOUNTS = [
+  { id: "k", logo: kasikorn, name: "ธนาคารกสิกรไทย", masked: "96* **** *08", primary: true },
+  { id: "kt", logo: krungthai, name: "ธนาคารกรุงไทย", masked: "12* **** *22", primary: false },
+];
+
+function BankPickerModal({ onClose, onAddNew }: { onClose: () => void; onAddNew: () => void }) {
+  const [selected, setSelected] = useState(BANK_ACCOUNTS[0].id);
+  return (
+    <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4" onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="bg-white rounded-2xl w-full max-w-[650px] max-h-[90vh] overflow-y-auto flex flex-col">
+        <div className="px-6 pt-6 pb-4 border-b border-[var(--color-neutral-200)] flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+          <div>
+            <h2 className="text-[20px] font-bold text-[var(--color-primary-700)]">บัญชีธนาคารของฉัน</h2>
+            <p className="text-[13px] text-[var(--color-neutral-600)] mt-1">บัญชีธนาคารจะแสดงให้เลือกตอนที่คุณจะดำเนินการถอนเงิน</p>
+          </div>
+          <button type="button" onClick={onAddNew} className="inline-flex items-center gap-1.5 h-9 px-4 rounded-lg bg-[var(--color-primary)] text-white text-[13px] font-medium hover:brightness-110 transition shrink-0">
+            <Plus size={16} />เพิ่มบัญชีใหม่
+          </button>
+        </div>
+        <div className="px-6 py-4 flex flex-col">
+          {BANK_ACCOUNTS.map((a) => (
+            <label key={a.id} className="flex flex-wrap items-center gap-3 py-3 border-b border-[var(--color-neutral-200)] last:border-b-0 cursor-pointer">
+              <input type="radio" name="bankacc" checked={selected === a.id} onChange={() => setSelected(a.id)} className="accent-[var(--color-primary)]" />
+              <img src={a.logo} alt="" className="w-9 h-9 rounded-md object-cover shrink-0 border border-[var(--color-neutral-200)]" />
+              <div className="w-full sm:w-[240px] sm:shrink-0 flex items-center gap-2 min-w-0">
+                <span className="text-[14px] text-[var(--color-neutral-900)] truncate">{a.name}</span>
+                {a.primary && <span className="text-[10px] text-white bg-[#0088ff] px-3 py-1 rounded shrink-0">ค่าเริ่มต้น</span>}
+              </div>
+              <span className="flex-1 text-center text-[14px] text-[var(--color-neutral-700)]">{a.masked}</span>
+              <button type="button" onClick={(e) => e.preventDefault()} className="h-8 px-3 rounded-lg border border-[var(--color-critical)] text-[var(--color-critical)] text-[13px] font-medium hover:bg-[#feeaed] transition shrink-0">ลบข้อมูล</button>
+            </label>
+          ))}
+        </div>
+        <div className="px-6 py-4 border-t border-[var(--color-neutral-200)] flex justify-end gap-3">
+          <button type="button" onClick={onClose} className="h-10 px-6 rounded-lg border border-[var(--color-neutral-400)] text-[var(--color-neutral-900)] text-[14px] font-medium bg-white hover:bg-[var(--color-neutral-100,#f5f8fa)] transition">ยกเลิก</button>
+          <button type="button" onClick={onClose} className="h-10 px-6 rounded-lg bg-[var(--color-primary)] text-white text-[14px] font-medium hover:brightness-110 transition">ยืนยัน</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function HolidayModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [range, setRange] = useState<RangeValue<DateValue> | null>({ start: parseDate("2026-08-10"), end: parseDate("2026-08-24") });
   useEffect(() => { if (isOpen) setRange({ start: parseDate("2026-08-10"), end: parseDate("2026-08-24") }); }, [isOpen]);
@@ -73,6 +117,10 @@ export default function SellerStoreSettings() {
   const logoInputRef = useRef<HTMLInputElement>(null);
   const pickLogo = () => logoInputRef.current?.click();
   const [autoWithdraw, setAutoWithdraw] = useState(true);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [addBankOpen, setAddBankOpen] = useState(false);
+  const [hasPassword, setHasPassword] = useState(true);
+  const [pwOpen, setPwOpen] = useState(false);
   const [holidayOpen, setHolidayOpen] = useState(false);
   const [holidays, setHolidays] = useState([
     { id: "h1", range: "10 ส.ค. 2026 - 24 ส.ค. 2026", on: false },
@@ -80,12 +128,14 @@ export default function SellerStoreSettings() {
   ]);
   const [notify, setNotify] = useState({ orders: true, promo: true, message: true, product: true });
 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-[#f5f8fa]">
-      <SellerHeader />
+      <SellerHeader onMenuClick={() => setMobileMenuOpen(true)} />
       <div className="flex">
-        <SellerSidebar active="การตั้งค่าร้านค้า" />
-        <main className="flex-1 min-w-0 px-8 py-6 flex flex-col gap-4 min-h-[calc(100vh-72px)]">
+        <SellerSidebar active="การตั้งค่าร้านค้า" mobileOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
+        <main className="flex-1 min-w-0 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 flex flex-col gap-4 min-h-[calc(100vh-72px)]">
           <h1 className="text-[20px] font-semibold text-[var(--color-primary-700)]">การตั้งค่า</h1>
 
           <div className={`${CARD} p-1.5 flex gap-1 w-fit`}>
@@ -194,63 +244,86 @@ export default function SellerStoreSettings() {
           )}
 
           {tab === "bank" && (
-            <div className="flex flex-col gap-4">
-              <section className={`${CARD} p-6`}>
-                <div className="flex items-start justify-between gap-4">
+            <div className="flex flex-col gap-6">
+              {/* บัญชีการถอนเงิน */}
+              <section className="bg-white rounded-2xl shadow-[0_2px_4px_rgba(29,33,45,0.08),0_0_2px_rgba(29,33,45,0.08),0_0_1px_rgba(29,33,45,0.2)] flex flex-col overflow-hidden">
+                <div className="px-6 pt-6 pb-4 flex items-start justify-between gap-4">
                   <div>
-                    <h2 className="text-[18px] font-medium text-[var(--color-neutral-900)]">บัญชีการถอนเงิน</h2>
-                    <p className="text-[13px] text-[var(--color-neutral-500)] mt-1">บัญชีธนาคารจะแสดงให้เลือกตอนที่คุณจะดำเนินการถอนเงิน</p>
+                    <h3 className="text-[18px] font-semibold text-[var(--color-neutral-900)]">บัญชีการถอนเงิน</h3>
+                    <p className="text-[14px] text-[var(--color-neutral-500)] mt-2">บัญชีธนาคารจะแสดงให้เลือกตอนที่คุณจะดำเนินการถอนเงิน</p>
                   </div>
-                  <button type="button" className="h-10 px-4 rounded-lg bg-[var(--color-primary)] text-white text-[14px] font-medium flex items-center gap-2 hover:bg-[var(--color-primary-600)] transition-colors shrink-0"><Plus size={16} />เพิ่มบัญชีใหม่</button>
+                  <button type="button" onClick={() => setAddBankOpen(true)} className="inline-flex items-center gap-2 h-10 px-4 rounded-lg bg-[var(--color-primary)] text-white text-[16px] font-medium hover:brightness-110 transition shrink-0"><Plus size={20} />เพิ่มบัญชีใหม่</button>
                 </div>
-                <div className="mt-4 flex flex-col">
-                  {[
-                    { logo: kasikorn, name: "ธนาคารกสิกรไทย", masked: "96* **** *08", primary: true },
-                    { logo: krungthai, name: "ธนาคารกรุงไทย", masked: "12* **** *22", primary: false },
-                  ].map((b, i) => (
-                    <div key={i} className="flex items-center gap-3 py-4 border-t border-[var(--color-neutral-200)] first:border-t-0">
-                      <BankLogo src={b.logo} />
-                      <span className="text-[14px] font-medium text-[var(--color-neutral-900)]">{b.name}</span>
-                      {b.primary && <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium text-white bg-[var(--color-primary)]">ค่าเริ่มต้น</span>}
-                      <span className="flex-1" />
-                      <span className="text-[14px] text-[var(--color-neutral-700)] tabular-nums">{b.masked}</span>
-                      <button type="button" className="h-8 px-3 rounded-lg border border-[var(--color-critical)] text-[var(--color-critical)] text-[13px] font-medium hover:bg-[var(--color-critical)]/5 transition-colors shrink-0">ลบข้อมูล</button>
+                <div className="px-6 pb-6 flex flex-col gap-6">
+                  {BANK_ACCOUNTS.map((b, i) => (
+                    <div key={b.id} className={`flex items-center gap-4 ${i < BANK_ACCOUNTS.length - 1 ? "pb-6 border-b border-[var(--color-neutral-200)]" : ""}`}>
+                      <img src={b.logo} alt="" className="w-10 h-10 rounded-lg object-cover shrink-0" />
+                      <div className="flex flex-1 items-center gap-3 min-w-0">
+                        <span className="text-[16px] font-semibold text-[var(--color-neutral-900)] truncate">{b.name}</span>
+                        {b.primary && <span className="text-[10px] text-white bg-[#0088ff] px-3 py-1 rounded shrink-0">ค่าเริ่มต้น</span>}
+                      </div>
+                      <span className="flex-1 text-[16px] text-[var(--color-neutral-900)] tabular-nums">{b.masked}</span>
+                      <button type="button" className="w-[76px] px-4 py-1 rounded border border-[var(--color-critical)] text-[var(--color-critical)] text-[12px] font-medium hover:bg-[#feeaed] transition shrink-0">ลบข้อมูล</button>
                     </div>
                   ))}
                 </div>
               </section>
 
-              <section className={`${CARD} p-6`}>
-                <div className="flex items-start justify-between gap-4">
+              {/* การถอนเงินอัตโนมัติ */}
+              <section className="bg-white rounded-2xl shadow-[0_2px_4px_rgba(29,33,45,0.08),0_0_2px_rgba(29,33,45,0.08),0_0_1px_rgba(29,33,45,0.2)] flex flex-col overflow-hidden">
+                <div className="px-6 py-6 flex items-start justify-between gap-4">
                   <div>
-                    <h2 className="text-[18px] font-medium text-[var(--color-neutral-900)]">การถอนเงินอัตโนมัติ</h2>
-                    <p className="text-[13px] text-[var(--color-neutral-500)] mt-1">การถอนเงินอัตโนมัติจะดำเนินการก็ต่อเมื่อคุณทำการเชื่อมต่อบัญชีธนาคารก่อนเท่านั้น</p>
+                    <h3 className="text-[18px] font-semibold text-[var(--color-neutral-900)]">การถอนเงินอัตโนมัติ</h3>
+                    <p className="text-[14px] text-[var(--color-neutral-500)] mt-2">การถอนเงินอัตโนมัติจะดำเนินการก็ต่อเมื่อคุณทำการเชื่อมต่อบัญชีธนาคารก่อนเท่านั้น</p>
                   </div>
                   <Switch size="sm" color="success" isSelected={autoWithdraw} onValueChange={setAutoWithdraw} aria-label="เปิด/ปิดการถอนเงินอัตโนมัติ" />
                 </div>
-                {autoWithdraw && (
-                  <div className="mt-4 flex items-center gap-3 pt-4 border-t border-[var(--color-neutral-200)]">
-                    <BankLogo src={kasikorn} />
-                    <span className="text-[14px] font-medium text-[var(--color-neutral-900)]">ธนาคารกสิกรไทย</span>
-                    <span className="flex-1" />
-                    <span className="text-[14px] text-[var(--color-neutral-700)] tabular-nums">96* **** *08</span>
-                    <button type="button" className="h-8 px-3 rounded-lg border border-[var(--color-primary)] text-[var(--color-primary)] text-[13px] font-medium hover:bg-[var(--color-primary-100)] transition-colors shrink-0">เปลี่ยน</button>
-                  </div>
-                )}
+                <div className="px-6 pb-6">
+                  {autoWithdraw ? (
+                    <div className="flex items-center gap-4">
+                      <img src={kasikorn} alt="" className="w-10 h-10 rounded-lg object-cover shrink-0" />
+                      <span className="flex-1 text-[16px] font-semibold text-[var(--color-neutral-900)]">ธนาคารกสิกรไทย</span>
+                      <span className="flex-1 text-[16px] text-[var(--color-neutral-900)] tabular-nums">96* **** *08</span>
+                      <button type="button" onClick={() => setPickerOpen(true)} className="w-[76px] px-4 py-1 rounded border border-[var(--color-primary)] text-[var(--color-primary)] text-[12px] font-medium hover:bg-[var(--color-primary-100)] transition shrink-0">เปลี่ยน</button>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center gap-4 py-4 text-center">
+                      <p className="text-[16px] text-[var(--color-neutral-900)]">ยังไม่มีบัญชีหลักสำหรับการทำรายการ</p>
+                      <button type="button" onClick={() => setPickerOpen(true)} className="h-10 px-5 rounded-lg bg-[var(--color-primary)] text-white text-[14px] font-medium hover:brightness-110 transition">เพิ่มบัญชีธนาคาร</button>
+                    </div>
+                  )}
+                </div>
               </section>
 
-              <section className={`${CARD} p-6`}>
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <h2 className="text-[18px] font-medium text-[var(--color-neutral-900)]">การจัดการรหัสผ่าน</h2>
-                    <p className="text-[13px] text-[var(--color-neutral-500)] mt-1">การถอนเงินเพื่อความปลอดภัยสูงสุด กรุณาตั้งรหัสผ่าน</p>
-                  </div>
+              {/* การจัดการรหัสผ่าน */}
+              <section className="bg-white rounded-2xl shadow-[0_2px_4px_rgba(29,33,45,0.08),0_0_2px_rgba(29,33,45,0.08),0_0_1px_rgba(29,33,45,0.2)] flex flex-col overflow-hidden">
+                <div className="px-6 py-6">
+                  <h3 className="text-[18px] font-semibold text-[var(--color-neutral-900)]">การจัดการรหัสผ่าน</h3>
+                  <p className="text-[14px] text-[var(--color-neutral-500)] mt-2">การถอนเงินเพื่อความปลอดภัยสูงสุด กรุณาตั้งรหัสผ่าน</p>
                 </div>
-                <div className="mt-4 flex items-center justify-between gap-4 pt-4 border-t border-[var(--color-neutral-200)]">
-                  <span className="text-[18px] tracking-widest text-[var(--color-neutral-700)]">••••••</span>
-                  <button type="button" className="h-8 px-3 rounded-lg border border-[var(--color-primary)] text-[var(--color-primary)] text-[13px] font-medium hover:bg-[var(--color-primary-100)] transition-colors">เปลี่ยน</button>
+                <div className="px-6 pb-6">
+                  {hasPassword ? (
+                    <div className="flex items-center gap-4">
+                      <span className="flex-1 text-[16px] tracking-widest text-[var(--color-neutral-900)]">******</span>
+                      <button type="button" onClick={() => setPwOpen(true)} className="w-[76px] px-4 py-1 rounded border border-[var(--color-primary)] text-[var(--color-primary)] text-[12px] font-medium hover:bg-[var(--color-primary-100)] transition shrink-0">เปลี่ยน</button>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center gap-4 py-4 text-center">
+                      <p className="text-[16px] text-[var(--color-neutral-900)]">กรุณาตั้งรหัสผ่านสำหรับการทำรายการ</p>
+                      <button type="button" onClick={() => setPwOpen(true)} className="h-10 px-5 rounded-lg bg-[var(--color-primary)] text-white text-[14px] font-medium hover:brightness-110 transition">ตั้งรหัสผ่าน</button>
+                    </div>
+                  )}
                 </div>
               </section>
+
+              {pickerOpen && (
+                <BankPickerModal
+                  onClose={() => setPickerOpen(false)}
+                  onAddNew={() => { setPickerOpen(false); setAddBankOpen(true); }}
+                />
+              )}
+              <AddBankModal isOpen={addBankOpen} onClose={() => setAddBankOpen(false)} onSubmit={() => {}} />
+              {pwOpen && <PasswordSetupModal onClose={() => setPwOpen(false)} onComplete={() => { setHasPassword(true); setPwOpen(false); }} />}
             </div>
           )}
 

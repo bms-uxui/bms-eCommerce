@@ -9,6 +9,8 @@ import HeartIcon from "../HeartIcon";
 import QuoteIcon from "../QuoteIcon";
 import OrderIcon from "../OrderIcon";
 import UserIcon from "../UserIcon";
+import CrownIcon from "../CrownIcon";
+import CouponIcon from "../CouponIcon";
 import SearchIcon from "../SearchIcon";
 import HelpSelect from "../HelpSelect";
 import GuestProfile from "../GuestProfile";
@@ -650,12 +652,20 @@ export function ProfileMenu() {
                         : "text-[var(--color-neutral-900)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)]",
                     ].join(" ")}
                   >
-                    {item.icon === "alarm" ? (
-                      <BellIcon size={18} />
-                    ) : item.icon === "user" ? (
+                    {item.icon === "user" ? (
                       <UserIcon size={18} />
                     ) : item.icon === "package" ? (
                       <OrderIcon size={18} />
+                    ) : item.icon === "clipboard" ? (
+                      <QuoteIcon size={18} />
+                    ) : item.icon === "crown" ? (
+                      <CrownIcon size={18} />
+                    ) : item.icon === "alarm" ? (
+                      <BellIcon size={18} />
+                    ) : item.icon === "tag" ? (
+                      <CouponIcon size={18} />
+                    ) : item.icon === "heart" ? (
+                      <HeartIcon size={18} />
                     ) : (
                       <Icon name={item.icon} size={18} />
                     )}
@@ -891,7 +901,7 @@ export default function Header() {
     navigate(sellerLoggedIn ? "/seller/overview" : "/seller/login");
 
   return (
-    <header className="sticky top-0 z-50 isolate bg-[var(--color-primary)] pb-2">
+    <header className="sticky top-0 z-50 isolate bg-[var(--color-primary)] pb-4 lg:pb-2">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-[120px]">
         {/* Top white bar */}
         <div className="bg-white rounded-b-2xl lg:rounded-b-3xl shadow-[0_4px_6px_rgba(0,118,223,0.4)] p-3 lg:p-[14px]">
@@ -931,23 +941,24 @@ export default function Header() {
           {/* Mobile / tablet rows (< lg) */}
           <div className="lg:hidden flex flex-col gap-2.5">
             {/* Row 1: hamburger / logo / actions */}
-            <div className="flex items-center justify-between gap-3 h-9">
-              <button
-                aria-label="เมนู"
-                onClick={() => setMobileMenuOpen((s) => !s)}
-                className="w-9 h-9 flex items-center justify-center rounded-full text-[var(--color-neutral-700)] hover:bg-[var(--color-primary)]/10 active:scale-95 transition-all"
-              >
-                <Icon name={mobileMenuOpen ? "close" : "menu"} size={22} />
-              </button>
+            <div className="flex items-center justify-between h-9">
+              <div className="flex items-center gap-3">
+                <button
+                  aria-label="เมนู"
+                  onClick={() => setMobileMenuOpen((s) => !s)}
+                  className="w-9 h-9 flex items-center justify-center rounded-full text-[var(--color-neutral-700)] hover:bg-[var(--color-primary)]/10 active:scale-95 transition-all"
+                >
+                  <Icon name={mobileMenuOpen ? "close" : "menu"} size={22} />
+                </button>
+                <Link to="/" className="flex items-center gap-2 shrink-0">
+                  <BrightifyLogo size={32} />
+                  <p className="text-[17px] sm:text-[18px] font-extrabold text-[var(--color-neutral-900)] leading-none">
+                    BRIGHTIFY
+                  </p>
+                </Link>
+              </div>
 
-              <Link to="/" className="flex items-center gap-2 shrink-0 min-w-0">
-                <BrightifyLogo size={32} />
-                <p className="text-[17px] sm:text-[18px] font-extrabold text-[var(--color-neutral-900)] leading-none truncate">
-                  BRIGHTIFY
-                </p>
-              </Link>
-
-              <div className="flex items-center gap-1 shrink-0">
+              <div className="flex items-center gap-1">
                 <CartButton />
                 <NotificationButton />
                 {isLoggedIn ? <ProfileMenu /> : <GuestProfile compact />}

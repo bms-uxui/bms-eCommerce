@@ -82,7 +82,7 @@ function SummaryTableSection() {
   const [page, setPage] = useState(2);
   return (
     <section className="bg-white rounded-2xl border border-[var(--color-neutral-300)] p-4">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-1 pb-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 px-1 pb-3">
         <h2 className="text-[18px] font-bold text-[var(--color-primary-700)]">
           สรุปผลโดยรวมแบบตาราง
         </h2>

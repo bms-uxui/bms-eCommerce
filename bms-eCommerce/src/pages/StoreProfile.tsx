@@ -40,7 +40,7 @@ export function StoreHero() {
     <section className="relative">
       {/* Banner */}
       <div
-        className="h-[250px] w-full"
+        className="h-[160px] sm:h-[200px] lg:h-[250px] w-full"
         style={{
           background:
             "linear-gradient(135deg, #5dd6f0 0%, #21bdff 30%, #0485f7 60%, #f0c674 100%)",
@@ -48,14 +48,14 @@ export function StoreHero() {
       />
 
       {/* Info card overlapping banner */}
-      <div className="max-w-[1240px] mx-auto px-3 sm:px-4 lg:px-5 -mt-[152px] relative z-10">
-        <div className="bg-white rounded-2xl shadow-[0_4px_16px_rgba(2,77,143,0.12)] p-6 flex gap-6 items-start">
+      <div className="max-w-[1240px] mx-auto px-3 sm:px-4 lg:px-5 -mt-[80px] sm:-mt-[120px] lg:-mt-[152px] relative z-10">
+        <div className="bg-white rounded-2xl shadow-[0_4px_16px_rgba(2,77,143,0.12)] p-4 sm:p-6 flex flex-col sm:flex-row gap-4 sm:gap-6 items-start">
           {/* Avatar + badge */}
-          <div className="shrink-0 flex flex-col items-center -mt-12">
+          <div className="shrink-0 flex flex-col items-center -mt-8 sm:-mt-12 self-center sm:self-start">
             <img
               src={storeAvatar}
               alt="BMS.shop"
-              className="w-[90px] h-[90px] rounded-full object-cover ring-4 ring-white"
+              className="w-[70px] h-[70px] sm:w-[90px] sm:h-[90px] rounded-full object-cover ring-4 ring-white"
             />
             <span className="-mt-2 px-2 py-0.5 rounded-md bg-[var(--color-primary)] text-white text-[12px] font-medium whitespace-nowrap">
               ร้านค้าแนะนำ
@@ -63,16 +63,16 @@ export function StoreHero() {
           </div>
 
           {/* Right column */}
-          <div className="flex-1 min-w-0">
-            <div className="flex flex-wrap items-center gap-3">
-              <h1 className="text-[20px] font-bold text-[var(--color-neutral-900)]">
+          <div className="flex-1 min-w-0 w-full">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+              <h1 className="text-[18px] sm:text-[20px] font-bold text-[var(--color-neutral-900)]">
                 BMS.shop
               </h1>
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[var(--color-primary-100)] text-[var(--color-primary)] text-[12px] font-medium">
                 <CheckCircle2 size={14} />
                 ยืนยันตัวตนแล้ว
               </span>
-              <span className="ml-auto flex items-center gap-2">
+              <span className="sm:ml-auto flex items-center gap-2">
                 <button className="h-8 px-3 rounded-md bg-[var(--color-primary)] text-white text-[13px] font-medium flex items-center gap-1.5 hover:brightness-110 active:scale-95 transition">
                   <Plus size={16} />
                   ติดตาม
@@ -103,7 +103,7 @@ export function StoreHero() {
               (รุ่นใหม่) โดยรองรับการเชื่อมต่อข้อมูล OP/IP กับ สปสช. (NHSO) และเชื่อมต่อผ่านระบบคลาวด์
             </p>
 
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-3 mt-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-3 mt-5">
               <InfoChip icon={MapPin}>เชียงราย</InfoChip>
               <InfoChip icon={MessageCircle}>ตอบกลับ 96%</InfoChip>
               <InfoChip icon={Star}>4.5 คะแนน (ผู้รีวิว 2.3k)</InfoChip>

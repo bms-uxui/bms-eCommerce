@@ -48,7 +48,7 @@ function HeroSlider({ slides }: { slides: Slide[] }) {
 
   return (
     <div
-      className="relative rounded-2xl md:rounded-[24px] overflow-hidden aspect-[3/1] md:h-[250px] md:aspect-auto group cursor-pointer shadow-[0_2px_8px_rgba(157,183,206,0.3)] bg-white"
+      className="relative rounded-2xl md:rounded-[24px] overflow-hidden h-full md:h-[250px] group cursor-pointer shadow-[0_2px_8px_rgba(157,183,206,0.3)] bg-white"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -111,7 +111,7 @@ function HeroSlider({ slides }: { slides: Slide[] }) {
 
 function StaticBanner() {
   return (
-    <div className="relative rounded-2xl md:rounded-[24px] overflow-hidden aspect-[434/250] md:h-[250px] md:aspect-auto bg-white cursor-pointer hover:shadow-md transition-shadow shadow-[0_2px_8px_rgba(157,183,206,0.3)]">
+    <div className="relative rounded-2xl md:rounded-[24px] overflow-hidden h-full md:h-[250px] bg-white cursor-pointer hover:shadow-md transition-shadow shadow-[0_2px_8px_rgba(157,183,206,0.3)]">
       <img
         src={sideBannerImage}
         alt={sideBannerAlt}
@@ -123,7 +123,7 @@ function StaticBanner() {
 
 function SubBanner({ banner }: { banner: (typeof subBanners)[number] }) {
   return (
-    <div className="relative aspect-[291/100] rounded-xl overflow-hidden cursor-pointer group bg-white shadow-[0_2px_8px_rgba(157,183,206,0.2)] hover:shadow-md transition-all active:scale-[0.98]">
+    <div className="relative aspect-[291/100] rounded-xl overflow-hidden cursor-pointer group bg-white shadow-[0_2px_8px_rgba(157,183,206,0.2)] hover:shadow-md transition-all active:scale-[0.98] min-w-[78%] sm:min-w-[48%] md:min-w-0">
       <img
         src={banner.image}
         alt={banner.alt}
@@ -136,14 +136,18 @@ function SubBanner({ banner }: { banner: (typeof subBanners)[number] }) {
 export default function HeroBanner() {
   return (
     <section className="flex flex-col gap-3 mt-3">
-      {/* Row 1 — slider 750 + static 434 (matches Figma 750:434 ≈ 63/37) */}
-      <div className="grid grid-cols-1 md:grid-cols-[750fr_434fr] gap-3">
-        <HeroSlider slides={slides} />
-        <StaticBanner />
+      {/* Row 1 — mobile: full-width snap slide, desktop: 63/37 grid */}
+      <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-none h-[200px] sm:h-[230px] md:h-auto md:overflow-visible md:grid md:grid-cols-[750fr_434fr] md:gap-3">
+        <div className="min-w-full shrink-0 h-full md:min-w-0 md:h-auto snap-start">
+          <HeroSlider slides={slides} />
+        </div>
+        <div className="min-w-full shrink-0 h-full md:min-w-0 md:h-auto snap-start">
+          <StaticBanner />
+        </div>
       </div>
 
-      {/* Row 2 — 4 sub banners */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      {/* Row 2 — 4 sub banners: single-row scroll on mobile, 4-col grid on md+ */}
+      <div className="flex gap-3 overflow-x-auto scrollbar-none -mx-3 sm:-mx-4 px-3 sm:px-4 pb-1 md:mx-0 md:px-0 md:pb-0 md:grid md:grid-cols-4">
         {subBanners.map((b) => (
           <SubBanner key={b.id} banner={b} />
         ))}

@@ -283,11 +283,11 @@ export default function WithdrawCommission() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Withdrawable */}
             <section className="bg-white rounded-2xl border border-[var(--color-neutral-300)] p-5 flex flex-col gap-3 justify-between h-full">
-              <div className="flex items-center justify-between gap-2">
+              <div className="flex flex-wrap items-center justify-between gap-2">
                 <p className="text-[14px] text-[var(--color-neutral-700)]">คอมมิชชันที่สามารถถอนได้</p>
                 <p className="text-[12px] text-[var(--color-neutral-500)]">อัปเดตข้อมูลล่าสุดวันที่ 27/04/2026</p>
               </div>
-              <div className="flex items-end justify-between gap-4">
+              <div className="flex flex-wrap items-end justify-between gap-4">
                 <div className="flex items-baseline gap-2 shrink-0">
                   <span className="text-[34px] font-bold text-[var(--color-primary)] leading-none">฿</span>
                   <span className="text-[34px] font-bold text-[var(--color-primary)] leading-none">6,500</span>
@@ -295,7 +295,7 @@ export default function WithdrawCommission() {
                 <button
                   type="button"
                   onClick={() => setWithdrawOpen(true)}
-                  className="w-[150px] h-10 rounded-lg bg-[#a5e840] text-[#1d212d] text-[14px] font-medium text-center hover:brightness-105 transition shrink-0"
+                  className="h-10 px-6 rounded-lg bg-[#a5e840] text-[#1d212d] text-[14px] font-medium text-center hover:brightness-105 transition"
                 >
                   ถอนเงิน
                 </button>
@@ -333,7 +333,7 @@ export default function WithdrawCommission() {
                 {ACCOUNTS.map((a, i) => (
                   <div key={i} className="flex items-center gap-3 py-2.5">
                     <img src={a.logo} alt="" className="w-9 h-9 rounded-md object-cover shrink-0 border border-[var(--color-neutral-200)]" />
-                    <div className="flex items-center gap-2 min-w-0 shrink-0">
+                    <div className="flex items-center gap-2 min-w-0 flex-1">
                       <span className="text-[14px] text-[var(--color-neutral-900)] truncate">{a.bank}</span>
                       {a.primary && (
                         <span className="text-[10px] text-white bg-[#0088ff] px-3 py-1 rounded shrink-0">
@@ -352,7 +352,7 @@ export default function WithdrawCommission() {
           <section className="bg-white rounded-2xl border border-[var(--color-neutral-300)] p-4 sm:p-5 flex flex-col gap-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <h2 className="text-[18px] font-bold text-[var(--color-primary-700)]">ประวัติการทำธุรกรรม</h2>
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-3">
                 <DateRangePicker />
                 <button
                   type="button"

@@ -7,17 +7,19 @@ export default function ProductGridSection({
   title,
   products,
   showLoadMore = false,
+  recommended = false,
 }: {
   title: string;
   products: Product[];
   showLoadMore?: boolean;
+  recommended?: boolean;
 }) {
   return (
     <section className="bg-white rounded-xl lg:rounded-2xl border border-[var(--color-neutral-300)] p-3 sm:p-4 lg:p-6">
       <SectionHeader title={title} />
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 sm:gap-3">
-        {products.map((p, i) => (
-          <ProductCard key={p.id} product={p} flashSale={i % 3 === 0} />
+        {products.map((p) => (
+          <ProductCard key={p.id} product={p} recommended={recommended} />
         ))}
       </div>
       {showLoadMore && (

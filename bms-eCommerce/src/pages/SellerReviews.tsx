@@ -86,13 +86,15 @@ export default function SellerReviews() {
   const pages = [1, 2, 3, 4, 5, "…", 12] as const;
   const storeRating = 4.8;
 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-[#f5f8fa]">
-      <SellerHeader />
+      <SellerHeader onMenuClick={() => setMobileMenuOpen(true)} />
       <div className="flex">
-        <SellerSidebar active="รีวิว & คะแนนร้านค้า" />
-        <main className="flex-1 min-w-0 px-8 py-6 flex flex-col gap-4 min-h-[calc(100vh-72px)]">
-          <div className="flex items-center justify-between gap-4">
+        <SellerSidebar active="รีวิว & คะแนนร้านค้า" mobileOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
+        <main className="flex-1 min-w-0 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 flex flex-col gap-4 min-h-[calc(100vh-72px)]">
+          <div className="flex items-center justify-between flex-wrap gap-3">
             <h1 className="text-[20px] font-semibold text-[var(--color-primary-700)]">รีวิว & คะแนนร้านค้า</h1>
             <div className="flex items-center">
               <input type="text" placeholder="ค้นหาสินค้าที่รีวิว" className="h-10 w-[360px] bg-white border border-[var(--color-neutral-300)] rounded-l-lg px-4 text-[16px] text-[var(--color-neutral-900)] placeholder:text-[var(--color-neutral-500)] focus:outline-none focus:border-[var(--color-primary)]" />

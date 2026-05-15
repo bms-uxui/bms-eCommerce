@@ -227,14 +227,16 @@ export default function SellerQuoteDetail() {
     setTimeout(() => setCopied(false), 1500);
   };
 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-[#f5f8fa]">
-      <SellerHeader />
+      <SellerHeader onMenuClick={() => setMobileMenuOpen(true)} />
       <div className="flex">
-        <SellerSidebar active="ใบเสนอราคา" />
-        <main className="flex-1 min-w-0 px-8 py-6 flex flex-col gap-4 min-h-[calc(100vh-72px)]">
+        <SellerSidebar active="ใบเสนอราคา" mobileOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
+        <main className="flex-1 min-w-0 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 flex flex-col gap-4 min-h-[calc(100vh-72px)]">
           {/* Top bar */}
-          <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center justify-between flex-wrap gap-3">
             <div className="flex items-center gap-2">
               <button
                 type="button"

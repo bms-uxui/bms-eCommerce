@@ -367,16 +367,23 @@ const TOP_CUSTOMERS = [
 ];
 
 function RankBadge({ n }: { n: number }) {
-  const isTopThree = n <= 3;
+  const gradients: Record<number, string> = {
+    1: "linear-gradient(135deg, #ffe066 0%, #f7b731 50%, #e8a000 100%)",
+    2: "linear-gradient(135deg, #e8ecf0 0%, #c8d0da 50%, #a0aab4 100%)",
+    3: "linear-gradient(135deg, #f0a97a 0%, #cd7c3e 50%, #a85c20 100%)",
+  };
+  if (gradients[n]) {
+    return (
+      <span
+        className="inline-flex items-center justify-center w-7 h-7 rounded-full text-[14px] font-semibold text-white"
+        style={{ background: gradients[n] }}
+      >
+        {n}
+      </span>
+    );
+  }
   return (
-    <span
-      className={[
-        "inline-flex items-center justify-center w-7 h-7 rounded-full text-[14px] font-semibold",
-        isTopThree
-          ? "bg-[var(--color-primary)] text-white"
-          : "bg-[var(--color-neutral-200)] text-[var(--color-neutral-900)]",
-      ].join(" ")}
-    >
+    <span className="inline-flex items-center justify-center w-7 h-7 rounded-full text-[14px] font-semibold bg-[var(--color-neutral-200)] text-[var(--color-neutral-900)]">
       {n}
     </span>
   );
@@ -456,12 +463,13 @@ function TableSection({
 }
 
 export default function SellerOverview() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   return (
     <div className="min-h-screen bg-[#f4f7fa]">
-      <SellerHeader />
+      <SellerHeader onMenuClick={() => setMobileMenuOpen(true)} />
       <div className="flex">
-        <SellerSidebar active="ภาพรวมร้านค้า" />
-        <main className="flex-1 min-w-0 px-8 py-6">
+        <SellerSidebar active="ภาพรวมร้านค้า" mobileOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
+        <main className="flex-1 min-w-0 px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
           <h1 className="text-[20px] font-bold text-[var(--color-neutral-900)] mb-6">
             ภาพรวมร้านค้า
           </h1>

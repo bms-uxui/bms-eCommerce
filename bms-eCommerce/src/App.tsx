@@ -42,7 +42,7 @@ function App() {
         </div>
 
         <div className="page-section-in" style={{ animationDelay: "480ms" }}>
-          <ProductGridSection title="สินค้าแนะนำ" products={recommended} showLoadMore />
+          <ProductGridSection title="สินค้าแนะนำ" products={recommended} showLoadMore recommended />
         </div>
       </main>
 

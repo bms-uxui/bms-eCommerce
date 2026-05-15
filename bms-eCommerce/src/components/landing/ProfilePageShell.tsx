@@ -1,8 +1,8 @@
+import { useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router";
 import type { ReactNode, ComponentType } from "react";
 import {
   Heart,
-  CreditCard,
   Settings as SettingsIcon,
   LogOut,
 } from "lucide-react";
@@ -15,7 +15,6 @@ import QuoteIcon from "../QuoteIcon";
 import CrownIcon from "../CrownIcon";
 import BellIcon from "../BellIcon";
 import avatar from "../../assets/avatar.jpg";
-import profileBanner from "../../assets/banners/profile-banner.png";
 
 export type SidebarKey =
   | "account"
@@ -25,7 +24,6 @@ export type SidebarKey =
   | "notifications"
   | "coupons"
   | "wishlist"
-  | "payment"
   | "settings";
 
 export type SidebarItem = {
@@ -43,20 +41,46 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
   { icon: BellIcon, label: "การแจ้งเตือน", key: "notifications", path: "/notifications" },
   { icon: CouponIcon, label: "โค้ดส่วนลด", key: "coupons", path: "/coupons" },
   { icon: Heart, label: "สิ่งที่ถูกใจ", key: "wishlist", path: "/favorites" },
-  { icon: CreditCard, label: "วิธีการชำระเงิน", key: "payment", path: "/settings" },
-  { icon: SettingsIcon, label: "การตั้งค่า", key: "settings", path: "/settings" },
+{ icon: SettingsIcon, label: "การตั้งค่า", key: "settings", path: "/settings" },
 ];
 
 function ProfileBanner({ avatarSrc }: { avatarSrc?: string }) {
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [bannerSrc, setBannerSrc] = useState<string | null>(null);
+
+  const onFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file || !file.type.startsWith("image/")) return;
+    const reader = new FileReader();
+    reader.onload = () => setBannerSrc(reader.result as string);
+    reader.readAsDataURL(file);
+  };
+
   return (
     <section className="relative">
-      <div className="h-[120px] sm:h-[150px] lg:h-[180px] w-full bg-[#cce7ff] overflow-hidden">
-        <img
-          src={profileBanner}
-          alt=""
-          aria-hidden
-          className="w-full h-full object-cover object-bottom pointer-events-none select-none"
-        />
+      <div
+        className="relative h-[120px] sm:h-[150px] lg:h-[180px] w-full overflow-hidden"
+        style={{
+          background: bannerSrc
+            ? undefined
+            : "linear-gradient(163.66deg, #b4e1ff 0%, #e9f8ff 45.1%, #f7fcfe 55.6%, #e9f8ff 62.7%, #55c9ff 109.1%)",
+        }}
+      >
+        {bannerSrc && (
+          <img src={bannerSrc} alt="" aria-hidden className="w-full h-full object-cover pointer-events-none select-none" />
+        )}
+        <input ref={fileRef} type="file" accept="image/*" onChange={onFile} className="hidden" aria-label="เลือกรูปพื้นหลัง" />
+        <button
+          type="button"
+          aria-label="เปลี่ยนรูปพื้นหลัง"
+          onClick={() => fileRef.current?.click()}
+          className="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-black/30 hover:bg-black/45 flex items-center justify-center transition"
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11.333 2a1.886 1.886 0 0 1 2.667 2.667L5.067 13.6 2 14l.4-3.067L11.333 2Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
       </div>
 
       <div className="max-w-[1240px] mx-auto px-3 sm:px-4 lg:px-5 relative z-10">

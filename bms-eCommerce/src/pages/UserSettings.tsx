@@ -12,12 +12,7 @@ import {
   Tag,
   Heart,
   Settings as SettingsIcon,
-  LogOut,
-  Pencil,
   Plus,
-  CreditCard,
-  Landmark,
-  Trash2,
 } from "lucide-react";
 import {
   AddCardModal,
@@ -52,7 +47,6 @@ const SIDEBAR_ITEMS = [
   { icon: Bell, label: "การแจ้งเตือน", key: "notifications" },
   { icon: Tag, label: "โค้ดส่วนลด", key: "coupons" },
   { icon: Heart, label: "สิ่งที่ถูกใจ", key: "wishlist" },
-  { icon: CreditCard, label: "วิธีการชำระเงิน", key: "payment" },
   { icon: SettingsIcon, label: "การตั้งค่า", key: "settings" },
 ] as const;
 
@@ -323,7 +317,7 @@ function AddressTab() {
 
   return (
     <div className="mt-8">
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-[20px] font-bold text-[var(--color-primary-700)]">
           ที่อยู่ของฉัน
         </h2>
@@ -333,7 +327,7 @@ function AddressTab() {
             setEditing(undefined);
             setOpen(true);
           }}
-          className="h-9 px-4 rounded-md bg-[var(--color-primary)] text-white text-[13px] font-medium flex items-center gap-1.5 hover:brightness-110 active:scale-95 transition"
+          className="h-9 px-4 rounded-md bg-[var(--color-primary)] text-white text-[13px] font-medium flex items-center gap-1.5 hover:brightness-110 active:scale-95 transition shrink-0"
         >
           <Plus size={16} />
           เพิ่มที่อยู่ใหม่
@@ -355,7 +349,7 @@ function AddressTab() {
           addresses.map((a) => (
             <article
               key={a.id}
-              className="flex items-start justify-between gap-6 py-4 border-b border-[var(--color-neutral-300)] last:border-b-0"
+              className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-6 py-4 border-b border-[var(--color-neutral-300)] last:border-b-0"
             >
               <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap items-baseline gap-3">
@@ -375,21 +369,21 @@ function AddressTab() {
                   </span>
                 )}
               </div>
-              <div className="flex flex-col gap-2 shrink-0">
+              <div className="flex sm:flex-col gap-2 shrink-0">
                 <button
                   type="button"
                   onClick={() => {
                     setEditing(a);
                     setOpen(true);
                   }}
-                  className="h-8 px-3 rounded-md border border-[var(--color-primary)] text-[var(--color-primary)] text-[12px] font-medium hover:bg-[var(--color-primary-100)] active:scale-95 transition"
+                  className="flex-1 sm:flex-none h-8 px-3 rounded-md border border-[var(--color-primary)] text-[var(--color-primary)] text-[12px] font-medium hover:bg-[var(--color-primary-100)] active:scale-95 transition"
                 >
                   แก้ไข
                 </button>
                 <button
                   type="button"
                   onClick={() => remove(a.id)}
-                  className="h-8 px-3 rounded-md border border-[var(--color-critical)] text-[var(--color-critical)] text-[12px] font-medium hover:bg-[var(--color-critical)]/10 active:scale-95 transition"
+                  className="flex-1 sm:flex-none h-8 px-3 rounded-md border border-[var(--color-critical)] text-[var(--color-critical)] text-[12px] font-medium hover:bg-[var(--color-critical)]/10 active:scale-95 transition"
                 >
                   ลบข้อมูล
                 </button>
@@ -436,7 +430,7 @@ function BankCardsTab() {
     <div className="mt-8 flex flex-col gap-10">
       {/* Cards */}
       <section>
-        <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <h3 className="text-[18px] font-bold text-[var(--color-primary-700)]">
               บัตรเครดิต / บัตรเดบิต ของฉัน
@@ -455,7 +449,7 @@ function BankCardsTab() {
           </button>
         </div>
         <hr className="mt-3 border-t border-[var(--color-neutral-300)]" />
-        <div className="mt-6 flex flex-col gap-2">
+        <div className="mt-6 flex flex-col">
           {cards.length === 0 ? (
             <div className="py-12 text-center">
               <p className="text-[15px] font-medium text-[var(--color-neutral-900)]">
@@ -471,29 +465,23 @@ function BankCardsTab() {
               return (
                 <div
                   key={i}
-                  className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 py-4"
+                  className="flex items-center gap-3 py-4 border-b border-[var(--color-neutral-300)] last:border-b-0"
                 >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-12 h-8 rounded flex items-center justify-center shrink-0">
-                      <img
-                        src={brand.logo}
-                        alt=""
-                        className="max-h-full max-w-full object-contain"
-                      />
+                  <div className="w-12 h-8 rounded flex items-center justify-center shrink-0">
+                    <img src={brand.logo} alt="" className="max-h-full max-w-full object-contain" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                      <span className="text-[14px] font-medium text-[var(--color-neutral-900)]">
+                        {brand.label}
+                      </span>
+                      {c.isDefault && <DefaultPill />}
                     </div>
-                    <span className="text-[15px] font-medium text-[var(--color-neutral-900)]">
-                      {brand.label}
-                    </span>
-                    {c.isDefault && <DefaultPill />}
+                    <p className="text-[13px] text-[var(--color-neutral-600)] tabular-nums tracking-wider mt-0.5">
+                      {maskCard(c.number)}
+                    </p>
                   </div>
-                  <p className="text-[14px] text-[var(--color-neutral-700)] tabular-nums tracking-wider justify-self-center whitespace-nowrap">
-                    {maskCard(c.number)}
-                  </p>
-                  <div className="justify-self-end">
-                    <DeleteButton
-                      onClick={() => setCards((prev) => prev.filter((_, idx) => idx !== i))}
-                    />
-                  </div>
+                  <DeleteButton onClick={() => setCards((prev) => prev.filter((_, idx) => idx !== i))} />
                 </div>
               );
             })
@@ -503,7 +491,7 @@ function BankCardsTab() {
 
       {/* Banks */}
       <section>
-        <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <h3 className="text-[18px] font-bold text-[var(--color-primary-700)]">
               บัญชีธนาคารของฉัน
@@ -522,7 +510,7 @@ function BankCardsTab() {
           </button>
         </div>
         <hr className="mt-3 border-t border-[var(--color-neutral-300)]" />
-        <div className="mt-6 flex flex-col gap-2">
+        <div className="mt-6 flex flex-col">
           {banks.length === 0 ? (
             <div className="py-12 text-center">
               <p className="text-[15px] font-medium text-[var(--color-neutral-900)]">
@@ -541,29 +529,23 @@ function BankCardsTab() {
               return (
                 <div
                   key={i}
-                  className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 py-4"
+                  className="flex items-center gap-3 py-4 border-b border-[var(--color-neutral-300)] last:border-b-0"
                 >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-9 h-9 rounded-full overflow-hidden flex items-center justify-center shrink-0 bg-white">
-                      <img
-                        src={info.logo}
-                        alt=""
-                        className="w-full h-full object-cover"
-                      />
+                  <div className="w-9 h-9 rounded-full overflow-hidden flex items-center justify-center shrink-0 bg-white border border-[var(--color-neutral-200)]">
+                    <img src={info.logo} alt="" className="w-full h-full object-cover" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                      <span className="text-[14px] font-medium text-[var(--color-neutral-900)] truncate">
+                        {info.label}
+                      </span>
+                      {b.isDefault && <DefaultPill />}
                     </div>
-                    <span className="text-[15px] font-medium text-[var(--color-neutral-900)] truncate">
-                      {info.label}
-                    </span>
-                    {b.isDefault && <DefaultPill />}
+                    <p className="text-[13px] text-[var(--color-neutral-600)] tabular-nums mt-0.5">
+                      {maskAccount(b.accountNumber)}
+                    </p>
                   </div>
-                  <p className="text-[14px] text-[var(--color-neutral-700)] tabular-nums justify-self-center whitespace-nowrap">
-                    {maskAccount(b.accountNumber)}
-                  </p>
-                  <div className="justify-self-end">
-                    <DeleteButton
-                      onClick={() => setBanks((prev) => prev.filter((_, idx) => idx !== i))}
-                    />
-                  </div>
+                  <DeleteButton onClick={() => setBanks((prev) => prev.filter((_, idx) => idx !== i))} />
                 </div>
               );
             })
@@ -646,168 +628,6 @@ function DeleteButton({ onClick }: { onClick: () => void }) {
   );
 }
 
-function PaymentMethodsPanel() {
-  const [cards, setCards] = useState<CardData[]>([]);
-  const [banks, setBanks] = useState<BankData[]>([]);
-  const [cardOpen, setCardOpen] = useState(false);
-  const [bankOpen, setBankOpen] = useState(false);
-
-  const addCard = (data: CardData) => {
-    setCards((prev) => {
-      const next = data.isDefault
-        ? prev.map((c) => ({ ...c, isDefault: false }))
-        : [...prev];
-      return [...next, data];
-    });
-  };
-
-  const addBank = (data: BankData) => {
-    setBanks((prev) => {
-      const next = data.isDefault
-        ? prev.map((b) => ({ ...b, isDefault: false }))
-        : [...prev];
-      return [...next, data];
-    });
-  };
-
-  return (
-    <section className="lg:min-h-[1200px] bg-white rounded-2xl border border-[var(--color-neutral-300)] p-4 sm:p-6 flex flex-col gap-8">
-      <h1 className="text-[20px] font-bold text-[var(--color-neutral-900)]">
-        วิธีการชำระเงิน
-      </h1>
-
-      {/* Cards */}
-      <section>
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <h3 className="text-[16px] font-semibold text-[var(--color-neutral-900)]">
-              บัตรเครดิต / เดบิต
-            </h3>
-            <p className="text-[13px] text-[var(--color-neutral-600)] mt-1">
-              ใช้สำหรับการชำระเงินผ่านบัตรเครดิตหรือเดบิต
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={() => setCardOpen(true)}
-            className="h-9 px-4 rounded-md bg-[var(--color-primary)] text-white text-[13px] font-medium flex items-center gap-1.5 hover:brightness-110 active:scale-95 transition"
-          >
-            <Plus size={16} />
-            เพิ่มบัตรใหม่
-          </button>
-        </div>
-        <div className="mt-4 flex flex-col gap-2">
-          {cards.length === 0 ? (
-            <div className="rounded-lg border border-dashed border-[var(--color-neutral-300)] bg-[var(--color-neutral-100)] py-8 px-4 text-center">
-              <p className="text-[13px] text-[var(--color-neutral-500)]">
-                ยังไม่มีบัตรที่บันทึก
-              </p>
-            </div>
-          ) : (
-            cards.map((c, i) => (
-              <div
-                key={i}
-                className="flex items-center gap-3 rounded-lg border border-[var(--color-neutral-300)] p-3"
-              >
-                <div className="w-10 h-10 rounded-md bg-[var(--color-primary-100)] text-[var(--color-primary)] flex items-center justify-center">
-                  <CreditCard size={20} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[14px] font-medium text-[var(--color-neutral-900)] tabular-nums">
-                    {maskCard(c.number)}
-                  </p>
-                  <p className="text-[12px] text-[var(--color-neutral-600)]">
-                    {c.holder} · หมดอายุ {c.expiry}
-                  </p>
-                </div>
-                {c.isDefault && (
-                  <span className="text-[11px] font-semibold text-[var(--color-primary)] bg-[var(--color-primary-100)] rounded px-2 py-0.5">
-                    ค่าเริ่มต้น
-                  </span>
-                )}
-                <button
-                  type="button"
-                  aria-label="ลบบัตร"
-                  onClick={() => setCards((prev) => prev.filter((_, idx) => idx !== i))}
-                  className="w-8 h-8 rounded-md text-[var(--color-neutral-500)] hover:text-[var(--color-critical)] hover:bg-[var(--color-critical)]/10 flex items-center justify-center transition"
-                >
-                  <Trash2 size={16} />
-                </button>
-              </div>
-            ))
-          )}
-        </div>
-      </section>
-
-      {/* Bank accounts */}
-      <section>
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <h3 className="text-[16px] font-semibold text-[var(--color-neutral-900)]">
-              บัญชีธนาคาร
-            </h3>
-            <p className="text-[13px] text-[var(--color-neutral-600)] mt-1">
-              ใช้สำหรับโอนเงินผ่านพร้อมเพย์หรือธนาคาร
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={() => setBankOpen(true)}
-            className="h-9 px-4 rounded-md bg-[var(--color-primary)] text-white text-[13px] font-medium flex items-center gap-1.5 hover:brightness-110 active:scale-95 transition"
-          >
-            <Plus size={16} />
-            เพิ่มบัญชีใหม่
-          </button>
-        </div>
-        <div className="mt-4 flex flex-col gap-2">
-          {banks.length === 0 ? (
-            <div className="rounded-lg border border-dashed border-[var(--color-neutral-300)] bg-[var(--color-neutral-100)] py-8 px-4 text-center">
-              <p className="text-[13px] text-[var(--color-neutral-500)]">
-                ยังไม่มีบัญชีธนาคารที่บันทึก
-              </p>
-            </div>
-          ) : (
-            banks.map((b, i) => (
-              <div
-                key={i}
-                className="flex items-center gap-3 rounded-lg border border-[var(--color-neutral-300)] p-3"
-              >
-                <div className="w-10 h-10 rounded-md bg-[var(--color-primary-100)] text-[var(--color-primary)] flex items-center justify-center">
-                  <Landmark size={20} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[14px] font-medium text-[var(--color-neutral-900)]">
-                    {b.holder}
-                  </p>
-                  <p className="text-[12px] text-[var(--color-neutral-600)] tabular-nums">
-                    {maskAccount(b.accountNumber)} · {b.bank.toUpperCase()}
-                  </p>
-                </div>
-                {b.isDefault && (
-                  <span className="text-[11px] font-semibold text-[var(--color-primary)] bg-[var(--color-primary-100)] rounded px-2 py-0.5">
-                    ค่าเริ่มต้น
-                  </span>
-                )}
-                <button
-                  type="button"
-                  aria-label="ลบบัญชี"
-                  onClick={() => setBanks((prev) => prev.filter((_, idx) => idx !== i))}
-                  className="w-8 h-8 rounded-md text-[var(--color-neutral-500)] hover:text-[var(--color-critical)] hover:bg-[var(--color-critical)]/10 flex items-center justify-center transition"
-                >
-                  <Trash2 size={16} />
-                </button>
-              </div>
-            ))
-          )}
-        </div>
-      </section>
-
-      <AddCardModal isOpen={cardOpen} onClose={() => setCardOpen(false)} onSubmit={addCard} />
-      <AddBankModal isOpen={bankOpen} onClose={() => setBankOpen(false)} onSubmit={addBank} />
-    </section>
-  );
-}
-
 const NOTIFICATION_SETTINGS = [
   { key: "orders", label: "การแจ้งเตือนการสั่งซื้อสินค้า", default: true },
   { key: "promo", label: "การแจ้งเตือนโปรโมชัน", default: true },
@@ -871,9 +691,7 @@ export default function UserSettings() {
       }}
     >
       <div className="page-section-in" style={{ animationDelay: "200ms" }}>
-        {active === "payment" ? (
-          <PaymentMethodsPanel />
-        ) : active === "settings" ? (
+        {active === "settings" ? (
           <NotificationSettingsPanel />
         ) : (
           <ProfileForm />

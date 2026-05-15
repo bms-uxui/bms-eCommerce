@@ -58,12 +58,14 @@ export default function SellerLogistics() {
   const [defaultFee, setDefaultFee] = useState(0);
   const [carrierOn, setCarrierOn] = useState<Record<string, boolean>>(() => Object.fromEntries(CARRIERS.map((c) => [c.id, c.on])));
 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-[#f5f8fa]">
-      <SellerHeader />
+      <SellerHeader onMenuClick={() => setMobileMenuOpen(true)} />
       <div className="flex">
-        <SellerSidebar active="โลจิสติกส์" />
-        <main className="flex-1 min-w-0 px-8 py-6 flex flex-col gap-4 min-h-[calc(100vh-72px)]">
+        <SellerSidebar active="โลจิสติกส์" mobileOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
+        <main className="flex-1 min-w-0 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 flex flex-col gap-4 min-h-[calc(100vh-72px)]">
           <h1 className="text-[20px] font-semibold text-[var(--color-primary-700)]">โลจิสติกส์</h1>
 
           {/* Warehouse addresses */}
