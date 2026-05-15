@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Check, ChevronDown, Copy, Info, MessageCircle, Star } from "lucide-react";
+import { Check, ChevronDown, ChevronUp, Copy, Info, MessageCircle, Star } from "lucide-react";
 import jtLogo from "../../assets/shipping/jt.png";
 import kerryLogo from "../../assets/shipping/kerry.png";
 import flashLogo from "../../assets/shipping/flash.png";
@@ -96,8 +96,17 @@ function ActionButton({
   );
 }
 
+const PRICE_ROWS = [
+  { label: "ราคาเดิมของสินค้า", value: "฿ 400.00", critical: false },
+  { label: "สินค้าที่ลดราคา", value: "- ฿ 20.00", critical: true },
+  { label: "ส่วนลดจากร้านค้า", value: "- ฿ 12.00", critical: true },
+  { label: "ค่าจัดส่ง", value: "฿ 0.00", critical: false },
+  { label: "ส่วนลดจาก Bright", value: "- ฿ 59.00", critical: true },
+];
+
 export default function OrderCard({ order }: { order: Order }) {
   const [open, setOpen] = useState(true);
+  const [priceOpen, setPriceOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const copyTracking = async () => {
@@ -166,7 +175,7 @@ export default function OrderCard({ order }: { order: Order }) {
           ))}
           <button
             type="button"
-            onClick={() => setOpen((o) => !o)}
+            onClick={() => setPriceOpen((o) => !o)}
             className="border-t border-dashed border-[var(--color-neutral-300)] flex items-center gap-2 py-2 w-full"
           >
             <span className="flex-1 text-left text-[16px] font-semibold text-black">
@@ -175,11 +184,26 @@ export default function OrderCard({ order }: { order: Order }) {
             <span className="flex-1 text-right text-[16px] font-semibold text-[var(--color-primary)] tabular-nums">
               {baht(order.total)}
             </span>
-            <ChevronDown
-              size={24}
-              className={`text-[var(--color-neutral-700)] transition-transform ${open ? "" : "-rotate-90"}`}
-            />
+            {priceOpen ? (
+              <ChevronUp size={24} className="text-[var(--color-neutral-700)] shrink-0" />
+            ) : (
+              <ChevronDown size={24} className="text-[var(--color-neutral-700)] shrink-0" />
+            )}
           </button>
+
+          {/* Price breakdown */}
+          {priceOpen && (
+            <div className="flex flex-col gap-4 py-2">
+              {PRICE_ROWS.map((r) => (
+                <div key={r.label} className="flex items-center gap-2 pl-4 pr-8">
+                  <span className="flex-1 text-[16px] text-[var(--color-neutral-500)]">{r.label}</span>
+                  <span className={`text-[16px] tabular-nums ${r.critical ? "text-[#f64669]" : "text-[var(--color-neutral-800)]"}`}>
+                    {r.value}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 

@@ -57,13 +57,15 @@ export default function SellerReviewDetail() {
 
   const rows = tab === "all" ? REVIEWS : REVIEWS.filter((r) => r.rating === tab);
 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-[#f5f8fa]">
-      <SellerHeader />
+      <SellerHeader onMenuClick={() => setMobileMenuOpen(true)} />
       <div className="flex">
-        <SellerSidebar active="รีวิว & คะแนนร้านค้า" />
-        <main className="flex-1 min-w-0 px-8 py-6 flex flex-col gap-4 min-h-[calc(100vh-72px)]">
-          <div className="flex items-center justify-between gap-4">
+        <SellerSidebar active="รีวิว & คะแนนร้านค้า" mobileOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
+        <main className="flex-1 min-w-0 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 flex flex-col gap-4 min-h-[calc(100vh-72px)]">
+          <div className="flex items-center justify-between flex-wrap gap-3">
             <div className="flex items-center gap-2 min-w-0">
               <button type="button" onClick={() => navigate("/seller/reviews")} aria-label="ย้อนกลับ" className="w-8 h-8 flex items-center justify-center rounded text-[var(--color-neutral-900)] hover:bg-[var(--color-neutral-100,#f5f8fa)] transition-colors"><ChevronLeft size={20} /></button>
               <h1 className="text-[20px] font-semibold text-[var(--color-primary-700)] truncate">{product.name}</h1>

@@ -106,18 +106,21 @@ function QuoteRow({ quote }: { quote: Quote }) {
   const slug = quote.number.replace(/^#/, "");
   const open = () => navigate(`/quotation/${slug}?status=${quote.status}`);
   return (
-    <div className="flex items-center px-2 sm:px-4 py-3 border-b border-[var(--color-neutral-200)] text-[12px] sm:text-[14px] text-[var(--color-neutral-900)]">
-      <div className="flex-1 leading-4 truncate pr-1">{quote.number}</div>
-      <div className="hidden sm:block flex-1 text-center leading-4">{quote.requestedAt}</div>
-      <div className="hidden md:block flex-1 text-center leading-4">{quote.itemCount}</div>
+    <div
+      className="flex items-center px-4 py-3 border-b border-[#e9f0f4] text-[14px] text-[var(--color-neutral-900)] cursor-pointer hover:bg-[var(--color-neutral-100)] transition-colors"
+      onClick={open}
+    >
+      <div className="flex-1 leading-4 truncate">{quote.number}</div>
+      <div className="flex-1 text-center leading-4">{quote.requestedAt}</div>
+      <div className="flex-1 text-center leading-4">{quote.itemCount}</div>
       <div className="flex-1 flex justify-center">
         <StatusBadge status={quote.status} />
       </div>
       <div className="flex-1 text-center">
         <button
           type="button"
-          onClick={open}
-          className="text-[var(--color-primary)] hover:underline leading-4"
+          onClick={(e) => { e.stopPropagation(); open(); }}
+          className="text-[var(--color-primary)] hover:underline leading-4 text-[14px]"
         >
           ดูรายละเอียด
         </button>
@@ -159,16 +162,16 @@ function PaginationFooter({
   })();
 
   return (
-    <div className="border-t border-[var(--color-neutral-300)] h-14 flex items-center justify-between px-4 py-3">
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2 text-[14px]">
+    <div className="border-t border-[var(--color-neutral-300)] min-h-[56px] flex flex-wrap items-center justify-between px-2 sm:px-4 py-2 gap-2">
+      <div className="flex items-center gap-2 sm:gap-4">
+        <div className="flex items-center gap-1 sm:gap-2 text-[13px] sm:text-[14px]">
           <span className="text-[var(--color-neutral-900)] tabular-nums">
             {total.toLocaleString("en-US")}
           </span>
           <span className="text-[var(--color-neutral-500)]">รายการ</span>
         </div>
         <span className="w-px h-6 bg-[var(--color-neutral-300)]" />
-        <div className="flex items-center gap-2 text-[14px]">
+        <div className="flex items-center gap-1 sm:gap-2 text-[13px] sm:text-[14px]">
           <span className="text-[var(--color-neutral-500)]">แสดง</span>
           <div className="relative">
             <select
@@ -280,21 +283,21 @@ export default function Quotation() {
 
           {/* Table */}
           <div className="shadow-[0_0_0.5px_rgba(29,33,45,0.2),0_0_1px_rgba(29,33,45,0.08),0_2px_2px_rgba(29,33,45,0.08)] m-2 rounded-xl bg-white flex flex-col">
-            {/* Column headers (sticky just below the sticky TabBar) */}
-            <div className="flex items-center bg-[var(--color-primary-100)] border-b border-[var(--color-neutral-200)] rounded-t-xl px-2 sm:px-4 lg:sticky lg:top-[162px] z-[5]">
-              <div className="flex-1 py-2.5 sm:pr-4 text-[11px] sm:text-[12px] font-medium text-[var(--color-neutral-600)] uppercase">
+            {/* Column headers */}
+            <div className="flex items-center bg-[var(--color-primary-100)] border-b border-[#e9f0f4] rounded-t-xl px-4">
+              <div className="flex-1 py-2.5 text-[12px] font-medium text-[var(--color-neutral-600)] uppercase">
                 หมายเลขคำขอ
               </div>
-              <div className="hidden sm:block flex-1 py-2.5 px-4 text-[12px] font-medium text-[var(--color-neutral-600)] uppercase text-center">
+              <div className="flex-1 py-2.5 text-[12px] font-medium text-[var(--color-neutral-600)] uppercase text-center">
                 วันที่ขอ
               </div>
-              <div className="hidden md:block flex-1 py-2.5 px-4 text-[12px] font-medium text-[var(--color-neutral-600)] uppercase text-center">
+              <div className="flex-1 py-2.5 text-[12px] font-medium text-[var(--color-neutral-600)] uppercase text-center">
                 จำนวนสินค้า (อย่าง)
               </div>
-              <div className="flex-1 py-2.5 px-2 sm:px-4 text-[11px] sm:text-[12px] font-medium text-[var(--color-neutral-600)] uppercase text-center">
+              <div className="flex-1 py-2.5 text-[12px] font-medium text-[var(--color-neutral-600)] uppercase text-center">
                 สถานะ
               </div>
-              <div className="flex-1 py-2.5 px-2 sm:px-4 text-[11px] sm:text-[12px] font-medium text-[var(--color-neutral-600)] uppercase text-center">
+              <div className="flex-1 py-2.5 text-[12px] font-medium text-[var(--color-neutral-600)] uppercase text-center">
                 การดำเนินการ
               </div>
             </div>

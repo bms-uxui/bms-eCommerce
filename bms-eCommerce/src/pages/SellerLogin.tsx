@@ -5,6 +5,8 @@ import { inputClassNames } from "../components/inputStyles";
 import Icon from "../components/landing/Icon";
 import LanguageSelect from "../components/LanguageSelect";
 import HelpSelect from "../components/HelpSelect";
+import TermsOfServiceModal from "../components/landing/TermsOfServiceModal";
+import PrivacyPolicyModal from "../components/landing/PrivacyPolicyModal";
 
 function BrightifyLogo({ size = 36 }: { size?: number }) {
   return (
@@ -233,6 +235,8 @@ export default function SellerLogin() {
   const [phone, setPhone] = useState("");
   const [phoneTouched, setPhoneTouched] = useState(false);
   const [step, setStep] = useState<"phone" | "otp">("phone");
+  const [termsOpen, setTermsOpen] = useState(false);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
   const phoneValid = /^0\d{9}$/.test(phone);
 
   return (
@@ -394,19 +398,21 @@ export default function SellerLogin() {
             >
               การเปิดบัญชี Brightify ท่านรับทราบและตกลงตาม
               <br />
-              <a className="text-[var(--color-primary)] underline" href="#">
+              <button type="button" onClick={() => setTermsOpen(true)} className="text-[var(--color-primary)] underline">
                 เงื่อนไขการให้บริการ
-              </a>{" "}
+              </button>{" "}
               และ{" "}
-              <a className="text-[var(--color-primary)] underline" href="#">
+              <button type="button" onClick={() => setPrivacyOpen(true)} className="text-[var(--color-primary)] underline">
                 นโยบายความคุ้มครองข้อมูลส่วนบุคคล
-              </a>
+              </button>
             </p>
           </div>
           </>
           )}
         </section>
       </main>
+      <TermsOfServiceModal isOpen={termsOpen} onClose={() => setTermsOpen(false)} />
+      <PrivacyPolicyModal isOpen={privacyOpen} onClose={() => setPrivacyOpen(false)} />
     </div>
   );
 }

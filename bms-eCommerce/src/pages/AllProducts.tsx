@@ -4,6 +4,7 @@ import { Checkbox, Select, SelectItem, Tooltip } from "@heroui/react";
 import {
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   Star,
   ListFilter,
 } from "lucide-react";
@@ -185,12 +186,20 @@ function FiltersSidebar() {
   const [rating, setRating] = useState(0);
   const [priceMin, setPriceMin] = useState("");
   const [priceMax, setPriceMax] = useState("");
+  const [open, setOpen] = useState(false);
 
   const toggle = (key: string) => (v: boolean) =>
     setChecked((s) => ({ ...s, [key]: v }));
 
   const hasActive =
     Object.values(checked).some(Boolean) || rating > 0 || !!priceMin || !!priceMax;
+
+  const activeCount = [
+    ...Object.values(checked).filter(Boolean),
+    rating > 0 && true,
+    !!priceMin && true,
+    !!priceMax && true,
+  ].filter(Boolean).length;
 
   const resetAll = () => {
     setChecked({});
@@ -199,52 +208,94 @@ function FiltersSidebar() {
     setPriceMax("");
   };
 
-  return (
-    <aside className="w-full lg:w-[216px] shrink-0 bg-white rounded-xl border border-[var(--color-neutral-300)] p-4 self-start lg:sticky lg:top-[124px] lg:max-h-[calc(100vh-140px)] lg:overflow-y-auto scrollbar-none">
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <ListFilter size={20} className="text-[var(--color-neutral-900)]" />
-          <h3 className="text-[20px] font-bold leading-6 text-[var(--color-neutral-900)]">
-            ตัวกรอง
-          </h3>
-        </div>
-        <button
-          type="button"
-          onClick={resetAll}
-          disabled={!hasActive}
-          className="text-[13px] font-medium text-[var(--color-primary)] hover:underline disabled:text-[var(--color-neutral-400)] disabled:no-underline disabled:cursor-default"
-        >
-          ล้างทั้งหมด
-        </button>
-      </div>
-
+  const filterBody = (
+    <>
       <FilterSection title="บริการและโปรโมชัน" pad={false}>
         <FilterSelect items={FILTERS.promo} placeholder="เลือกบริการ/โปรโมชัน" selected={checked} onChange={setChecked} />
       </FilterSection>
-
       <FilterSection title="พื้นที่การจัดส่ง" pad={false}>
         <FilterSelect items={FILTERS.shipping} placeholder="เลือกพื้นที่จัดส่ง" selected={checked} onChange={setChecked} />
       </FilterSection>
-
       <FilterSection title="ระดับดาว" pad={false}>
         <StarRating value={rating} onChange={setRating} />
       </FilterSection>
-
       <FilterSection title="ราคา" pad={false}>
         <div className="flex flex-col gap-3">
           <PriceInput value={priceMin} onChange={setPriceMin} placeholder="ราคาต่ำสุด" />
           <PriceInput value={priceMax} onChange={setPriceMax} placeholder="ราคาสูงสุด" />
         </div>
       </FilterSection>
-
       <FilterSection title="สภาพสินค้า" pad={false}>
         <CheckboxRow label="สินค้ามือหนึ่ง" checked={!!checked["สินค้ามือหนึ่ง"]} onChange={toggle("สินค้ามือหนึ่ง")} />
       </FilterSection>
-
       <FilterSection title="ช่องทางการชำระ" pad={false}>
         <FilterSelect items={FILTERS.payment} placeholder="เลือกช่องทางชำระ" selected={checked} onChange={setChecked} />
       </FilterSection>
-    </aside>
+    </>
+  );
+
+  return (
+    <div className="w-full lg:w-[216px] shrink-0 self-start lg:sticky lg:top-[124px]">
+      {/* Mobile / tablet: collapsible dropdown */}
+      <div className="lg:hidden bg-white rounded-xl border border-[var(--color-neutral-300)] overflow-hidden">
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          className="w-full flex items-center justify-between gap-2 px-4 py-3"
+        >
+          <div className="flex items-center gap-2">
+            <ListFilter size={18} className="text-[var(--color-neutral-900)]" />
+            <span className="text-[16px] font-bold text-[var(--color-neutral-900)]">ตัวกรอง</span>
+            {activeCount > 0 && (
+              <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[var(--color-primary)] text-white text-[11px] font-semibold">
+                {activeCount}
+              </span>
+            )}
+          </div>
+          <div className="flex items-center gap-3">
+            {hasActive && (
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); resetAll(); }}
+                className="text-[13px] font-medium text-[var(--color-primary)] hover:underline"
+              >
+                ล้างทั้งหมด
+              </button>
+            )}
+            <ChevronDown
+              size={18}
+              className={["text-[var(--color-neutral-600)] transition-transform duration-200", open ? "rotate-180" : ""].join(" ")}
+            />
+          </div>
+        </button>
+        {open && (
+          <div className="px-4 pb-4 border-t border-[var(--color-neutral-300)]">
+            {filterBody}
+          </div>
+        )}
+      </div>
+
+      {/* Desktop: always-visible sticky sidebar */}
+      <aside className="hidden lg:block bg-white rounded-xl border border-[var(--color-neutral-300)] p-4 max-h-[calc(100vh-140px)] overflow-y-auto scrollbar-none">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <ListFilter size={20} className="text-[var(--color-neutral-900)]" />
+            <h3 className="text-[20px] font-bold leading-6 text-[var(--color-neutral-900)]">
+              ตัวกรอง
+            </h3>
+          </div>
+          <button
+            type="button"
+            onClick={resetAll}
+            disabled={!hasActive}
+            className="text-[13px] font-medium text-[var(--color-primary)] hover:underline disabled:text-[var(--color-neutral-400)] disabled:no-underline disabled:cursor-default"
+          >
+            ล้างทั้งหมด
+          </button>
+        </div>
+        {filterBody}
+      </aside>
+    </div>
   );
 }
 
@@ -275,10 +326,10 @@ function Pagination({
   }, [page, total]);
 
   const arrowCls =
-    "w-8 h-8 flex items-center justify-center rounded-md border border-[var(--color-neutral-300)] text-[var(--color-neutral-600)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors";
+    "w-8 h-8 flex items-center justify-center rounded text-[var(--color-neutral-600)] hover:bg-[#f5f8fa] disabled:opacity-40 disabled:cursor-not-allowed transition-colors";
 
   return (
-    <nav className="flex items-center justify-center gap-1.5" aria-label="Pagination">
+    <nav className="flex items-center justify-center gap-1" aria-label="Pagination">
       <button
         onClick={() => onChange(Math.max(1, page - 1))}
         disabled={page === 1}
@@ -291,7 +342,7 @@ function Pagination({
         p === "…" ? (
           <span
             key={`e-${i}`}
-            className="w-6 h-8 flex items-center justify-center text-[13px] text-[var(--color-neutral-600)]"
+            className="w-8 h-8 flex items-center justify-center text-[12px] text-[var(--color-neutral-600)]"
           >
             …
           </span>
@@ -301,10 +352,10 @@ function Pagination({
             onClick={() => onChange(p)}
             aria-current={p === page ? "page" : undefined}
             className={[
-              "min-w-[32px] h-8 px-2 rounded-md text-[13px] font-medium transition-colors",
+              "min-w-8 h-8 px-2 flex items-center justify-center rounded text-[12px] font-medium transition-colors",
               p === page
-                ? "bg-[var(--color-primary)] text-white"
-                : "text-[var(--color-neutral-900)] hover:bg-[var(--color-primary-100)] hover:text-[var(--color-primary)]",
+                ? "bg-[#dcf2fe] text-[#0e3ed0]"
+                : "text-[var(--color-neutral-600)] hover:bg-[#f5f8fa]",
             ].join(" ")}
           >
             {p}

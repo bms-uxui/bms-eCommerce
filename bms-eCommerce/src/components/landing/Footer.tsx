@@ -1,4 +1,7 @@
+import { useState } from "react";
 import { Facebook, Instagram, Music, Youtube } from "lucide-react";
+import TermsOfServiceModal from "./TermsOfServiceModal";
+import PrivacyPolicyModal from "./PrivacyPolicyModal";
 import visa from "../../assets/payments/visa.png";
 import mastercard from "../../assets/payments/mastercard.png";
 import amex from "../../assets/payments/amex.png";
@@ -14,27 +17,22 @@ import flash from "../../assets/shipping/flash.png";
 import thaipost from "../../assets/shipping/thaipost.png";
 import jt from "../../assets/shipping/jt.png";
 
-const links = {
-  about: {
-    title: "เกี่ยวกับเรา",
-    items: [
-      "บริษัท BMS GROUP",
-      "นโยบายความเป็นส่วนตัว",
-      "เงื่อนไขการใช้งาน",
-      "นโยบายคืนสินค้า",
-    ],
-  },
-  help: {
-    title: "ช่วยเหลือ",
-    items: [
-      "ศูนย์ช่วยเหลือ",
-      "วิธีสั่งซื้อสินค้า",
-      "การจัดส่ง",
-      "คืนสินค้า & เงิน",
-      "ติดต่อเรา",
-    ],
-  },
-};
+type FooterLink = { label: string; action?: "terms" | "privacy" };
+
+const aboutLinks: FooterLink[] = [
+  { label: "บริษัท BMS GROUP" },
+  { label: "นโยบายความเป็นส่วนตัว", action: "privacy" },
+  { label: "เงื่อนไขการใช้งาน", action: "terms" },
+  { label: "นโยบายคืนสินค้า" },
+];
+
+const helpLinks: FooterLink[] = [
+  { label: "ศูนย์ช่วยเหลือ" },
+  { label: "วิธีสั่งซื้อสินค้า" },
+  { label: "การจัดส่ง" },
+  { label: "คืนสินค้า & เงิน" },
+  { label: "ติดต่อเรา" },
+];
 
 const socials = [
   { icon: Facebook, label: "Brightify Thailand" },
@@ -72,7 +70,16 @@ const PAD_CLASS: Record<NonNullable<LogoItem["pad"]>, string> = {
 };
 
 export default function Footer() {
+  const [termsOpen, setTermsOpen] = useState(false);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
+
+  const handleLink = (action?: "terms" | "privacy") => {
+    if (action === "terms") setTermsOpen(true);
+    else if (action === "privacy") setPrivacyOpen(true);
+  };
+
   return (
+    <>
     <footer className="relative mt-12 text-white">
       {/* Curved top arch — same gradient as the body */}
       <svg
@@ -122,11 +129,17 @@ export default function Footer() {
 
           {/* About */}
           <div>
-            <h4 className="text-sm font-bold text-white mb-3">{links.about.title}</h4>
-            <ul className="space-y-3">
-              {links.about.items.map((it) => (
-                <li key={it} className="text-sm hover:underline cursor-pointer">
-                  {it}
+            <h4 className="text-sm font-bold text-white mb-3">เกี่ยวกับเรา</h4>
+            <ul className="grid grid-cols-2 sm:grid-cols-1 gap-3">
+              {aboutLinks.map((it) => (
+                <li key={it.label}>
+                  <button
+                    type="button"
+                    onClick={() => handleLink(it.action)}
+                    className="text-sm text-left hover:underline"
+                  >
+                    {it.label}
+                  </button>
                 </li>
               ))}
             </ul>
@@ -134,11 +147,13 @@ export default function Footer() {
 
           {/* Help */}
           <div>
-            <h4 className="text-sm font-bold text-white mb-3">{links.help.title}</h4>
-            <ul className="space-y-3">
-              {links.help.items.map((it) => (
-                <li key={it} className="text-sm hover:underline cursor-pointer">
-                  {it}
+            <h4 className="text-sm font-bold text-white mb-3">ช่วยเหลือ</h4>
+            <ul className="grid grid-cols-2 sm:grid-cols-1 gap-3">
+              {helpLinks.map((it) => (
+                <li key={it.label}>
+                  <button type="button" className="text-sm text-left hover:underline">
+                    {it.label}
+                  </button>
                 </li>
               ))}
             </ul>
@@ -147,7 +162,7 @@ export default function Footer() {
           {/* Socials */}
           <div>
             <h4 className="text-sm font-bold text-white mb-3">ติดตามเรา</h4>
-            <ul className="space-y-3">
+            <ul className="grid grid-cols-2 sm:grid-cols-1 gap-3">
               {socials.map((s, i) => (
                 <li key={i} className="flex items-center gap-2 text-sm hover:underline cursor-pointer">
                   <s.icon size={20} />
@@ -208,5 +223,8 @@ export default function Footer() {
       </div>
       </div>
     </footer>
+    <TermsOfServiceModal isOpen={termsOpen} onClose={() => setTermsOpen(false)} />
+    <PrivacyPolicyModal isOpen={privacyOpen} onClose={() => setPrivacyOpen(false)} />
+    </>
   );
 }

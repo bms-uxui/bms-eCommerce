@@ -44,13 +44,15 @@ export default function SellerDiscounts() {
   const rows = tab === "all" ? CODES : CODES.filter((c) => statuses[c.id] === tab);
   const pages = [1, 2, 3, 4, 5, "…", 12] as const;
 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-[#f5f8fa]">
-      <SellerHeader />
+      <SellerHeader onMenuClick={() => setMobileMenuOpen(true)} />
       <div className="flex">
-        <SellerSidebar active="โค้ดส่วนลด" />
-        <main className="flex-1 min-w-0 px-8 py-6 flex flex-col gap-4 min-h-[calc(100vh-72px)]">
-          <div className="flex items-center justify-between gap-4">
+        <SellerSidebar active="โค้ดส่วนลด" mobileOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
+        <main className="flex-1 min-w-0 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 flex flex-col gap-4 min-h-[calc(100vh-72px)]">
+          <div className="flex items-center justify-between flex-wrap gap-3">
             <h1 className="text-[20px] font-semibold text-[var(--color-primary-700)]">โค้ดส่วนลด</h1>
             <div className="flex items-center gap-3">
               <div className="flex items-center">

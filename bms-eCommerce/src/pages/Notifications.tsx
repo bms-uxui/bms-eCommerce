@@ -52,10 +52,11 @@ function NotiIcon({ category }: { category: NotiCategory }) {
   const Ic = meta.icon;
   return (
     <div
-      className="w-16 h-16 rounded-lg shrink-0 flex items-center justify-center text-white"
+      className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg shrink-0 flex items-center justify-center text-white"
       style={{ backgroundColor: meta.bg }}
     >
-      <Ic size={28} />
+      <Ic size={22} className="sm:hidden" />
+      <Ic size={28} className="hidden sm:block" />
     </div>
   );
 }
@@ -65,23 +66,23 @@ function NotiRow({ noti }: { noti: Notification }) {
     <div
       className={`px-4 sm:px-6 ${noti.read ? "" : "bg-[#f7fcfe]"}`}
     >
-      <div className="flex gap-4 items-center py-6 border-b border-[var(--color-neutral-200)]">
+      <div className="flex gap-3 sm:gap-4 items-start sm:items-center py-4 sm:py-6 border-b border-[var(--color-neutral-200)]">
         <NotiIcon category={noti.category} />
         <div className="flex-1 min-w-0 flex flex-col gap-1">
-          <p className="text-[16px] font-semibold text-black truncate">
+          <p className="text-[15px] sm:text-[16px] font-semibold text-black line-clamp-2 sm:truncate">
             {noti.title}
           </p>
           <p className="text-[12px] text-[var(--color-neutral-500)] line-clamp-2">
             {noti.body}
           </p>
-          <div className="flex gap-2 text-[12px] text-[var(--color-neutral-500)]">
+          <div className="flex flex-wrap gap-x-2 text-[12px] text-[var(--color-neutral-500)]">
             <span>{noti.date}</span>
             <span>{noti.time}</span>
           </div>
         </div>
         <button
           type="button"
-          className="shrink-0 px-4 py-1 rounded border border-[var(--color-neutral-300)] text-[12px] font-medium text-[var(--color-neutral-900)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition"
+          className="shrink-0 px-3 sm:px-4 py-1 rounded border border-[var(--color-neutral-300)] text-[11px] sm:text-[12px] font-medium text-[var(--color-neutral-900)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition whitespace-nowrap"
         >
           ดูรายละเอียด
         </button>
@@ -108,8 +109,8 @@ export default function Notifications() {
         style={{ animationDelay: "200ms" }}
       >
         {/* Tab strip + mark-all */}
-        <div className="flex items-center justify-between gap-4 pl-2 pr-4 py-2 border-b border-[var(--color-neutral-300)]">
-          <div className="bg-[var(--color-neutral-200)] rounded-lg p-1 flex h-10 overflow-x-auto scrollbar-none">
+        <div className="flex items-center justify-between gap-2 sm:gap-4 pl-2 pr-2 sm:pr-4 py-2 border-b border-[var(--color-neutral-300)]">
+          <div className="bg-[var(--color-neutral-200)] rounded-lg p-1 flex h-10 overflow-x-auto scrollbar-none min-w-0 flex-1">
             {TABS.map((tab) => {
               const isActive = active === tab.key;
               return (
@@ -137,7 +138,7 @@ export default function Notifications() {
           <button
             type="button"
             onClick={markAllRead}
-            className="shrink-0 text-[16px] font-semibold text-[var(--color-primary)] hover:underline"
+            className="shrink-0 text-[13px] sm:text-[16px] font-semibold text-[var(--color-primary)] hover:underline whitespace-nowrap"
           >
             อ่านทั้งหมด
           </button>

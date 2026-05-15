@@ -82,19 +82,21 @@ export default function SellerFlashSale() {
   const rows = tab === "all" ? ROWS : ROWS.filter((r) => statuses[r.id] === tab);
   const pages = [1, 2, 3, 4, 5, "…", 12] as const;
 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-[#f5f8fa]">
-      <SellerHeader />
+      <SellerHeader onMenuClick={() => setMobileMenuOpen(true)} />
       <div className="flex">
-        <SellerSidebar active="Flash Sale" />
-        <main className="flex-1 min-w-0 px-8 py-6 flex flex-col gap-4 min-h-[calc(100vh-72px)]">
+        <SellerSidebar active="Flash Sale" mobileOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
+        <main className="flex-1 min-w-0 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 flex flex-col gap-4 min-h-[calc(100vh-72px)]">
           {/* Section 1: Flash Sale Event */}
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h1 className="text-[20px] font-semibold text-[var(--color-primary-700)]">Flash Sale Event</h1>
             <button type="button" onClick={() => setTermsOpen(true)} className="flex items-center gap-1.5 text-[13px] text-[var(--color-neutral-500)] hover:text-[var(--color-primary)] hover:underline transition-colors"><Info size={14} className="shrink-0" />เข้าร่วมกับ Flash Sale กับทาง BMS เพื่อรับข้อเสนอสุดพิเศษ</button>
           </div>
-          <div className="-mx-8 overflow-x-auto scrollbar-none">
-            <div className="flex gap-4 px-8 pb-1 w-max">
+          <div className="-mx-4 sm:-mx-6 lg:-mx-8 overflow-x-auto scrollbar-none">
+            <div className="flex gap-4 px-4 sm:px-6 lg:px-8 pb-1 w-max">
               {EVENTS.map((ev) => (
                 <button
                   key={ev.id}

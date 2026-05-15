@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import { Calendar } from "lucide-react";
 import Icon from "../components/landing/Icon";
 import { SellerHeader, SellerSidebar } from "../components/SellerChrome";
 import { ChangeBadge } from "./SellerOverview";
@@ -70,9 +71,9 @@ function PeriodSelector({
   onNext: () => void;
 }) {
   return (
-    <div className="flex flex-col items-center gap-3">
-      {/* Tabs */}
-      <div className="bg-white border border-[var(--color-neutral-300)] rounded-lg p-1 flex gap-1">
+    <div className="flex flex-col items-center gap-4">
+      {/* Segmented control */}
+      <div className="bg-[#e9f0f4] rounded-[8px] p-[4px] flex items-center justify-center h-10">
         {PERIOD_TABS.map((t) => {
           const isActive = t.key === period;
           return (
@@ -81,10 +82,10 @@ function PeriodSelector({
               type="button"
               onClick={() => onChange(t.key)}
               className={[
-                "h-8 px-4 rounded-md text-[14px] font-medium transition-colors whitespace-nowrap",
+                "h-8 px-4 rounded-[4px] text-[14px] font-medium transition-all whitespace-nowrap",
                 isActive
-                  ? "bg-[#dcf2fe] text-[var(--color-primary)] border border-[#a3d8ff]"
-                  : "text-[var(--color-neutral-600)] hover:text-[var(--color-primary)]",
+                  ? "bg-white text-[var(--color-primary)] shadow-[0_0_1px_rgba(29,33,45,0.2),0_0_2px_rgba(29,33,45,0.08),0_2px_4px_rgba(29,33,45,0.08)]"
+                  : "text-[#5d6c87] hover:text-[var(--color-primary)]",
               ].join(" ")}
             >
               {t.label}
@@ -94,24 +95,24 @@ function PeriodSelector({
       </div>
 
       {/* Date navigator */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-6">
         <button
           type="button"
           onClick={onPrev}
           aria-label="ก่อนหน้า"
-          className="w-8 h-8 flex items-center justify-center rounded text-[var(--color-neutral-600)] hover:bg-[var(--color-neutral-100,#f5f8fa)]"
+          className="w-8 h-8 flex items-center justify-center bg-white border border-[#e9f0f4] rounded-[4px] text-[var(--color-neutral-600)] hover:bg-[var(--color-neutral-100,#f5f8fa)] transition-colors"
         >
           <Icon name="chevron-left" size={16} />
         </button>
-        <div className="flex items-center gap-2 px-3 text-[14px] text-[var(--color-neutral-900)]">
+        <div className="flex items-center gap-2 text-[16px] text-[#1d212d]">
           <span>{label}</span>
-          <Icon name="calendar" size={14} className="text-[var(--color-neutral-500)]" />
+          <Calendar size={20} className="text-[#5d6c87]" />
         </div>
         <button
           type="button"
           onClick={onNext}
           aria-label="ถัดไป"
-          className="w-8 h-8 flex items-center justify-center rounded text-[var(--color-neutral-600)] hover:bg-[var(--color-neutral-100,#f5f8fa)]"
+          className="w-8 h-8 flex items-center justify-center bg-white border border-[#e9f0f4] rounded-[4px] text-[var(--color-neutral-600)] hover:bg-[var(--color-neutral-100,#f5f8fa)] transition-colors"
         >
           <Icon name="chevron-right" size={16} />
         </button>
@@ -190,12 +191,12 @@ function BarChart({ data, dateLabel }: { data: BarPoint[]; dateLabel: string }) 
                   >
                     {/* Sales bar (blue) */}
                     <span
-                      className="block w-[39px] rounded-t bg-gradient-to-b from-[#cdedff] via-[#21bdff] to-[#0485f7] transition-opacity"
+                      className="block w-[39px] rounded-t bg-gradient-to-b from-[#0485f7] via-[#21bdff] to-[#cdedff] transition-opacity"
                       style={{ height: `${salesPct}%`, opacity: isHover ? 1 : 0.95 }}
                     />
                     {/* Orders bar (green) */}
                     <span
-                      className="block w-[39px] rounded-t bg-gradient-to-b from-[#e6f8d0] via-[#a5e36a] to-[#5dbf36] transition-opacity"
+                      className="block w-[39px] rounded-t bg-gradient-to-b from-[#5dbf36] via-[#a5e36a] to-[#e6f8d0] transition-opacity"
                       style={{ height: `${ordersPct}%`, opacity: isHover ? 1 : 0.95 }}
                     />
 
@@ -216,7 +217,7 @@ function BarChart({ data, dateLabel }: { data: BarPoint[]; dateLabel: string }) 
                             <p className="text-[13px] text-[#7cd2ff]">
                               ยอดขาย : <span className="tabular-nums">{thousands(d.sales)}</span> บาท
                             </p>
-                            <p className="text-[13px] text-[#7cd2ff]">
+                            <p className="text-[13px] text-[#6ACE13]">
                               จำนวนคำสั่งซื้อ : <span className="tabular-nums">{thousands(d.orders)}</span> รายการ
                             </p>
                           </div>
@@ -320,16 +321,17 @@ type Category = {
   label: string;
   percent: number;
   color: string;
+  labelColor: string;
   textColor: string;
   count: number;
   amount: number;
 };
 
 const CATEGORIES: Category[] = [
-  { label: "เครื่องใช้ไฟฟ้า", percent: 40, color: "#21bdff", textColor: "#0a4a86", count: 120, amount: 55578 },
-  { label: "เสื้อผ้า",         percent: 30, color: "#a5e36a", textColor: "#2d5b0f", count: 300, amount: 78578 },
-  { label: "เครื่องครัว",      percent: 18, color: "#c4a5f0", textColor: "#3c1f6b", count: 111, amount: 8378 },
-  { label: "รองเท้า",          percent: 12, color: "#f7adb5", textColor: "#7a1a2a", count: 341, amount: 35078 },
+  { label: "เครื่องใช้ไฟฟ้า", percent: 40, color: "url(#grad-blue)",   labelColor: "#5bbde8", textColor: "#000000", count: 120, amount: 55578 },
+  { label: "เสื้อผ้า",         percent: 30, color: "url(#grad-green)",  labelColor: "#7dd155", textColor: "#000000", count: 300, amount: 78578 },
+  { label: "เครื่องครัว",      percent: 18, color: "url(#grad-purple)", labelColor: "#a07de0", textColor: "#000000", count: 111, amount: 8378 },
+  { label: "รองเท้า",          percent: 12, color: "url(#grad-pink)",   labelColor: "#f095a8", textColor: "#000000", count: 341, amount: 35078 },
 ];
 
 function polarToCartesian(cx: number, cy: number, r: number, angleDeg: number) {
@@ -345,6 +347,10 @@ function piePath(cx: number, cy: number, r: number, startDeg: number, endDeg: nu
 }
 
 function PieChart({ slices }: { slices: Category[] }) {
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+  const [mouse, setMouse] = useState({ x: 0, y: 0 });
+  const wrapRef = useRef<HTMLDivElement>(null);
+
   // Draw smallest → largest so smaller slices end up at the top (matches Figma).
   const drawOrder = [...slices].sort((a, b) => a.percent - b.percent);
   const total = drawOrder.reduce((a, s) => a + s.percent, 0);
@@ -359,17 +365,92 @@ function PieChart({ slices }: { slices: Category[] }) {
     const end = (acc / total) * 360;
     const mid = (start + end) / 2;
     const labelPos = polarToCartesian(cx, cy, radius * 0.6, mid);
-    return { ...s, start, end, labelPos };
+    return { ...s, start, end, labelPos, mid };
   });
 
+  const hovered = hoveredIdx !== null ? segments[hoveredIdx] : null;
+
+  // Tooltip width + arrow
+  const TIP_W = 183;
+  const ARROW = 8;
+  const TIP_H = 90;
+
+  // Position tooltip to left or right of cursor based on which side of pie the slice is
+  const tipLeft = hovered
+    ? (hovered.mid > 90 && hovered.mid < 270)
+      ? mouse.x - TIP_W - ARROW - 8   // slice on left → tooltip to the left
+      : mouse.x + ARROW + 8           // slice on right → tooltip to the right
+    : 0;
+  const tipTop = hovered ? mouse.y - TIP_H / 2 : 0;
+  const arrowRight = hovered && hovered.mid > 90 && hovered.mid < 270;
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const rect = wrapRef.current?.getBoundingClientRect();
+    if (rect) setMouse({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  };
+
   return (
-    <div className="flex items-center justify-center w-full">
+    <div ref={wrapRef} className="relative flex items-center justify-center w-full" onMouseMove={handleMouseMove}>
+      {/* Tooltip */}
+      {hovered && (
+        <div
+          className="absolute pointer-events-none z-10"
+          style={{ left: tipLeft, top: tipTop }}
+        >
+          <div className={`flex items-center ${arrowRight ? "flex-row" : "flex-row-reverse"}`}>
+            <div className="bg-[#011b31] rounded-[4px] p-3 w-[183px] flex flex-col gap-2">
+              <span className="text-[14px] font-medium leading-4 whitespace-nowrap" style={{ color: hovered.labelColor }}>{hovered.label}</span>
+              <span className="text-[12px] font-medium text-white whitespace-nowrap">รายการสินค้า : {hovered.count.toLocaleString()} รายการ</span>
+              <span className="text-[12px] font-medium text-white whitespace-nowrap">มูลค่าสินค้า (฿) : {hovered.amount.toLocaleString("th-TH", { minimumFractionDigits: 2 })} บาท</span>
+            </div>
+            {/* Arrow */}
+            <div
+              className="shrink-0 w-0 h-0"
+              style={arrowRight ? {
+                borderTop: "8px solid transparent",
+                borderBottom: "8px solid transparent",
+                borderLeft: "8px solid #011b31",
+              } : {
+                borderTop: "8px solid transparent",
+                borderBottom: "8px solid transparent",
+                borderRight: "8px solid #011b31",
+              }}
+            />
+          </div>
+        </div>
+      )}
+
       <svg viewBox="0 0 220 220" className="w-[220px] h-[220px]">
+        <defs>
+          <linearGradient id="grad-blue" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#5bbde8" />
+            <stop offset="100%" stopColor="#c2e9fa" />
+          </linearGradient>
+          <linearGradient id="grad-green" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#7dd155" />
+            <stop offset="100%" stopColor="#c8ecaa" />
+          </linearGradient>
+          <linearGradient id="grad-purple" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#a07de0" />
+            <stop offset="100%" stopColor="#d8bef8" />
+          </linearGradient>
+          <linearGradient id="grad-pink" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f095a8" />
+            <stop offset="100%" stopColor="#fad5db" />
+          </linearGradient>
+        </defs>
         {segments.map((seg, i) => (
           <path
             key={i}
             d={piePath(cx, cy, radius, seg.start, seg.end)}
             fill={seg.color}
+            stroke="white"
+            strokeWidth={2.5}
+            strokeLinejoin="round"
+            className="cursor-pointer transition-opacity"
+            style={{ opacity: hoveredIdx === null || hoveredIdx === i ? 1 : 0.55 }}
+            onMouseEnter={() => setHoveredIdx(i)}
+            onMouseLeave={() => setHoveredIdx(null)}
           />
         ))}
         {segments.map((seg, i) => (
@@ -380,7 +461,7 @@ function PieChart({ slices }: { slices: Category[] }) {
             textAnchor="middle"
             dominantBaseline="central"
             fill={seg.textColor}
-            style={{ fontSize: 13, fontWeight: 500 }}
+            style={{ fontSize: 10, fontWeight: 500, pointerEvents: "none" }}
           >
             {seg.percent} %
           </text>
@@ -518,12 +599,14 @@ export default function SellerRevenueAnalysis() {
     []
   );
 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-[#f5f8fa]">
-      <SellerHeader />
+      <SellerHeader onMenuClick={() => setMobileMenuOpen(true)} />
       <div className="flex">
-        <SellerSidebar active="การวิเคราะห์รายได้" />
-        <main className="flex-1 min-w-0 px-6 py-6 flex flex-col gap-6">
+        <SellerSidebar active="การวิเคราะห์รายได้" mobileOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
+        <main className="flex-1 min-w-0 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 flex flex-col gap-6">
           {/* === Section 1 : Revenue analysis (chart) === */}
           <section className={`bg-white rounded-2xl ${CARD_SHADOW} p-6 flex flex-col gap-5`}>
             <div className="flex items-start justify-between gap-6 flex-wrap">
@@ -579,7 +662,7 @@ export default function SellerRevenueAnalysis() {
                     <div className="flex items-center gap-3 min-w-0">
                       <span
                         className="w-4 h-4 rounded-sm shrink-0"
-                        style={{ backgroundColor: c.color }}
+                        style={{ backgroundColor: c.labelColor }}
                       />
                       <span className="truncate text-[var(--color-neutral-900)]">{c.label}</span>
                     </div>

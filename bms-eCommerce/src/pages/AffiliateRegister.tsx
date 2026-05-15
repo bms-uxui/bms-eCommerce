@@ -27,6 +27,8 @@ import {
   type ConnectedSocialAccount,
 } from "../components/SocialPlatformPicker";
 import avatar from "../assets/avatar.jpg";
+import TermsOfServiceModal from "../components/landing/TermsOfServiceModal";
+import PrivacyPolicyModal from "../components/landing/PrivacyPolicyModal";
 
 const BG_GRADIENT =
   "linear-gradient(116.5deg, #b4e1ff 0%, #e9f8ff 24.9%, #f7fcfe 52.2%, #e9f8ff 74.9%, #55c9ff 109%)";
@@ -193,6 +195,8 @@ function FormRow({
 
 
 function RegistrationForm({ onSubmit }: { onSubmit: () => void }) {
+  const [termsOpen, setTermsOpen] = useState(false);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
   const [accountType, setAccountType] = useState<"individual" | "company">(
     "individual"
   );
@@ -365,9 +369,12 @@ function RegistrationForm({ onSubmit }: { onSubmit: () => void }) {
           />
           <span className="text-[16px] text-[var(--color-neutral-900)] leading-6">
             ฉันยืนยันว่าฉันได้กรอกข้อมูลข้างต้นทั้งหมดถูกต้อง รวมถึงฉันได้อ่านและยอมรับ{" "}
-            <span className="text-[var(--color-primary)]">
-              เงื่อนไขการใช้บริการและนโยบายความเป็นส่วนตัว
-            </span>{" "}
+            <button type="button" onClick={() => setTermsOpen(true)} className="text-[var(--color-primary)] underline">
+              เงื่อนไขการใช้บริการ
+            </button>{" "}และ{" "}
+            <button type="button" onClick={() => setPrivacyOpen(true)} className="text-[var(--color-primary)] underline">
+              นโยบายความเป็นส่วนตัว
+            </button>{" "}
             ของโปรแกรม Affiliate
           </span>
         </label>
@@ -388,6 +395,8 @@ function RegistrationForm({ onSubmit }: { onSubmit: () => void }) {
           if (pendingPlatform) addPlatform(pendingPlatform, link);
         }}
       />
+      <TermsOfServiceModal isOpen={termsOpen} onClose={() => setTermsOpen(false)} />
+      <PrivacyPolicyModal isOpen={privacyOpen} onClose={() => setPrivacyOpen(false)} />
     </div>
   );
 }
@@ -398,11 +407,11 @@ function SuccessState() {
     <div className="relative w-full max-w-[1200px] mx-auto">
       <span
         aria-hidden
-        className="pointer-events-none select-none absolute left-1/2 -translate-x-1/2 top-8 text-[180px] font-bold text-white/40 leading-none whitespace-nowrap"
+        className="pointer-events-none select-none absolute left-1/2 -translate-x-1/2 top-8 text-[clamp(60px,15vw,180px)] font-bold text-white/40 leading-none whitespace-nowrap"
       >
         Affiliate
       </span>
-      <div className="relative bg-white rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.08)] w-full px-8 py-12 flex flex-col items-center text-center gap-4">
+      <div className="relative bg-white rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.08)] w-full px-4 sm:px-8 py-12 flex flex-col items-center text-center gap-4">
         <span className="w-16 h-16 rounded-full bg-[var(--color-positive-700)]/10 flex items-center justify-center">
           <span className="w-12 h-12 rounded-full bg-[#2ecc71] flex items-center justify-center">
             <Check size={28} className="text-white" strokeWidth={3} />

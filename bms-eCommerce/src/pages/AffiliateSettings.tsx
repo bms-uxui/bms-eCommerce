@@ -148,13 +148,13 @@ function AccountInfoTab() {
           <p className="text-[14px] text-[var(--color-neutral-900)] mt-1">รายบุคคล</p>
         </div>
         <Field label="เบอร์โทรศัพท์">
-          <div className="flex gap-2">
+          <div className="flex gap-2 min-w-0">
             <input defaultValue="09*****904" readOnly className={inputCls} />
             <ChangeBtn />
           </div>
         </Field>
         <Field label="อีเมล์">
-          <div className="flex gap-2">
+          <div className="flex gap-2 min-w-0">
             <input placeholder="กรุณาระบุอีเมล์" className={inputCls} />
             <ChangeBtn />
           </div>
@@ -304,8 +304,8 @@ function SectionCard({
 }) {
   return (
     <section className="rounded-xl border border-[var(--color-neutral-300)] p-4 flex flex-col gap-3">
-      <div className="flex items-start justify-between gap-3">
-        <div>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="min-w-0">
           <h3 className="text-[15px] font-medium text-[var(--color-neutral-900)]">{title}</h3>
           <p className="text-[13px] text-[var(--color-neutral-500)] mt-0.5">{desc}</p>
         </div>

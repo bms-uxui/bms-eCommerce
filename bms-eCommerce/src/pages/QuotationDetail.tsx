@@ -99,19 +99,19 @@ function ProductRow({
   price: number;
 }) {
   return (
-    <div className="flex items-center gap-4 px-6 py-4 border-t border-[var(--color-neutral-200)]">
+    <div className="flex items-center gap-2 sm:gap-4 px-3 sm:px-6 py-4 border-t border-[var(--color-neutral-200)]">
       <img
         src={image}
         alt=""
-        className="w-16 h-16 rounded object-cover shrink-0"
+        className="w-12 h-12 sm:w-16 sm:h-16 rounded object-cover shrink-0"
       />
-      <p className="flex-1 min-w-0 text-[16px] text-[var(--color-neutral-900)] truncate">
+      <p className="flex-1 min-w-0 text-[14px] sm:text-[16px] text-[var(--color-neutral-900)] truncate">
         {name}
       </p>
-      <span className="w-20 text-center text-[16px] text-[var(--color-neutral-700)]">
+      <span className="w-10 sm:w-20 text-center text-[13px] sm:text-[16px] text-[var(--color-neutral-700)] shrink-0">
         x{qty}
       </span>
-      <span className="w-24 text-right text-[16px] font-semibold text-[var(--color-neutral-900)] tabular-nums">
+      <span className="w-20 sm:w-24 text-right text-[13px] sm:text-[16px] font-semibold text-[var(--color-neutral-900)] tabular-nums shrink-0">
         ฿ {price.toLocaleString("th-TH", { minimumFractionDigits: 2 })}
       </span>
     </div>
@@ -194,28 +194,28 @@ export default function QuotationDetail() {
 
       <div className="max-w-[1240px] mx-auto px-3 sm:px-4 lg:px-5 pt-6 pb-12">
         {/* Top action bar */}
-        <div className="h-[88px] flex items-center justify-between">
-          <div className="flex items-center gap-2">
+        <div className="min-h-[64px] sm:h-[88px] flex flex-wrap items-center justify-between gap-3 py-3 sm:py-0">
+          <div className="flex items-center gap-2 min-w-0">
             <button
               type="button"
               onClick={() => navigate("/quotation")}
               aria-label="กลับ"
-              className="w-10 h-10 flex items-center justify-center rounded text-[var(--color-neutral-900)] hover:bg-[var(--color-neutral-100)] transition"
+              className="w-10 h-10 flex items-center justify-center rounded text-[var(--color-neutral-900)] hover:bg-[var(--color-neutral-100)] transition shrink-0"
             >
               <ChevronLeft size={20} />
             </button>
-            <span className="text-[22px] font-medium text-[var(--color-neutral-900)] tracking-[-0.011em]">
+            <span className="text-[16px] sm:text-[22px] font-medium text-[var(--color-neutral-900)] tracking-[-0.011em] truncate">
               #{id}
             </span>
             <span
-              className={`px-4 py-1 rounded text-[12px] font-medium ${STATUS_STYLE[status]}`}
+              className={`px-2 sm:px-4 py-1 rounded text-[11px] sm:text-[12px] font-medium whitespace-nowrap shrink-0 ${STATUS_STYLE[status]}`}
             >
               {STATUS_LABEL[status]}
             </span>
           </div>
           <button
             type="button"
-            className="h-10 px-4 rounded-lg border border-[var(--color-critical)] text-[var(--color-critical)] text-[14px] font-medium flex items-center gap-2 hover:bg-[var(--color-critical)]/5 transition"
+            className="h-9 sm:h-10 px-3 sm:px-4 rounded-lg border border-[var(--color-critical)] text-[var(--color-critical)] text-[13px] sm:text-[14px] font-medium flex items-center gap-2 hover:bg-[var(--color-critical)]/5 transition shrink-0"
           >
             <X size={15} />
             ยกเลิกคำขอ
@@ -228,13 +228,13 @@ export default function QuotationDetail() {
           <div className="flex-1 min-w-0 flex flex-col gap-6">
           {/* Left: details card */}
           <section className="bg-white rounded-2xl border border-[var(--color-neutral-300)] flex flex-col">
-            <div className="flex items-center justify-between h-20 px-6">
-              <h2 className="text-[20px] font-medium text-[var(--color-neutral-900)]">
+            <div className="flex items-center justify-between flex-wrap gap-3 min-h-[64px] sm:h-20 px-4 sm:px-6 py-3 sm:py-0">
+              <h2 className="text-[17px] sm:text-[20px] font-medium text-[var(--color-neutral-900)]">
                 รายละเอียดใบเสนอราคา
               </h2>
               <button
                 type="button"
-                className="h-10 px-4 rounded-lg border border-[var(--color-neutral-400)] text-[var(--color-neutral-900)] text-[14px] font-medium flex items-center gap-2 hover:bg-[var(--color-neutral-100)] transition"
+                className="h-9 sm:h-10 px-3 sm:px-4 rounded-lg border border-[var(--color-neutral-400)] text-[var(--color-neutral-900)] text-[13px] sm:text-[14px] font-medium flex items-center gap-2 hover:bg-[var(--color-neutral-100)] transition"
               >
                 <Pencil size={16} />
                 แก้ไขคำขอ
@@ -242,7 +242,7 @@ export default function QuotationDetail() {
             </div>
 
             {/* Customer info */}
-            <div className="px-6 py-6 grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-8 border-t border-[var(--color-neutral-200)]">
+            <div className="px-4 sm:px-6 py-6 grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6 sm:gap-y-8 border-t border-[var(--color-neutral-200)]">
               <CustomerField label="หมายเลขคำขอ" value="Deenee" />
               <CustomerField label="นามสกุล" value="kadum" />
               <CustomerField
@@ -277,7 +277,7 @@ export default function QuotationDetail() {
             </div>
 
             {/* Summary */}
-            <div className="px-6 py-6 flex flex-col gap-4 border-t border-[var(--color-neutral-200)]">
+            <div className="px-4 sm:px-6 py-6 flex flex-col gap-4 border-t border-[var(--color-neutral-200)]">
               <div className="flex items-center justify-between">
                 <span className="text-[14px] text-[var(--color-neutral-900)]">
                   หมายเลขคำขอ
@@ -343,7 +343,7 @@ export default function QuotationDetail() {
             </div>
 
             {/* Note */}
-            <div className="px-6 py-6 flex flex-col gap-2 border-t border-[var(--color-neutral-200)]">
+            <div className="px-4 sm:px-6 py-6 flex flex-col gap-2 border-t border-[var(--color-neutral-200)]">
               <span className="text-[14px] text-[var(--color-neutral-500)]">
                 หมายเหตุ
               </span>
@@ -354,20 +354,20 @@ export default function QuotationDetail() {
           {/* Upload card — ตอบรับใบเสนอราคา */}
           {showUploadCard && (
             <section className="bg-white rounded-2xl border border-[var(--color-neutral-300)] flex flex-col">
-              <div className="px-6 py-5 border-b border-[var(--color-neutral-200)]">
+              <div className="px-4 sm:px-6 py-5 border-b border-[var(--color-neutral-200)]">
                 <h3 className="text-[18px] font-medium text-[var(--color-neutral-900)]">
                   ตอบรับใบเสนอราคา
                 </h3>
               </div>
-              <div className="px-6 py-6 flex flex-col gap-4">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-2 text-[14px] text-[var(--color-neutral-700)]">
-                    <Info size={16} className="shrink-0" />
+              <div className="px-4 sm:px-6 py-6 flex flex-col gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                  <div className="flex items-start sm:items-center gap-2 text-[14px] text-[var(--color-neutral-700)]">
+                    <Info size={16} className="shrink-0 mt-0.5 sm:mt-0" />
                     <span>ดาวน์โหลด PDF แล้วลงนาม จากนั้นอัปโหลดกลับเพื่อตอบรับ</span>
                   </div>
                   <button
                     type="button"
-                    className="h-10 px-4 rounded-lg bg-[var(--color-primary)] text-white text-[14px] font-medium hover:brightness-110 transition shrink-0"
+                    className="h-10 px-4 rounded-lg bg-[var(--color-primary)] text-white text-[14px] font-medium hover:brightness-110 transition shrink-0 self-start sm:self-auto"
                   >
                     ดาวน์โหลด PDF
                   </button>
@@ -429,11 +429,11 @@ export default function QuotationDetail() {
           {/* Order created CTA */}
           {showOrderCTA && (
             <section className="bg-white rounded-2xl border border-[var(--color-neutral-300)] flex flex-col">
-              <div className="px-6 py-4 flex items-center gap-2 text-[14px] text-[var(--color-neutral-700)]">
+              <div className="px-4 sm:px-6 py-4 flex items-center gap-2 text-[14px] text-[var(--color-neutral-700)]">
                 <Info size={16} className="shrink-0" />
                 <span>ใบเสนอราคานี้ถูกแปลงเป็นคำสั่งซื้อแล้ว</span>
               </div>
-              <div className="px-6 pb-6">
+              <div className="px-4 sm:px-6 pb-6">
                 <button
                   type="button"
                   onClick={() => navigate("/delivery")}
@@ -449,13 +449,13 @@ export default function QuotationDetail() {
 
           {/* Right: timeline card */}
           <aside className="w-full lg:w-[364px] shrink-0 bg-white rounded-2xl border border-[var(--color-neutral-300)] flex flex-col self-start lg:sticky lg:top-[120px]">
-            <div className="px-6 py-5 border-b border-[var(--color-neutral-200)]">
+            <div className="px-4 sm:px-6 py-5 border-b border-[var(--color-neutral-200)]">
               <h3 className="text-[20px] font-medium text-[var(--color-neutral-900)]">
                 การดำเนินการ
               </h3>
             </div>
 
-            <ol className="px-8 py-6 flex flex-col">
+            <ol className="px-4 sm:px-8 py-6 flex flex-col">
               {TIMELINE.map((step, i) => {
                 const stepStatus: StepStatus =
                   i < currentStep ? "done" : i === currentStep ? "current" : "pending";
@@ -493,7 +493,7 @@ export default function QuotationDetail() {
               })}
             </ol>
 
-            <div className="px-6 py-6 border-t border-[var(--color-neutral-200)]">
+            <div className="px-4 sm:px-6 py-6 border-t border-[var(--color-neutral-200)]">
               <button
                 type="button"
                 className="w-full h-10 px-4 rounded-lg border border-[var(--color-neutral-400)] text-[var(--color-neutral-900)] text-[14px] font-medium flex items-center justify-center gap-2 hover:bg-[var(--color-neutral-100)] transition"

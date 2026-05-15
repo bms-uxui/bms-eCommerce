@@ -80,7 +80,20 @@ function BulkActionBar({
             onClick={a.id === "update" ? onUpdate : undefined}
             className="flex flex-col items-center gap-1 px-2 py-1 rounded-lg hover:bg-white/10 active:bg-white/15 transition-colors"
           >
-            <Icon name={a.icon} size={20} />
+            {a.icon === "download" ? (
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16.6668 10.417V5.66699C16.6668 4.26686 16.6668 3.5668 16.3943 3.03202C16.1547 2.56161 15.7722 2.17916 15.3018 1.93948C14.767 1.66699 14.067 1.66699 12.6668 1.66699H7.3335C5.93336 1.66699 5.2333 1.66699 4.69852 1.93948C4.22811 2.17916 3.84566 2.56161 3.60598 3.03202C3.3335 3.5668 3.3335 4.26686 3.3335 5.66699V14.3337C3.3335 15.7338 3.3335 16.4339 3.60598 16.9686C3.84566 17.439 4.22811 17.8215 4.69852 18.0612C5.2333 18.3337 5.93333 18.3337 7.33338 18.3337H10.4168M11.6668 9.16699H6.66683M8.3335 12.5003H6.66683M13.3335 5.83366H6.66683M17.5002 15.8337L15.0002 18.3337L12.5002 15.8337M15.0002 18.3337V13.3337" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            ) : a.icon === "package" ? (
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17.0833 6.06527L9.99997 10.0005M9.99997 10.0005L2.91664 6.06527M9.99997 10.0005L10 17.9171M11.6667 17.4079L10.6475 17.9741C10.4112 18.1054 10.293 18.171 10.1679 18.1968C10.0571 18.2195 9.94288 18.2195 9.83213 18.1968C9.70698 18.171 9.58881 18.1054 9.35248 17.9741L3.18581 14.5481C2.93621 14.4095 2.8114 14.3401 2.72053 14.2415C2.64013 14.1543 2.57929 14.0509 2.54207 13.9382C2.5 13.8109 2.5 13.6681 2.5 13.3826V6.61835C2.5 6.33281 2.5 6.19005 2.54207 6.06271C2.57929 5.95007 2.64013 5.84667 2.72053 5.75942C2.8114 5.66081 2.93621 5.59148 3.18581 5.45281L9.35248 2.02688C9.58881 1.89558 9.70698 1.82993 9.83213 1.80419C9.94288 1.78141 10.0571 1.78141 10.1679 1.80419C10.293 1.82993 10.4112 1.89558 10.6475 2.02688L16.8142 5.4528C17.0638 5.59147 17.1886 5.66081 17.2795 5.75942C17.3599 5.84666 17.4207 5.95007 17.4579 6.06271C17.5 6.19004 17.5 6.33281 17.5 6.61835L17.5 10.4171M6.25 3.75048L13.75 7.91714" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M18 14L15 17M15 14L18 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            ) : a.icon === "files" ? (
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11.6668 1.8916V5.33372C11.6668 5.80043 11.6668 6.03378 11.7577 6.21204C11.8376 6.36885 11.965 6.49633 12.1218 6.57622C12.3001 6.66705 12.5335 6.66705 13.0002 6.66705H16.4423M13.3335 10.8337H6.66683M13.3335 14.167H6.66683M8.3335 7.50033H6.66683M11.6668 1.66699H7.3335C5.93336 1.66699 5.2333 1.66699 4.69852 1.93948C4.22811 2.17916 3.84566 2.56161 3.60598 3.03202C3.3335 3.5668 3.3335 4.26686 3.3335 5.66699V14.3337C3.3335 15.7338 3.3335 16.4339 3.60598 16.9686C3.84566 17.439 4.22811 17.8215 4.69852 18.0612C5.2333 18.3337 5.93336 18.3337 7.3335 18.3337H12.6668C14.067 18.3337 14.767 18.3337 15.3018 18.0612C15.7722 17.8215 16.1547 17.439 16.3943 16.9686C16.6668 16.4339 16.6668 15.7338 16.6668 14.3337V6.66699L11.6668 1.66699Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            ) : <Icon name={a.icon} size={20} />}
             <span className="text-[12px] leading-tight whitespace-nowrap">{a.label}</span>
           </button>
         ))}
@@ -172,7 +185,9 @@ function UpdateOrderDrawer({ count, onClose }: { count: number; onClose: () => v
             type="button"
             className="flex-1 h-10 rounded-lg border border-[var(--color-neutral-300)] text-[14px] font-medium text-[var(--color-neutral-900)] flex items-center justify-center gap-2 hover:bg-[var(--color-neutral-100,#f5f8fa)] transition-colors"
           >
-            <Icon name="comments" size={18} />
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4.06258 7.48587C4.02115 7.21883 3.99965 6.94525 3.99965 6.66668C3.99965 3.72116 6.40317 1.33334 9.36807 1.33334C12.333 1.33334 14.7365 3.72116 14.7365 6.66668C14.7365 7.33206 14.6138 7.96898 14.3898 8.55635C14.3432 8.67833 14.32 8.73933 14.3094 8.78695C14.2989 8.83413 14.2949 8.86733 14.2938 8.91564C14.2926 8.96441 14.2992 9.01813 14.3125 9.12556L14.5808 11.3057C14.6099 11.5417 14.6244 11.6597 14.5852 11.7455C14.5508 11.8207 14.4897 11.8804 14.4137 11.913C14.3271 11.9503 14.2094 11.933 13.9742 11.8986L11.8506 11.5873C11.7398 11.571 11.6843 11.5629 11.6338 11.5632C11.5839 11.5635 11.5493 11.5672 11.5004 11.5774C11.451 11.5878 11.3879 11.6115 11.2617 11.6588C10.6728 11.8793 10.0346 12 9.36807 12C9.08928 12 8.81545 11.9789 8.54811 11.9382M5.08739 14.6667C7.06399 14.6667 8.66634 13.0251 8.66634 11C8.66634 8.97497 7.06399 7.33334 5.08739 7.33334C3.1108 7.33334 1.50845 8.97497 1.50845 11C1.50845 11.4071 1.57319 11.7986 1.69271 12.1645C1.74323 12.3191 1.76849 12.3965 1.77678 12.4493C1.78543 12.5045 1.78695 12.5354 1.78373 12.5912C1.78064 12.6445 1.76728 12.7049 1.74057 12.8255L1.33301 14.6667L3.32954 14.394C3.43852 14.3791 3.49301 14.3717 3.54059 14.372C3.59069 14.3723 3.61728 14.3751 3.66641 14.3849C3.71308 14.3942 3.78245 14.4186 3.92119 14.4676C4.28674 14.5966 4.67908 14.6667 5.08739 14.6667Z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
             แชทลูกค้า
           </button>
           <button
@@ -210,6 +225,7 @@ export default function SellerOrders() {
   const [page, setPage] = useState(2);
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const rows = tab === "all" ? ORDERS : ORDERS.filter((o) => o.status === tab);
   const pages = [1, 2, 3, 4, 5, "…", 12] as const;
@@ -227,12 +243,12 @@ export default function SellerOrders() {
 
   return (
     <div className="min-h-screen bg-[#f5f8fa]">
-      <SellerHeader />
+      <SellerHeader onMenuClick={() => setMobileMenuOpen(true)} />
       <div className="flex">
-        <SellerSidebar active="คำสั่งซื้อ" />
-        <main className="flex-1 min-w-0 px-8 py-6 flex flex-col gap-4 min-h-[calc(100vh-72px)]">
+        <SellerSidebar active="คำสั่งซื้อ" mobileOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
+        <main className="flex-1 min-w-0 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 flex flex-col gap-4 min-h-[calc(100vh-72px)]">
           {/* Title + search */}
-          <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center justify-between flex-wrap gap-3">
             <h1 className="text-[20px] font-semibold text-[var(--color-primary-700)]">
               คำสั่งซื้อ
             </h1>

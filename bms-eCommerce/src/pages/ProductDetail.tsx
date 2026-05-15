@@ -74,7 +74,7 @@ export function ShopCard() {
           <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-positive-700)]" />
           <span className="text-[var(--color-neutral-600)]">ออนไลน์</span>
         </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-2 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-2 mt-4">
           <InfoChip icon={MapPin}>เชียงราย</InfoChip>
           <InfoChip icon={MessageCircle}>ตอบกลับ 96%</InfoChip>
           <InfoChip icon={Star}>4.5 คะแนน (ผู้รีวิว 2.3k)</InfoChip>

@@ -5,6 +5,8 @@ import { inputClassNames } from "../components/inputStyles";
 import LanguageSelect from "../components/LanguageSelect";
 import HelpSelect from "../components/HelpSelect";
 import loginBg from "../assets/banners/login-bg.png";
+import TermsOfServiceModal from "../components/landing/TermsOfServiceModal";
+import PrivacyPolicyModal from "../components/landing/PrivacyPolicyModal";
 
 function BrightifyLogo({ size = 36 }: { size?: number }) {
   return (
@@ -131,7 +133,7 @@ function OtpStep({
 
   return (
     <>
-      <div className="px-10 pt-6">
+      <div className="px-5 sm:px-10 pt-6">
         <div className="login-item-in w-full flex flex-col items-center" style={{ animationDelay: "60ms" }}>
           <h1 className="text-[20px] font-bold text-[var(--color-neutral-900)] text-center">
             ยืนยันรหัส OTP
@@ -139,7 +141,7 @@ function OtpStep({
         </div>
       </div>
       <span className="mt-6 block w-full h-px bg-[var(--color-neutral-300)]" />
-      <div className="px-10 pb-10 flex flex-col items-center">
+      <div className="px-5 sm:px-10 pb-10 flex flex-col items-center">
       <div className="login-item-in mt-8 flex flex-col items-center gap-3 text-center" style={{ animationDelay: "140ms" }}>
         <p className="text-[14px] text-[var(--color-neutral-500)]">
           รหัส OTP จะถูกส่งไปยัง SMS ที่หมายเลข
@@ -174,7 +176,7 @@ function OtpStep({
             onKeyDown={(e) => handleKey(i, e)}
             onFocus={(e) => e.currentTarget.select()}
             aria-label={`หลักที่ ${i + 1}`}
-            className="w-10 h-10 rounded-lg bg-white border border-[var(--color-neutral-300)] text-center text-[16px] font-medium text-[var(--color-neutral-900)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 transition-all"
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-white border border-[var(--color-neutral-300)] text-center text-[15px] sm:text-[16px] font-medium text-[var(--color-neutral-900)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 transition-all"
           />
         ))}
       </form>
@@ -221,6 +223,8 @@ export default function Login() {
   const [phone, setPhone] = useState("");
   const [phoneTouched, setPhoneTouched] = useState(false);
   const [step, setStep] = useState<"phone" | "otp">("phone");
+  const [termsOpen, setTermsOpen] = useState(false);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
   const phoneValid = /^0\d{9}$/.test(phone);
 
   return (
@@ -271,7 +275,7 @@ export default function Login() {
             />
           ) : (
           <>
-            <div className="px-10 pt-10">
+            <div className="px-5 sm:px-10 pt-10">
               <div className="login-item-in w-full flex flex-col items-center" style={{ animationDelay: "380ms" }}>
                 <h1
                   id="login-title"
@@ -282,7 +286,7 @@ export default function Login() {
               </div>
             </div>
             <span className="mt-6 block w-full h-px bg-[var(--color-neutral-300)]" />
-            <div className="px-10 pt-8 pb-0 flex flex-col items-center gap-8">
+            <div className="px-5 sm:px-10 pt-8 pb-0 flex flex-col items-center gap-8">
             <form
               className="login-item-in w-full flex flex-col gap-8"
               style={{ animationDelay: "460ms" }}
@@ -346,19 +350,21 @@ export default function Login() {
             <p className="login-item-in text-[12px] leading-6 text-[var(--color-neutral-900)] text-center" style={{ animationDelay: "680ms" }}>
               การเปิดบัญชี Brightify ท่านรับทราบและตกลงตาม
               <br />
-              <a className="text-[var(--color-primary)] underline" href="#">
+              <button type="button" onClick={() => setTermsOpen(true)} className="text-[var(--color-primary)] underline">
                 เงื่อนไขการให้บริการ
-              </a>{" "}
+              </button>{" "}
               และ{" "}
-              <a className="text-[var(--color-primary)] underline" href="#">
+              <button type="button" onClick={() => setPrivacyOpen(true)} className="text-[var(--color-primary)] underline">
                 นโยบายความคุ้มครองข้อมูลส่วนบุคคล
-              </a>
+              </button>
             </p>
             </div>
           </>
           )}
         </section>
       </main>
+      <TermsOfServiceModal isOpen={termsOpen} onClose={() => setTermsOpen(false)} />
+      <PrivacyPolicyModal isOpen={privacyOpen} onClose={() => setPrivacyOpen(false)} />
     </div>
   );
 }

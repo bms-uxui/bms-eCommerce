@@ -334,8 +334,8 @@ export default function Cart() {
       <SlimHeader />
 
       <main className="flex-1 max-w-[1200px] w-full mx-auto px-4 sm:px-6 py-6 pb-32 space-y-3">
-        {/* Column header */}
-        <div className="bg-white rounded-xl border border-[var(--color-neutral-300)] px-4 py-3 grid grid-cols-[24px_1fr_120px_120px_120px_140px_60px] items-center gap-4 text-[13px] text-[var(--color-neutral-700)]">
+        {/* Column header — hidden on mobile, shown on md+ */}
+        <div className="hidden md:grid bg-white rounded-xl border border-[var(--color-neutral-300)] px-4 py-3 grid-cols-[24px_1fr_120px_120px_120px_140px_60px] items-center gap-4 text-[13px] text-[var(--color-neutral-700)]">
           <Checkbox
             size="sm"
             isSelected={allSelected}
@@ -349,6 +349,17 @@ export default function Cart() {
           <span className="text-center">ราคาต่อชิ้น</span>
           <span className="text-center">ราคารวมทั้งหมด</span>
           <span className="text-center">ลบสินค้า</span>
+        </div>
+        {/* Mobile select-all row */}
+        <div className="md:hidden bg-white rounded-xl border border-[var(--color-neutral-300)] px-4 py-3 flex items-center gap-3 text-[13px] text-[var(--color-neutral-700)]">
+          <Checkbox
+            size="sm"
+            isSelected={allSelected}
+            onValueChange={toggleAll}
+            aria-label="เลือกสินค้าทั้งหมด"
+            classNames={{ wrapper: "before:rounded after:rounded mr-0", base: "m-0 p-0" }}
+          />
+          <span>เลือกสินค้าทั้งหมด</span>
         </div>
 
         {/* Shop sections */}
@@ -388,80 +399,115 @@ export default function Cart() {
               {shop.items.map((it) => {
                 const lineTotal = it.unitPrice * it.qty;
                 return (
-                  <div
-                    key={it.id}
-                    className="px-4 py-4 grid grid-cols-[24px_1fr_120px_120px_120px_140px_60px] items-center gap-4"
-                  >
-                    <Checkbox
-                      size="sm"
-                      isSelected={selected.has(it.id)}
-                      onValueChange={() => toggleItem(it.id)}
-                      aria-label={it.name}
-                      classNames={{ wrapper: "before:rounded after:rounded mr-0", base: "m-0 p-0" }}
-                    />
-
-                    {/* Image + name + badges */}
-                    <div className="min-w-0">
-                      <CartItemRow
-                        multiline
-                        item={{
-                          name: it.name,
-                          image: it.image,
-                          badges: [
-                            ...(it.freeShipping ? [{ kind: "free-shipping" } as const] : []),
-                            ...(it.discountPct !== undefined
-                              ? [{ kind: "discount", percent: it.discountPct } as const]
-                              : []),
-                            ...(it.shopDiscountPct !== undefined
-                              ? [{ kind: "shop-discount", percent: it.shopDiscountPct } as const]
-                              : []),
-                          ],
-                        }}
+                  <div key={it.id} className="px-4 py-4 border-b border-[var(--color-neutral-100)] last:border-0">
+                    {/* Desktop row */}
+                    <div className="hidden md:grid grid-cols-[24px_1fr_120px_120px_120px_140px_60px] items-center gap-4">
+                      <Checkbox
+                        size="sm"
+                        isSelected={selected.has(it.id)}
+                        onValueChange={() => toggleItem(it.id)}
+                        aria-label={it.name}
+                        classNames={{ wrapper: "before:rounded after:rounded mr-0", base: "m-0 p-0" }}
                       />
-                    </div>
-
-                    {/* Variant dropdown */}
-                    <div className="flex justify-center">
-                      {it.variant ? (
-                        <VariantDropdown
-                          value={it.variant}
-                          onChange={(v) => updateVariant(it.id, v)}
+                      <div className="min-w-0">
+                        <CartItemRow
+                          multiline
+                          item={{
+                            name: it.name,
+                            image: it.image,
+                            badges: [
+                              ...(it.freeShipping ? [{ kind: "free-shipping" } as const] : []),
+                              ...(it.discountPct !== undefined
+                                ? [{ kind: "discount", percent: it.discountPct } as const]
+                                : []),
+                              ...(it.shopDiscountPct !== undefined
+                                ? [{ kind: "shop-discount", percent: it.shopDiscountPct } as const]
+                                : []),
+                            ],
+                          }}
                         />
-                      ) : (
-                        <span className="text-[13px] text-[var(--color-neutral-500)]">
-                          –
-                        </span>
-                      )}
+                      </div>
+                      <div className="flex justify-center">
+                        {it.variant ? (
+                          <VariantDropdown value={it.variant} onChange={(v) => updateVariant(it.id, v)} />
+                        ) : (
+                          <span className="text-[13px] text-[var(--color-neutral-500)]">–</span>
+                        )}
+                      </div>
+                      <div className="flex justify-center">
+                        <QtyStepper value={it.qty} onChange={(n) => updateQty(it.id, n)} />
+                      </div>
+                      <div className="text-center text-[14px] text-[var(--color-neutral-900)] tabular-nums">
+                        {baht(it.unitPrice)}
+                      </div>
+                      <div className="text-center text-[14px] font-semibold text-[var(--color-primary)] tabular-nums">
+                        {baht(lineTotal)}
+                      </div>
+                      <div className="flex justify-center">
+                        <button
+                          type="button"
+                          onClick={() => removeItem(it.id)}
+                          className="w-8 h-8 rounded-md text-[var(--color-neutral-500)] hover:text-[var(--color-critical)] hover:bg-[var(--color-critical)]/10 flex items-center justify-center transition"
+                          aria-label="ลบสินค้า"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
                     </div>
 
-                    {/* Qty */}
-                    <div className="flex justify-center">
-                      <QtyStepper
-                        value={it.qty}
-                        onChange={(n) => updateQty(it.id, n)}
-                      />
-                    </div>
-
-                    {/* Unit price */}
-                    <div className="text-center text-[14px] text-[var(--color-neutral-900)] tabular-nums">
-                      {baht(it.unitPrice)}
-                    </div>
-
-                    {/* Line total (highlighted) */}
-                    <div className="text-center text-[14px] font-semibold text-[var(--color-primary)] tabular-nums">
-                      {baht(lineTotal)}
-                    </div>
-
-                    {/* Delete */}
-                    <div className="flex justify-center">
-                      <button
-                        type="button"
-                        onClick={() => removeItem(it.id)}
-                        className="w-8 h-8 rounded-md text-[var(--color-neutral-500)] hover:text-[var(--color-critical)] hover:bg-[var(--color-critical)]/10 flex items-center justify-center transition"
-                        aria-label="ลบสินค้า"
-                      >
-                        <Trash2 size={16} />
-                      </button>
+                    {/* Mobile card layout */}
+                    <div className="md:hidden flex flex-col gap-3">
+                      <div className="flex items-start gap-3">
+                        <Checkbox
+                          size="sm"
+                          isSelected={selected.has(it.id)}
+                          onValueChange={() => toggleItem(it.id)}
+                          aria-label={it.name}
+                          classNames={{ wrapper: "before:rounded after:rounded mr-0", base: "m-0 p-0 mt-1" }}
+                        />
+                        <div className="flex-1 min-w-0">
+                          <CartItemRow
+                            multiline
+                            item={{
+                              name: it.name,
+                              image: it.image,
+                              badges: [
+                                ...(it.freeShipping ? [{ kind: "free-shipping" } as const] : []),
+                                ...(it.discountPct !== undefined
+                                  ? [{ kind: "discount", percent: it.discountPct } as const]
+                                  : []),
+                                ...(it.shopDiscountPct !== undefined
+                                  ? [{ kind: "shop-discount", percent: it.shopDiscountPct } as const]
+                                  : []),
+                              ],
+                            }}
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeItem(it.id)}
+                          className="shrink-0 w-8 h-8 rounded-md text-[var(--color-neutral-500)] hover:text-[var(--color-critical)] hover:bg-[var(--color-critical)]/10 flex items-center justify-center transition"
+                          aria-label="ลบสินค้า"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                      <div className="flex items-center justify-between gap-3 pl-7">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          {it.variant && (
+                            <VariantDropdown value={it.variant} onChange={(v) => updateVariant(it.id, v)} />
+                          )}
+                          <QtyStepper value={it.qty} onChange={(n) => updateQty(it.id, n)} />
+                        </div>
+                        <div className="flex flex-col items-end gap-0.5">
+                          <span className="text-[12px] text-[var(--color-neutral-500)] tabular-nums">
+                            {baht(it.unitPrice)} / ชิ้น
+                          </span>
+                          <span className="text-[14px] font-semibold text-[var(--color-primary)] tabular-nums">
+                            {baht(lineTotal)}
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 );
@@ -519,35 +565,36 @@ export default function Cart() {
       {/* Fixed checkout footer */}
       <div className="fixed bottom-0 inset-x-0 z-30 px-4 sm:px-6 pointer-events-none">
         <div
-          className="max-w-[1200px] mx-auto bg-[var(--color-primary)] border-l border-r border-t border-[var(--color-neutral-300)] rounded-tl-[32px] rounded-tr-[32px] pt-6 pb-8 px-8 flex items-center gap-10 pointer-events-auto"
+          className="max-w-[1200px] mx-auto bg-[var(--color-primary)] border-l border-r border-t border-[var(--color-neutral-300)] rounded-tl-[32px] rounded-tr-[32px] pt-4 pb-6 px-4 sm:pt-6 sm:pb-8 sm:px-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-10 pointer-events-auto"
           style={{ filter: "drop-shadow(0 0 4px #68b6fa)" }}
         >
           <div className="flex flex-1 items-center gap-2.5 min-w-0 text-white">
-            <div className="flex flex-col gap-3 w-[200px] shrink-0">
-              <p className="text-[20px] font-semibold leading-4">
+            <div className="flex flex-col gap-1.5 sm:gap-3 flex-1 min-w-0">
+              <p className="text-[16px] sm:text-[20px] font-semibold leading-tight">
                 มูลค่าสินค้าทั้งหมด
               </p>
-              <p className="text-[14px] leading-4">
+              <p className="text-[13px] sm:text-[14px] leading-tight">
                 เลือกสินค้าทั้งหมด {selectedItems.length} รายการ
               </p>
             </div>
-            <div className="flex flex-col gap-3 flex-1 min-w-0 text-right">
-              <p className="text-[20px] font-semibold leading-4 tabular-nums">
+            <div className="flex flex-col gap-1.5 sm:gap-3 items-end text-right shrink-0">
+              <p className="text-[18px] sm:text-[20px] font-semibold leading-tight tabular-nums">
                 {baht(total)}
               </p>
-              <p className="text-[14px] leading-4">
+              <p className="text-[13px] sm:text-[14px] leading-tight">
                 ส่วนลด ฿{discount.toLocaleString()}
               </p>
             </div>
           </div>
 
-          <span className="w-px h-12 bg-white/40" />
+          <span className="hidden sm:block w-px h-12 bg-white/40" />
+          <span className="sm:hidden h-px w-full bg-white/40" />
 
           <button
             type="button"
             onClick={() => navigate("/checkout")}
             disabled={selectedItems.length === 0}
-            className="flex-1 px-4 py-3 rounded-lg bg-white text-[var(--color-primary)] text-[16px] font-semibold tracking-[-0.011em] shadow-[0_2px_4px_1px_var(--color-primary-600)] hover:brightness-95 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition"
+            className="w-full sm:flex-1 px-4 py-3 rounded-lg bg-white text-[var(--color-primary)] text-[16px] font-semibold tracking-[-0.011em] shadow-[0_2px_4px_1px_var(--color-primary-600)] hover:brightness-95 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition"
           >
             ดำเนินการชำระเงิน
           </button>

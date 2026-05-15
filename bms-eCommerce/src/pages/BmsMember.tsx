@@ -32,52 +32,68 @@ const HISTORY: PointEntry[] = [
 function MemberCard() {
   return (
     <div
-      className="relative w-full max-w-[330px] mx-auto aspect-[330/196] rounded-2xl overflow-hidden text-white border-[0.5px] border-white shadow-[0_0_1px_rgba(29,33,45,0.2),0_1px_4px_rgba(29,33,45,0.15),0_16px_32px_rgba(29,33,45,0.1)]"
+      className="relative w-full max-w-[330px] mx-auto aspect-[330/196] rounded-2xl overflow-hidden text-white border-[0.5px] border-white shadow-[0px_0px_1px_rgba(29,33,45,0.2),0px_1px_4px_rgba(29,33,45,0.15),0px_16px_32px_rgba(29,33,45,0.1)]"
       style={{ backgroundColor: "#023563" }}
     >
-      {/* Glossy radial shine layers (Ellipse 33 / 34 from Figma) */}
+      {/* Ellipse 33 — large top-center glow */}
       <div
-        className="absolute inset-0"
+        className="absolute pointer-events-none"
         style={{
+          width: "621px",
+          height: "432px",
+          left: "calc(50% - 310.5px)",
+          top: "40px",
           background:
-            "radial-gradient(140% 120% at 50% -20%, rgba(95,190,255,0.85) 0%, rgba(40,130,210,0.45) 35%, rgba(2,53,99,0) 70%)",
+            "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(100,195,255,0.75) 0%, rgba(35,120,210,0.4) 40%, transparent 70%)",
+          transform: "scale(1.05)",
         }}
       />
+      {/* Ellipse 34 — secondary glow lower */}
       <div
-        className="absolute inset-0"
+        className="absolute pointer-events-none"
         style={{
+          width: "621px",
+          height: "432px",
+          left: "calc(50% - 310.5px)",
+          top: "99px",
           background:
-            "radial-gradient(120% 100% at 50% 0%, rgba(120,205,255,0.5) 0%, rgba(2,53,99,0) 55%)",
+            "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(80,175,255,0.45) 0%, transparent 60%)",
         }}
       />
-      {/* Concentric arc lines bleeding off the top-right (Ellipse 35 ×2) */}
-      <div className="absolute -top-[160px] left-[195px] w-[279px] h-[279px] rounded-full border border-white/20" />
-      <div className="absolute -top-[160px] left-[264px] w-[279px] h-[279px] rounded-full border border-white/15" />
+      {/* Ellipse 35 ×2 — concentric circle decorations top-right */}
+      <div
+        className="absolute rounded-full border border-white/20 pointer-events-none"
+        style={{ width: 279, height: 279, left: 195, top: -159 }}
+      />
+      <div
+        className="absolute rounded-full border border-white/15 pointer-events-none"
+        style={{ width: 279, height: 279, left: 264, top: -159 }}
+      />
 
-      {/* Points + logo */}
+      {/* Logo + points */}
       <div className="absolute left-[17px] top-[14px] flex items-center gap-2">
         <img
           src={bmsLogo}
-          alt=""
-          className="w-16 h-16 object-contain drop-shadow-[0_2px_4px_rgba(0,0,0,0.25)]"
+          alt="BMS"
+          className="w-16 h-16 object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.3)]"
         />
-        <div className="flex flex-col leading-[22px]">
-          <p className="text-[32px] sm:text-[36px] font-bold">237</p>
+        <div className="flex flex-col gap-1 leading-[22px]">
+          <p className="text-[36px] font-bold leading-none">237</p>
           <p className="text-[14px]">Point สะสมทั้งหมด</p>
         </div>
       </div>
 
-      {/* Footer bar */}
-      <div className="absolute inset-x-0 bottom-0 flex items-center justify-between px-5 py-3">
+      {/* Footer */}
+      <div className="absolute inset-x-0 bottom-0 flex items-end justify-between px-5 py-3">
         <div className="flex flex-col gap-1">
-          <p className="text-[10px]">บัตรสมาชิกของ</p>
-          <p className="text-[16px] font-medium [text-shadow:0_1px_1px_rgba(5,69,124,0.27)]">
+          <p className="text-[10px] opacity-90">บัตรสมาชิกของ</p>
+          <p className="text-[16px] font-medium [text-shadow:0px_1px_1px_rgba(5,69,124,0.27)]">
             Okinowa Kawasaki
           </p>
         </div>
-        <div className="flex flex-col gap-1 text-right">
-          <p className="text-[10px]">Point จะหมดอายุ</p>
-          <p className="text-[16px] font-medium [text-shadow:0_1px_1px_rgba(5,69,124,0.27)]">
+        <div className="flex flex-col gap-1 items-end">
+          <p className="text-[10px] opacity-90">Point จะหมดอายุ</p>
+          <p className="text-[16px] font-medium [text-shadow:0px_1px_1px_rgba(5,69,124,0.27)]">
             12/12/2569
           </p>
         </div>
@@ -138,7 +154,7 @@ export default function BmsMember() {
             <h3 className="text-[16px] font-semibold text-[#011b31]">
               เงื่อนไขการใช้งาน
             </h3>
-            <ol className="list-decimal pl-5 text-[12px] leading-5 flex flex-col gap-2 text-[var(--color-neutral-900)]">
+            <ol className="list-decimal pl-5 text-[14px] leading-6 flex flex-col gap-2 text-[var(--color-neutral-900)]">
               <li>
                 <span className="font-semibold">เงื่อนไขการสะสม Point BMS Member</span>{" "}
                 <span className="text-[var(--color-neutral-600)]">
@@ -152,7 +168,7 @@ export default function BmsMember() {
                 </span>
               </li>
             </ol>
-            <p className="text-[12px] leading-5">
+            <p className="text-[14px] leading-6">
               <span className="font-semibold text-[var(--color-critical)]">หมายเหตุ</span>{" "}
               <span className="font-semibold text-[var(--color-neutral-900)]">
                 สินค้าที่ไม่ร่วมรายการ :

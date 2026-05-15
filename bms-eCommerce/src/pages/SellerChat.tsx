@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { SellerHeader, SellerSidebar } from "../components/SellerChrome";
 import ChatWorkspace, { type ChatConversation, type ChatProductRef } from "../components/landing/ChatWorkspace";
 import ginseng from "../assets/products/p08-ginseng.jpg";
@@ -91,11 +92,12 @@ const CONVERSATIONS: ChatConversation[] = [
 ];
 
 export default function SellerChat() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   return (
     <div className="min-h-screen bg-[#f5f8fa]">
-      <SellerHeader />
+      <SellerHeader onMenuClick={() => setMobileMenuOpen(true)} />
       <div className="flex">
-        <SellerSidebar active="แชท" />
+        <SellerSidebar active="แชท" mobileOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
         <ChatWorkspace title="แชท" conversations={CONVERSATIONS} />
       </div>
     </div>
