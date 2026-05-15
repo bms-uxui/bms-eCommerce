@@ -10,7 +10,7 @@ import vitaminC from "../assets/products/p04-vitamin-c.jpg";
 import bpMonitor from "../assets/products/p03-bp-monitor.jpg";
 import mask from "../assets/products/p05-mask.jpg";
 
-type TabKey = "all" | OrderStatus;
+type TabKey = "all" | OrderStatus | "refund" | "review";
 
 const TABS: { key: TabKey; label: string }[] = [
   { key: "all", label: "ทั้งหมด" },
@@ -20,6 +20,8 @@ const TABS: { key: TabKey; label: string }[] = [
   { key: "delivered", label: "จัดส่งสำเร็จแล้ว" },
   { key: "received", label: "ได้รับสินค้าแล้ว" },
   { key: "cancelled", label: "ยกเลิก" },
+  { key: "refund", label: "ขอคืนเงิน/คืนสินค้า" },
+  { key: "review", label: "รีวิวสินค้า" },
 ];
 
 const ORDERS: Order[] = [
@@ -153,14 +155,20 @@ export default function Delivery() {
       acc[t.key] =
         t.key === "all"
           ? ORDERS.length
-          : ORDERS.filter((o) => o.status === t.key).length;
+          : t.key === "refund" || t.key === "review"
+            ? ORDERS.filter((o) => o.status === "received").length
+            : ORDERS.filter((o) => o.status === t.key).length;
       return acc;
     },
     {} as Record<TabKey, number>
   );
 
   const visible =
-    active === "all" ? ORDERS : ORDERS.filter((o) => o.status === active);
+    active === "all"
+      ? ORDERS
+      : active === "refund" || active === "review"
+        ? ORDERS.filter((o) => o.status === "received")
+        : ORDERS.filter((o) => o.status === active);
 
   return (
     <ProfilePageShell activeKey="orders">

@@ -4,7 +4,7 @@ import Icon from "../components/landing/Icon";
 import Pagination from "../components/Pagination";
 import StatusBadge, { type StatusTone } from "../components/StatusBadge";
 import { AffiliateHeader, AffiliateSidebar } from "../components/AffiliateChrome";
-import DateRangePicker from "../components/DateRangePicker";
+import { CustomRangeField } from "../components/CustomRangeCalendar";
 import { makeProducts } from "../components/landing/mockData";
 
 type Status = { label: string; tone: StatusTone };
@@ -103,7 +103,7 @@ export default function OrderReport() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-3">
               <FilterField label="วันที่คำสั่งซื้อ">
-                <DateRangePicker className="!flex w-full" />
+                <CustomRangeField className="w-full" />
               </FilterField>
               <FilterField label="สถานะการคำสั่งซื้อ">
                 <FakeSelect placeholder="เลือกสถานะ" />

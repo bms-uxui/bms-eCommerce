@@ -2,7 +2,7 @@ import { useState } from "react";
 import Icon from "../components/landing/Icon";
 import Pagination from "../components/Pagination";
 import { AffiliateHeader, AffiliateSidebar } from "../components/AffiliateChrome";
-import DateRangePicker from "../components/DateRangePicker";
+import { CustomRangeField } from "../components/CustomRangeCalendar";
 import { ChangeBadge, type BadgeTone } from "./SellerOverview";
 import { makeProducts } from "../components/landing/mockData";
 import facebookLogo from "../assets/social/facebook.png";
@@ -102,7 +102,7 @@ export default function CommissionSummary() {
                 ข้อมูลอัปเดตล่าสุด: วันนี้ เวลา 00:00 น.
               </p>
             </div>
-            <DateRangePicker />
+            <CustomRangeField />
           </div>
 
           {/* Revenue + platform stats */}

@@ -1,10 +1,27 @@
-import { useMemo, useRef, useState } from "react";
-import { Calendar } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { Calendar, ChevronDown, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Download } from "lucide-react";
 import Icon from "../components/landing/Icon";
 import { SellerHeader, SellerSidebar } from "../components/SellerChrome";
 import { ChangeBadge } from "./SellerOverview";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
+import {
+  CustomRangePanel,
+  MonthGrid,
+  THAI_MONTH_SHORT,
+  THAI_MONTH_LONG,
+  TODAY,
+  startOfDay,
+  isSameDay,
+  addMonths,
+  addDays,
+  weekRange,
+  isFutureDay,
+  isFutureMonth,
+  isFutureYear,
+  type DateRange,
+} from "../components/CustomRangeCalendar";
 
 type PeriodKey = "day" | "week" | "month" | "year" | "custom";
 
@@ -31,12 +48,364 @@ function SectionHint({ text }: { text: string }) {
   );
 }
 
-/* ---------- Date selector ---------- */
+/* ---------- Calendar popover ---------- */
 
-const THAI_MONTH_SHORT = [
-  "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.",
-  "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค.",
-];
+type PopoverMode = "day" | "week" | "month" | "year" | "custom";
+
+function CalendarPanel({
+  view,
+  setView,
+  selected,
+  onPick,
+  range,
+}: {
+  view: Date;
+  setView: (d: Date) => void;
+  selected: Date;
+  onPick: (d: Date) => void;
+  range?: { start: Date; end: Date };
+}) {
+  return (
+    <div className="flex flex-col w-[336px]">
+      <div className="h-12 flex items-center justify-between px-3">
+        <button
+          type="button"
+          onClick={() => setView(addMonths(view, -1))}
+          className="size-8 flex items-center justify-center rounded text-[#5d6c87] hover:bg-[var(--color-neutral-100,#f5f8fa)]"
+          aria-label="ก่อนหน้า"
+        >
+          <ChevronLeft size={16} />
+        </button>
+        <div className="text-[20px] font-medium text-[#1d212d]">
+          <span className="text-[#011b31]">{THAI_MONTH_LONG[view.getMonth()]}</span>{" "}
+          <span>{view.getFullYear()}</span>
+        </div>
+        <button
+          type="button"
+          onClick={() => setView(addMonths(view, 1))}
+          className="size-8 flex items-center justify-center rounded text-[#5d6c87] hover:bg-[var(--color-neutral-100,#f5f8fa)]"
+          aria-label="ถัดไป"
+        >
+          <ChevronRight size={16} />
+        </button>
+      </div>
+      <MonthGrid
+        year={view.getFullYear()}
+        month={view.getMonth()}
+        selected={selected}
+        rangeStart={range?.start}
+        rangeEnd={range?.end}
+        onPick={onPick}
+      />
+    </div>
+  );
+}
+
+function MonthPanel({
+  viewYear,
+  setViewYear,
+  selected,
+  onPick,
+}: {
+  viewYear: number;
+  setViewYear: (y: number) => void;
+  selected: Date;
+  onPick: (year: number, month: number) => void;
+}) {
+  return (
+    <div className="flex flex-col w-[336px]">
+      <div className="h-12 flex items-center justify-between px-3">
+        <button
+          type="button"
+          onClick={() => setViewYear(viewYear - 1)}
+          className="size-8 flex items-center justify-center rounded text-[#5d6c87] hover:bg-[var(--color-neutral-100,#f5f8fa)]"
+          aria-label="ก่อนหน้า"
+        >
+          <ChevronLeft size={16} />
+        </button>
+        <div className="text-[20px] font-medium text-[#1d212d]">{viewYear}</div>
+        <button
+          type="button"
+          onClick={() => setViewYear(viewYear + 1)}
+          className="size-8 flex items-center justify-center rounded text-[#5d6c87] hover:bg-[var(--color-neutral-100,#f5f8fa)]"
+          aria-label="ถัดไป"
+        >
+          <ChevronRight size={16} />
+        </button>
+      </div>
+      <div className="grid grid-cols-2 gap-y-2 px-2 pb-2">
+        {THAI_MONTH_LONG.map((name, i) => {
+          const isSel = selected.getFullYear() === viewYear && selected.getMonth() === i;
+          const isToday = TODAY.getFullYear() === viewYear && TODAY.getMonth() === i;
+          const disabled = isFutureMonth(viewYear, i);
+          return (
+            <button
+              key={i}
+              type="button"
+              disabled={disabled}
+              onClick={() => onPick(viewYear, i)}
+              className="h-10 flex items-center justify-center group disabled:cursor-not-allowed"
+            >
+              <span
+                className={[
+                  "h-9 px-4 flex items-center justify-center rounded-full text-[14px] min-w-[120px] text-center transition-colors",
+                  disabled
+                    ? "text-[#c2cad6]"
+                    : isSel
+                      ? "bg-[#0485f7] text-white font-bold"
+                      : isToday
+                        ? "border border-[#0485f7] text-[#0485f7] font-bold group-hover:bg-[#dcf2fe]"
+                        : "text-[#1d212d] group-hover:bg-[#eff9fe]",
+                ].join(" ")}
+              >
+                {name}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function YearPanel({
+  viewYear,
+  setViewYear,
+  selected,
+  onPick,
+}: {
+  viewYear: number;
+  setViewYear: (y: number) => void;
+  selected: Date;
+  onPick: (y: number) => void;
+}) {
+  const startYear = viewYear - 13;
+  const years = Array.from({ length: 18 }, (_, i) => startYear + i);
+  return (
+    <div className="flex flex-col w-[336px]">
+      <div className="h-12 flex items-center justify-between px-3">
+        <button
+          type="button"
+          onClick={() => setViewYear(viewYear - 18)}
+          className="size-8 flex items-center justify-center rounded text-[#5d6c87] hover:bg-[var(--color-neutral-100,#f5f8fa)]"
+          aria-label="ก่อนหน้า"
+        >
+          <ChevronLeft size={16} />
+        </button>
+        <div className="text-[20px] font-medium text-[#0485f7]">{viewYear}</div>
+        <button
+          type="button"
+          onClick={() => setViewYear(viewYear + 18)}
+          className="size-8 flex items-center justify-center rounded text-[#5d6c87] hover:bg-[var(--color-neutral-100,#f5f8fa)]"
+          aria-label="ถัดไป"
+        >
+          <ChevronRight size={16} />
+        </button>
+      </div>
+      <div className="grid grid-cols-3 gap-y-2 px-2 pb-2">
+        {years.map((y) => {
+          const isSel = selected.getFullYear() === y;
+          const isToday = TODAY.getFullYear() === y;
+          const disabled = isFutureYear(y);
+          return (
+            <button
+              key={y}
+              type="button"
+              disabled={disabled}
+              onClick={() => onPick(y)}
+              className="h-10 flex items-center justify-center group disabled:cursor-not-allowed"
+            >
+              <span
+                className={[
+                  "h-9 px-5 flex items-center justify-center rounded-full text-[14px] min-w-[90px] transition-colors",
+                  disabled
+                    ? "text-[#c2cad6]"
+                    : isSel
+                      ? "bg-[#0485f7] text-white font-bold"
+                      : isToday
+                        ? "border border-[#0485f7] text-[#0485f7] font-bold group-hover:bg-[#dcf2fe]"
+                        : "text-[#1d212d] group-hover:bg-[#eff9fe]",
+                ].join(" ")}
+              >
+                {y}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function WeekCalendarPanel({
+  value,
+  onPick,
+}: {
+  value: Date;
+  onPick: (d: Date) => void;
+}) {
+  const [view, setView] = useState(new Date(value.getFullYear(), value.getMonth(), 1));
+  const [hoverDate, setHoverDate] = useState<Date | null>(null);
+
+  const { start: rangeStart, end: rangeEnd } = weekRange(value);
+  const hoverWeek = hoverDate ? weekRange(hoverDate) : null;
+
+  return (
+    <div className="flex flex-col w-[336px]">
+      <div className="h-12 flex items-center justify-between px-3">
+        <button
+          type="button"
+          onClick={() => setView(addMonths(view, -1))}
+          className="size-8 flex items-center justify-center rounded text-[#5d6c87] hover:bg-[var(--color-neutral-100,#f5f8fa)]"
+          aria-label="ก่อนหน้า"
+        >
+          <ChevronLeft size={16} />
+        </button>
+        <div className="text-[20px] font-medium text-[#1d212d]">
+          <span className="text-[#011b31]">{THAI_MONTH_LONG[view.getMonth()]}</span>{" "}
+          <span>{view.getFullYear()}</span>
+        </div>
+        <button
+          type="button"
+          onClick={() => setView(addMonths(view, 1))}
+          className="size-8 flex items-center justify-center rounded text-[#5d6c87] hover:bg-[var(--color-neutral-100,#f5f8fa)]"
+          aria-label="ถัดไป"
+        >
+          <ChevronRight size={16} />
+        </button>
+      </div>
+
+      <MonthGrid
+        year={view.getFullYear()}
+        month={view.getMonth()}
+        selected={value}
+        rangeStart={rangeStart}
+        rangeEnd={rangeEnd}
+        hoverStart={hoverWeek?.start}
+        hoverEnd={hoverWeek?.end}
+        onPick={onPick}
+        bothEndsCircle
+        onCellEnter={setHoverDate}
+        onGridLeave={() => setHoverDate(null)}
+      />
+    </div>
+  );
+}
+
+function RevenueDatePopover({
+  mode,
+  value,
+  onChange,
+  onClose,
+  anchorRef,
+  customRange,
+  onCustomChange,
+}: {
+  mode: PopoverMode;
+  value: Date;
+  onChange: (d: Date) => void;
+  onClose: () => void;
+  anchorRef: React.RefObject<HTMLElement | null>;
+  customRange: DateRange;
+  onCustomChange: (r: DateRange) => void;
+}) {
+  const [view, setView] = useState(new Date(value.getFullYear(), value.getMonth(), 1));
+  const [viewYear, setViewYear] = useState(value.getFullYear());
+  const popRef = useRef<HTMLDivElement>(null);
+  const [pos, setPos] = useState<{ left: number; top: number } | null>(null);
+
+  useEffect(() => {
+    const el = anchorRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const popW = mode === "custom" ? 832 : 368;
+    let left = r.left + r.width / 2 - popW / 2;
+    left = Math.max(8, Math.min(window.innerWidth - popW - 8, left));
+    setPos({ left, top: r.bottom + 8 });
+  }, [anchorRef, mode]);
+
+  useEffect(() => {
+    const onDown = (e: MouseEvent) => {
+      if (popRef.current?.contains(e.target as Node)) return;
+      if (anchorRef.current?.contains(e.target as Node)) return;
+      onClose();
+    };
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, [onClose, anchorRef]);
+
+  if (!pos) return null;
+
+  const content =
+    mode === "month" ? (
+      <MonthPanel
+        viewYear={viewYear}
+        setViewYear={setViewYear}
+        selected={value}
+        onPick={(y, m) => {
+          onChange(new Date(y, m, 1));
+          onClose();
+        }}
+      />
+    ) : mode === "year" ? (
+      <YearPanel
+        viewYear={viewYear}
+        setViewYear={setViewYear}
+        selected={value}
+        onPick={(y) => {
+          onChange(new Date(y, 0, 1));
+          onClose();
+        }}
+      />
+    ) : mode === "custom" ? (
+      <CustomRangePanel
+        range={customRange}
+        onChange={onCustomChange}
+        onClose={onClose}
+      />
+    ) : mode === "week" ? (
+      <WeekCalendarPanel
+        value={value}
+        onPick={(d) => {
+          onChange(d);
+          onClose();
+        }}
+      />
+    ) : (
+      <CalendarPanel
+        view={view}
+        setView={setView}
+        selected={value}
+        onPick={(d) => {
+          onChange(d);
+          onClose();
+        }}
+      />
+    );
+
+  return createPortal(
+    <div
+      ref={popRef}
+      className="fixed z-[9999] bg-white rounded-[12px] p-4 shadow-[0_0_1px_rgba(29,33,45,0.2),0_1px_4px_rgba(29,33,45,0.15),0_16px_32px_rgba(29,33,45,0.1)]"
+      style={{ left: pos.left, top: pos.top }}
+    >
+      {content}
+    </div>,
+    document.body
+  );
+}
+
+function formatCustomRange(r: DateRange): string {
+  const sy = r.start.getFullYear() + 543;
+  const ey = r.end.getFullYear() + 543;
+  if (isSameDay(r.start, r.end)) {
+    return `${r.end.getDate()} ${THAI_MONTH_SHORT[r.end.getMonth()]} ${ey}`;
+  }
+  const startStr = sy === ey
+    ? `${r.start.getDate()} ${THAI_MONTH_SHORT[r.start.getMonth()]}`
+    : `${r.start.getDate()} ${THAI_MONTH_SHORT[r.start.getMonth()]} ${sy}`;
+  return `${startStr} - ${r.end.getDate()} ${THAI_MONTH_SHORT[r.end.getMonth()]} ${ey}`;
+}
 
 function formatDateRange(period: PeriodKey, base: Date): string {
   const y = base.getFullYear() + 543;
@@ -44,9 +413,9 @@ function formatDateRange(period: PeriodKey, base: Date): string {
     return `${base.getDate()} ${THAI_MONTH_SHORT[base.getMonth()]} ${y}`;
   }
   if (period === "week") {
-    const start = new Date(base);
-    start.setDate(base.getDate() - 6);
-    return `${start.getDate()} ${THAI_MONTH_SHORT[start.getMonth()]} - ${base.getDate()} ${THAI_MONTH_SHORT[base.getMonth()]} ${y}`;
+    const { start, end } = weekRange(base);
+    const ey = end.getFullYear() + 543;
+    return `${start.getDate()} ${THAI_MONTH_SHORT[start.getMonth()]} - ${end.getDate()} ${THAI_MONTH_SHORT[end.getMonth()]} ${ey}`;
   }
   if (period === "month") {
     return `${THAI_MONTH_SHORT[base.getMonth()]} ${y}`;
@@ -63,13 +432,41 @@ function PeriodSelector({
   label,
   onPrev,
   onNext,
+  baseDate,
+  setBaseDate,
+  customRange,
+  setCustomRange,
 }: {
   period: PeriodKey;
   onChange: (p: PeriodKey) => void;
   label: string;
   onPrev: () => void;
   onNext: () => void;
+  baseDate: Date;
+  setBaseDate: (d: Date) => void;
+  customRange: DateRange;
+  setCustomRange: (r: DateRange) => void;
 }) {
+  const [open, setOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const nextDisabled = (() => {
+    if (period === "day") return isFutureDay(addDays(baseDate, 1));
+    if (period === "week") return isFutureDay(addDays(weekRange(baseDate).end, 1));
+    if (period === "month") return isFutureMonth(baseDate.getFullYear(), baseDate.getMonth() + 1);
+    if (period === "year") return isFutureYear(baseDate.getFullYear() + 1);
+    if (period === "custom") return isFutureDay(addDays(customRange.end, 1));
+    return false;
+  })();
+  const popoverMode: PopoverMode | null =
+    period === "day" || period === "week"
+      ? period
+      : period === "month"
+        ? "month"
+        : period === "year"
+          ? "year"
+          : period === "custom"
+            ? "custom"
+            : null;
   return (
     <div className="flex flex-col items-center gap-4">
       {/* Segmented control */}
@@ -104,15 +501,33 @@ function PeriodSelector({
         >
           <Icon name="chevron-left" size={16} />
         </button>
-        <div className="flex items-center gap-2 text-[16px] text-[#1d212d]">
+        <button
+          ref={triggerRef}
+          type="button"
+          onClick={() => popoverMode && setOpen((v) => !v)}
+          disabled={!popoverMode}
+          className="flex items-center gap-2 text-[16px] text-[#1d212d] disabled:cursor-default"
+        >
           <span>{label}</span>
           <Calendar size={20} className="text-[#5d6c87]" />
-        </div>
+        </button>
+        {open && popoverMode && (
+          <RevenueDatePopover
+            mode={popoverMode}
+            value={baseDate}
+            onChange={setBaseDate}
+            onClose={() => setOpen(false)}
+            anchorRef={triggerRef}
+            customRange={customRange}
+            onCustomChange={setCustomRange}
+          />
+        )}
         <button
           type="button"
           onClick={onNext}
+          disabled={nextDisabled}
           aria-label="ถัดไป"
-          className="w-8 h-8 flex items-center justify-center bg-white border border-[#e9f0f4] rounded-[4px] text-[var(--color-neutral-600)] hover:bg-[var(--color-neutral-100,#f5f8fa)] transition-colors"
+          className="w-8 h-8 flex items-center justify-center bg-white border border-[#e9f0f4] rounded-[4px] text-[var(--color-neutral-600)] hover:bg-[var(--color-neutral-100,#f5f8fa)] transition-colors disabled:cursor-not-allowed disabled:text-[#c2cad6] disabled:hover:bg-white"
         >
           <Icon name="chevron-right" size={16} />
         </button>
@@ -125,15 +540,88 @@ function PeriodSelector({
 
 type BarPoint = { label: string; sales: number; orders: number };
 
-const HOURLY_DATA: BarPoint[] = [
-  { label: "08:00", sales: 70000, orders: 1300 },
-  { label: "10:00", sales: 45000, orders: 600 },
-  { label: "14:00", sales: 95000, orders: 1900 },
-  { label: "16:00", sales: 28058, orders: 150 },
-  { label: "18:00", sales: 38000, orders: 700 },
-  { label: "20:00", sales: 30000, orders: 500 },
-  { label: "22:00", sales: 56000, orders: 1400 },
+const HOURLY_SALES = [
+  8000, 4500, 3000, 2000, 1500, 3500, 18000, 42000,
+  70000, 52000, 45000, 60000, 78000, 88000, 95000, 62000,
+  28058, 34000, 38000, 33000, 30000, 41000, 56000, 22000,
 ];
+const HOURLY_ORDERS = [
+  180, 90, 60, 40, 30, 70, 320, 800,
+  1300, 900, 600, 1100, 1500, 1700, 1900, 1200,
+  150, 500, 700, 600, 500, 850, 1400, 400,
+];
+const HOURLY_DATA: BarPoint[] = Array.from({ length: 24 }, (_, h) => ({
+  label: `${String(h).padStart(2, "0")}:00`,
+  sales: HOURLY_SALES[h],
+  orders: HOURLY_ORDERS[h],
+}));
+
+const WEEKLY_SALES = [42000, 28000, 35000, 51000, 68000, 84000, 96000];
+const WEEKLY_ORDERS = [650, 480, 720, 980, 1280, 1650, 1880];
+
+const MONTHLY_SALES = [
+  22000, 18000, 30000, 41000, 48000, 36000, 27000, 33000, 45000, 52000,
+  61000, 58000, 47000, 39000, 44000, 51000, 63000, 72000, 68000, 55000,
+  49000, 57000, 64000, 71000, 78000, 84000, 76000, 69000, 73000, 81000, 88000,
+];
+const MONTHLY_ORDERS = [
+  320, 280, 410, 560, 640, 510, 380, 470, 610, 700,
+  830, 790, 640, 540, 600, 700, 850, 970, 920, 750,
+  670, 780, 870, 960, 1050, 1130, 1020, 940, 990, 1090, 1180,
+];
+
+const YEARLY_SALES = [
+  32000, 41000, 38000, 46000, 52000, 58000,
+  61000, 64000, 59000, 72000, 78000, 92000,
+];
+const YEARLY_ORDERS = [
+  420, 720, 980, 1260, 1480, 1680, 1820, 2100, 1940, 2350, 2580, 2820,
+];
+
+function buildCustomChartData(range: DateRange): BarPoint[] {
+  const days = Math.round((startOfDay(range.end).getTime() - startOfDay(range.start).getTime()) / 86400000) + 1;
+  const n = Math.max(1, days);
+  return Array.from({ length: n }, (_, i) => {
+    const d = new Date(range.start);
+    d.setDate(d.getDate() + i);
+    return {
+      label: `${d.getDate()} ${THAI_MONTH_SHORT[d.getMonth()]}`,
+      sales: MONTHLY_SALES[i % MONTHLY_SALES.length],
+      orders: MONTHLY_ORDERS[i % MONTHLY_ORDERS.length],
+    };
+  });
+}
+
+function buildChartData(period: PeriodKey, base: Date): BarPoint[] {
+  if (period === "week") {
+    const { start } = weekRange(base);
+    return Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(start);
+      d.setDate(start.getDate() + i);
+      return {
+        label: `${d.getDate()} ${THAI_MONTH_SHORT[d.getMonth()]}`,
+        sales: WEEKLY_SALES[i],
+        orders: WEEKLY_ORDERS[i],
+      };
+    });
+  }
+  if (period === "month") {
+    const dim = new Date(base.getFullYear(), base.getMonth() + 1, 0).getDate();
+    return Array.from({ length: dim }, (_, i) => ({
+      label: `${i + 1}`,
+      sales: MONTHLY_SALES[i % MONTHLY_SALES.length],
+      orders: MONTHLY_ORDERS[i % MONTHLY_ORDERS.length],
+    }));
+  }
+  if (period === "year") {
+    return Array.from({ length: 12 }, (_, i) => ({
+      label: THAI_MONTH_SHORT[i],
+      sales: YEARLY_SALES[i],
+      orders: YEARLY_ORDERS[i],
+    }));
+  }
+  return HOURLY_DATA;
+}
 
 const SALES_TICKS = [100000, 50000, 20000, 15000, 10000, 5000, 0];
 const ORDER_TICKS = [3000, 2000, 1500, 1000, 500, 100, 0];
@@ -142,15 +630,32 @@ function thousands(n: number): string {
   return n.toLocaleString("en-US");
 }
 
-function BarChart({ data, dateLabel }: { data: BarPoint[]; dateLabel: string }) {
-  const [hover, setHover] = useState<number | null>(3);
+function BarChart({ data, dateLabel, period }: { data: BarPoint[]; dateLabel: string; period: PeriodKey }) {
+  const [hover, setHover] = useState<{ index: number; x: number; y: number } | null>(null);
   const maxSales = SALES_TICKS[0];
   const maxOrders = ORDER_TICKS[0];
+
+  const handleEnter = (i: number, el: HTMLElement) => {
+    // Anchor at the top-center of the tallest inner bar
+    const bars = el.querySelectorAll<HTMLSpanElement>("span[data-bar]");
+    const btnRect = el.getBoundingClientRect();
+    let top = btnRect.top;
+    let centerX = btnRect.left + btnRect.width / 2;
+    let firstBarTop = Number.POSITIVE_INFINITY;
+    bars.forEach((b) => {
+      const r = b.getBoundingClientRect();
+      if (r.top < firstBarTop) {
+        firstBarTop = r.top;
+      }
+    });
+    if (Number.isFinite(firstBarTop)) top = firstBarTop;
+    setHover({ index: i, x: centerX, y: top });
+  };
 
   return (
     <div className="w-full">
       <div className="relative">
-        <div className="grid grid-cols-[46px_1fr_46px] gap-2">
+        <div className="grid grid-cols-[46px_1fr_46px] gap-2 items-start">
           {/* Left axis labels (sales ฿) */}
           <div className="relative h-[297px]">
             {SALES_TICKS.map((t, i) => (
@@ -164,8 +669,10 @@ function BarChart({ data, dateLabel }: { data: BarPoint[]; dateLabel: string }) 
             ))}
           </div>
 
-          {/* Plot area */}
-          <div className="relative h-[297px]">
+          {/* Plot area (horizontally scrollable when many bars) */}
+          <div className="overflow-x-auto">
+            <div style={{ minWidth: `${data.length * 125}px` }}>
+            <div className="relative h-[297px]">
             {/* Horizontal gridlines */}
             {SALES_TICKS.map((_, i) => (
               <span
@@ -176,65 +683,53 @@ function BarChart({ data, dateLabel }: { data: BarPoint[]; dateLabel: string }) 
             ))}
 
             {/* Bars */}
-            <div className="absolute inset-0 grid grid-cols-7">
+            <div className="absolute inset-0 grid" style={{ gridTemplateColumns: `repeat(${data.length}, minmax(0, 1fr))` }}>
+
               {data.map((d, i) => {
                 const salesPct = (d.sales / maxSales) * 100;
                 const ordersPct = (d.orders / maxOrders) * 100;
-                const isHover = hover === i;
+                const isHover = hover?.index === i;
                 return (
                   <button
                     key={i}
                     type="button"
-                    onMouseEnter={() => setHover(i)}
-                    onMouseLeave={() => setHover((h) => (h === i ? null : h))}
+                    onMouseEnter={(e) => handleEnter(i, e.currentTarget)}
+                    onMouseMove={(e) => handleEnter(i, e.currentTarget)}
+                    onMouseLeave={() => setHover((h) => (h?.index === i ? null : h))}
+                    onClick={(e) => {
+                      if (hover?.index === i) setHover(null);
+                      else handleEnter(i, e.currentTarget);
+                    }}
                     className="relative flex items-end justify-center gap-2 h-full focus:outline-none"
                   >
                     {/* Sales bar (blue) */}
                     <span
+                      data-bar
                       className="block w-[39px] rounded-t bg-gradient-to-b from-[#0485f7] via-[#21bdff] to-[#cdedff] transition-opacity"
                       style={{ height: `${salesPct}%`, opacity: isHover ? 1 : 0.95 }}
                     />
                     {/* Orders bar (green) */}
                     <span
+                      data-bar
                       className="block w-[39px] rounded-t bg-gradient-to-b from-[#5dbf36] via-[#a5e36a] to-[#e6f8d0] transition-opacity"
                       style={{ height: `${ordersPct}%`, opacity: isHover ? 1 : 0.95 }}
                     />
-
-                    {/* Tooltip */}
-                    {isHover && (
-                      <div
-                        className="absolute left-1/2 -translate-x-1/2 z-10 pointer-events-none"
-                        style={{ bottom: `${Math.max(salesPct, ordersPct) + 4}%` }}
-                      >
-                        <div className="relative bg-[#1d212d] text-white rounded-lg px-3 py-2.5 w-[230px] shadow-lg text-left">
-                          <div className="flex items-center justify-between text-[12px] text-white">
-                            <span>{dateLabel}</span>
-                            <span>
-                              {d.label.replace(":", ".")} น.
-                            </span>
-                          </div>
-                          <div className="mt-2 pt-2 border-t border-white/10 flex flex-col gap-1">
-                            <p className="text-[13px] text-[#7cd2ff]">
-                              ยอดขาย : <span className="tabular-nums">{thousands(d.sales)}</span> บาท
-                            </p>
-                            <p className="text-[13px] text-[#6ACE13]">
-                              จำนวนคำสั่งซื้อ : <span className="tabular-nums">{thousands(d.orders)}</span> รายการ
-                            </p>
-                          </div>
-                          <span
-                            className="absolute left-1/2 -bottom-2 -translate-x-1/2 w-0 h-0"
-                            style={{
-                              borderLeft: "8px solid transparent",
-                              borderRight: "8px solid transparent",
-                              borderTop: "8px solid #1d212d",
-                            }}
-                          />
-                        </div>
-                      </div>
-                    )}
                   </button>
                 );
               })}
+            </div>
+            </div>
+            {/* X labels (in same scroll container) */}
+            <div className="grid mt-3" style={{ gridTemplateColumns: `repeat(${data.length}, minmax(0, 1fr))` }}>
+              {data.map((d) => (
+                <span
+                  key={d.label}
+                  className="text-center text-[14px] text-[var(--color-neutral-700)] tabular-nums"
+                >
+                  {d.label}
+                </span>
+              ))}
+            </div>
             </div>
           </div>
 
@@ -252,22 +747,50 @@ function BarChart({ data, dateLabel }: { data: BarPoint[]; dateLabel: string }) 
           </div>
         </div>
 
-        {/* X labels */}
-        <div className="grid grid-cols-[46px_1fr_46px] gap-2 mt-3">
-          <span />
-          <div className="grid grid-cols-7">
-            {data.map((d) => (
-              <span
-                key={d.label}
-                className="text-center text-[14px] text-[var(--color-neutral-700)]"
-              >
-                {d.label}
-              </span>
-            ))}
-          </div>
-          <span />
-        </div>
       </div>
+
+      {/* Portal tooltip — escapes all overflow/scroll ancestors */}
+      {hover &&
+        createPortal(
+          <div
+            className="fixed z-[9999] pointer-events-none"
+            style={{
+              left: hover.x,
+              top: hover.y,
+              transform: "translate(-50%, calc(-100% - 12px))",
+            }}
+          >
+            <div className="relative bg-[#1d212d] text-white rounded-lg px-3 py-2.5 w-[230px] shadow-lg text-left">
+              <div className="flex items-center justify-between text-[12px] text-white">
+                {period === "day" ? (
+                  <>
+                    <span>{dateLabel}</span>
+                    <span>{data[hover.index].label.replace(":", ".")} น.</span>
+                  </>
+                ) : (
+                  <span>{data[hover.index].label}</span>
+                )}
+              </div>
+              <div className="mt-2 pt-2 border-t border-white/10 flex flex-col gap-1">
+                <p className="text-[13px] text-[#7cd2ff]">
+                  ยอดขาย : <span className="tabular-nums">{thousands(data[hover.index].sales)}</span> บาท
+                </p>
+                <p className="text-[13px] text-[#6ACE13]">
+                  จำนวนคำสั่งซื้อ : <span className="tabular-nums">{thousands(data[hover.index].orders)}</span> รายการ
+                </p>
+              </div>
+              <span
+                className="absolute left-1/2 -bottom-2 -translate-x-1/2 w-0 h-0"
+                style={{
+                  borderLeft: "8px solid transparent",
+                  borderRight: "8px solid transparent",
+                  borderTop: "8px solid #1d212d",
+                }}
+              />
+            </div>
+          </div>,
+          document.body
+        )}
 
       {/* Legend */}
       <div className="flex items-center justify-center gap-8 mt-4">
@@ -290,23 +813,26 @@ function BarChart({ data, dateLabel }: { data: BarPoint[]; dateLabel: string }) 
 
 function StatMini({
   title,
+  period,
   value,
   change,
   tone,
 }: {
   title: string;
+  period: string;
   value: string;
   change: string;
   tone: "positive" | "critical" | "neutral";
 }) {
   return (
     <div className="bg-white rounded-xl p-4 flex flex-col gap-4 border border-[var(--color-neutral-300)]">
-      <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-2">
         <FontAwesomeIcon icon={faCircleInfo} className="text-[var(--color-neutral-500)] text-[14px]" />
-        <p className="text-[14px] text-[var(--color-neutral-700)]">{title}</p>
+        <p className="text-[12px] text-[var(--color-neutral-900)] whitespace-nowrap">{title}</p>
+        <p className="text-[12px] text-[var(--color-neutral-900)] whitespace-nowrap tabular-nums">{period}</p>
       </div>
       <div className="flex items-center justify-between gap-2">
-        <p className="text-[20px] font-semibold text-[var(--color-neutral-900)] tabular-nums">
+        <p className="text-[24px] font-bold text-[var(--color-primary)] tabular-nums">
           {value}
         </p>
         <ChangeBadge value={change} tone={tone} />
@@ -579,12 +1105,32 @@ export default function SellerRevenueAnalysis() {
   const [period, setPeriod] = useState<PeriodKey>("day");
   const [page, setPage] = useState(2);
   const [baseDate, setBaseDate] = useState(() => new Date(2026, 7, 24));
+  const [customRange, setCustomRange] = useState<DateRange>(() => ({
+    start: addDays(TODAY, -13),
+    end: TODAY,
+  }));
 
-  const dateLabel = formatDateRange(period, baseDate);
+  const dateLabel = period === "custom"
+    ? formatCustomRange(customRange)
+    : formatDateRange(period, baseDate);
+  const chartData = useMemo(
+    () => period === "custom" ? buildCustomChartData(customRange) : buildChartData(period, baseDate),
+    [period, baseDate, customRange]
+  );
 
   const shift = (delta: number) => {
+    if (period === "custom") {
+      const span = Math.round(
+        (startOfDay(customRange.end).getTime() - startOfDay(customRange.start).getTime()) / 86400000
+      ) + 1;
+      setCustomRange({
+        start: addDays(customRange.start, span * delta),
+        end: addDays(customRange.end, span * delta),
+      });
+      return;
+    }
     const next = new Date(baseDate);
-    if (period === "day" || period === "custom") next.setDate(next.getDate() + delta);
+    if (period === "day") next.setDate(next.getDate() + delta);
     else if (period === "week") next.setDate(next.getDate() + 7 * delta);
     else if (period === "month") next.setMonth(next.getMonth() + delta);
     else next.setFullYear(next.getFullYear() + delta);
@@ -622,17 +1168,21 @@ export default function SellerRevenueAnalysis() {
               label={dateLabel}
               onPrev={() => shift(-1)}
               onNext={() => shift(1)}
+              baseDate={baseDate}
+              setBaseDate={setBaseDate}
+              customRange={customRange}
+              setCustomRange={setCustomRange}
             />
 
-            <BarChart data={HOURLY_DATA} dateLabel={dateLabel} />
+            <BarChart data={chartData} dateLabel={dateLabel} period={period} />
           </section>
 
           {/* === Section 1b : 4 stat cards === */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <StatMini title="ยอดขายรายวัน" value="฿ 0.00" change="12.5%" tone="critical" />
-            <StatMini title="ยอดขายรายสัปดาห์" value="฿ 0.00" change="0.0%" tone="neutral" />
-            <StatMini title="ยอดขายรายเดือน" value="฿ 0.00" change="12.5%" tone="positive" />
-            <StatMini title="ยอดขายรายปี" value="฿ 0.00" change="12.5%" tone="positive" />
+            <StatMini title="วันที่ขายดีที่สุด" period="24 เม.ย. 2569" value="฿ 128,450" change="12.5%" tone="critical" />
+            <StatMini title="สัปดาห์ที่ขายดีที่สุด" period="8 ก.พ. - 14 ก.พ. 2569" value="฿ 742,890" change="0.0%" tone="neutral" />
+            <StatMini title="เดือนที่ขายดีที่สุด" period="ก.พ. 2569" value="฿ 2,915,670" change="12.5%" tone="positive" />
+            <StatMini title="ปีที่ขายดีที่สุด" period="2569" value="฿ 28,470,320" change="12.5%" tone="positive" />
           </div>
 
           {/* === Section 2 : Revenue by category === */}
@@ -698,6 +1248,7 @@ export default function SellerRevenueAnalysis() {
                 type="button"
                 className="inline-flex items-center gap-2 h-9 px-4 rounded-lg bg-[var(--color-primary)] text-white text-[14px] font-medium hover:brightness-110 transition"
               >
+                <Download size={16} />
                 ดาวน์โหลดรายงาน
               </button>
             </div>

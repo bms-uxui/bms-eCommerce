@@ -4,6 +4,8 @@ import jtLogo from "../../assets/shipping/jt.png";
 import kerryLogo from "../../assets/shipping/kerry.png";
 import flashLogo from "../../assets/shipping/flash.png";
 import thaipostLogo from "../../assets/shipping/thaipost.png";
+import RefundRequestModal from "./RefundRequestModal";
+import ReviewProductModal from "./ReviewProductModal";
 
 export type OrderStatus =
   | "wait_pay"
@@ -283,15 +285,18 @@ export default function OrderCard({ order }: { order: Order }) {
               )}
             </div>
           </div>
-          <OrderActions status={order.status} />
+          <OrderActions order={order} />
         </div>
       )}
     </article>
   );
 }
 
-function OrderActions({ status }: { status: OrderStatus }) {
-  switch (status) {
+function OrderActions({ order }: { order: Order }) {
+  const [refundOpen, setRefundOpen] = useState(false);
+  const [reviewOpen, setReviewOpen] = useState(false);
+  const firstItem = order.items[0];
+  switch (order.status) {
     case "wait_pay":
       return (
         <div className="flex w-full lg:w-auto items-center gap-2 sm:gap-3 lg:shrink-0">
@@ -333,12 +338,31 @@ function OrderActions({ status }: { status: OrderStatus }) {
           <ActionButton
             variant="outline-neutral"
             icon={<Info size={20} />}
+            onClick={() => setRefundOpen(true)}
           >
             ขอคืนเงิน/คืนสินค้า
           </ActionButton>
-          <ActionButton variant="primary" icon={<Star size={20} />}>
+          <ActionButton
+            variant="primary"
+            icon={<Star size={20} />}
+            onClick={() => setReviewOpen(true)}
+          >
             รีวิวสินค้า
           </ActionButton>
+          {firstItem && (
+            <>
+              <RefundRequestModal
+                isOpen={refundOpen}
+                onClose={() => setRefundOpen(false)}
+                product={firstItem}
+              />
+              <ReviewProductModal
+                isOpen={reviewOpen}
+                onClose={() => setReviewOpen(false)}
+                product={firstItem}
+              />
+            </>
+          )}
         </div>
       );
     case "cancelled":
