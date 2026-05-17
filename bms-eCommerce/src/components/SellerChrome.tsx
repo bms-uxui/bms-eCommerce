@@ -147,9 +147,9 @@ const SIDEBAR_ENTRIES: SidebarEntry[] = [
     label: "การวิเคราะห์",
     children: [
       { kind: "leaf", icon: "dollar", label: "การวิเคราะห์รายได้", to: "/seller/analytics/revenue" },
-      { kind: "leaf", icon: "users", label: "การวิเคราะห์ลูกค้า" },
-      { kind: "leaf", icon: "package", label: "การวิเคราะห์สินค้า" },
-      { kind: "leaf", icon: "bullhorn", label: "การวิเคราะห์การตลาด" },
+      { kind: "leaf", icon: "users", label: "การวิเคราะห์ลูกค้า", to: "/seller/analytics/customers" },
+      { kind: "leaf", icon: "package", label: "การวิเคราะห์สินค้า", to: "/seller/analytics/products" },
+      { kind: "leaf", icon: "bullhorn", label: "การวิเคราะห์การตลาด", to: "/seller/analytics/marketing" },
     ],
   },
   { kind: "leaf", icon: "wallet", label: "กระเป๋าเงิน", to: "/seller/wallet" },
