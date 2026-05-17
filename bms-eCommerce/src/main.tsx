@@ -29,6 +29,9 @@ import SellerStoreSettings from "./pages/SellerStoreSettings.tsx";
 import SellerQuotes from "./pages/SellerQuotes.tsx";
 import SellerQuoteDetail from "./pages/SellerQuoteDetail.tsx";
 import SellerRevenueAnalysis from "./pages/SellerRevenueAnalysis.tsx";
+import SellerCustomerAnalysis from "./pages/SellerCustomerAnalysis.tsx";
+import SellerProductAnalysis from "./pages/SellerProductAnalysis.tsx";
+import SellerMarketingAnalysis from "./pages/SellerMarketingAnalysis.tsx";
 import AffiliateRegister from "./pages/AffiliateRegister.tsx";
 import AffiliateOverview from "./pages/AffiliateOverview.tsx";
 import BrightifyCommission from "./pages/BrightifyCommission.tsx";
@@ -152,6 +155,9 @@ createRoot(document.getElementById("root")!).render(
               <Route path="/seller/quotes" element={<SellerQuotes />} />
               <Route path="/seller/quotes/:id" element={<SellerQuoteDetail />} />
               <Route path="/seller/analytics/revenue" element={<SellerRevenueAnalysis />} />
+              <Route path="/seller/analytics/customers" element={<SellerCustomerAnalysis />} />
+              <Route path="/seller/analytics/products" element={<SellerProductAnalysis />} />
+              <Route path="/seller/analytics/marketing" element={<SellerMarketingAnalysis />} />
               <Route path="/affiliate/register" element={<AffiliateRegister />} />
               <Route path="/affiliate/overview" element={<AffiliateOverview />} />
               <Route path="/affiliate/commission/brightify" element={<BrightifyCommission />} />

@@ -23,7 +23,7 @@ import {
   type DateRange,
 } from "../components/CustomRangeCalendar";
 
-type PeriodKey = "day" | "week" | "month" | "year" | "custom";
+export type PeriodKey = "day" | "week" | "month" | "year" | "custom";
 
 const PERIOD_TABS: { key: PeriodKey; label: string }[] = [
   { key: "day", label: "รายวัน" },
@@ -33,10 +33,10 @@ const PERIOD_TABS: { key: PeriodKey; label: string }[] = [
   { key: "custom", label: "กำหนดเอง" },
 ];
 
-const CARD_SHADOW =
+export const CARD_SHADOW =
   "shadow-[0_2px_4px_rgba(29,33,45,0.08),0_0_2px_rgba(29,33,45,0.08),0_0_1px_rgba(29,33,45,0.2)]";
 
-function SectionHint({ text }: { text: string }) {
+export function SectionHint({ text }: { text: string }) {
   return (
     <div className="flex items-start gap-2 max-w-[300px]">
       <FontAwesomeIcon
@@ -395,7 +395,7 @@ function RevenueDatePopover({
   );
 }
 
-function formatCustomRange(r: DateRange): string {
+export function formatCustomRange(r: DateRange): string {
   const sy = r.start.getFullYear() + 543;
   const ey = r.end.getFullYear() + 543;
   if (isSameDay(r.start, r.end)) {
@@ -407,7 +407,7 @@ function formatCustomRange(r: DateRange): string {
   return `${startStr} - ${r.end.getDate()} ${THAI_MONTH_SHORT[r.end.getMonth()]} ${ey}`;
 }
 
-function formatDateRange(period: PeriodKey, base: Date): string {
+export function formatDateRange(period: PeriodKey, base: Date): string {
   const y = base.getFullYear() + 543;
   if (period === "day") {
     return `${base.getDate()} ${THAI_MONTH_SHORT[base.getMonth()]} ${y}`;
@@ -426,7 +426,7 @@ function formatDateRange(period: PeriodKey, base: Date): string {
   return `${base.getDate()} ${THAI_MONTH_SHORT[base.getMonth()]} ${y}`;
 }
 
-function PeriodSelector({
+export function PeriodSelector({
   period,
   onChange,
   label,
@@ -538,7 +538,7 @@ function PeriodSelector({
 
 /* ---------- Bar chart ---------- */
 
-type BarPoint = { label: string; sales: number; orders: number };
+export type BarPoint = { label: string; sales: number; orders: number; extra?: number };
 
 const HOURLY_SALES = [
   8000, 4500, 3000, 2000, 1500, 3500, 18000, 42000,
@@ -630,10 +630,67 @@ function thousands(n: number): string {
   return n.toLocaleString("en-US");
 }
 
-function BarChart({ data, dateLabel, period }: { data: BarPoint[]; dateLabel: string; period: PeriodKey }) {
+export type BarSeriesConfig = {
+  leftTicks: number[];
+  rightTicks: number[];
+  leftGradient: string;
+  rightGradient: string;
+  leftLegendColor: string;
+  rightLegendColor: string;
+  leftLegendLabel: string;
+  rightLegendLabel: string;
+  leftTipColor: string;
+  rightTipColor: string;
+  leftTipLabel: string;
+  leftTipUnit: string;
+  rightTipLabel: string;
+  rightTipUnit: string;
+  /** When true, only the left axis is shown and every series scales to leftTicks. */
+  singleAxis?: boolean;
+  /** Optional third series (rendered as a third bar in each group). */
+  thirdGradient?: string;
+  thirdLegendColor?: string;
+  thirdLegendLabel?: string;
+  thirdTipColor?: string;
+  thirdTipLabel?: string;
+  thirdTipUnit?: string;
+};
+
+export const REVENUE_SERIES: BarSeriesConfig = {
+  leftTicks: SALES_TICKS,
+  rightTicks: ORDER_TICKS,
+  leftGradient: "bg-gradient-to-b from-[#0485f7] via-[#21bdff] to-[#cdedff]",
+  rightGradient: "bg-gradient-to-b from-[#5dbf36] via-[#a5e36a] to-[#e6f8d0]",
+  leftLegendColor: "#0485f7",
+  rightLegendColor: "#5dbf36",
+  leftLegendLabel: "ยอดขาย (฿)",
+  rightLegendLabel: "จำนวนคำสั่งซื้อ (รายการ)",
+  leftTipColor: "#7cd2ff",
+  rightTipColor: "#6ACE13",
+  leftTipLabel: "ยอดขาย",
+  leftTipUnit: "บาท",
+  rightTipLabel: "จำนวนคำสั่งซื้อ",
+  rightTipUnit: "รายการ",
+};
+
+export function BarChart({
+  data,
+  dateLabel,
+  period,
+  series = REVENUE_SERIES,
+}: {
+  data: BarPoint[];
+  dateLabel: string;
+  period: PeriodKey;
+  series?: BarSeriesConfig;
+}) {
   const [hover, setHover] = useState<{ index: number; x: number; y: number } | null>(null);
+  const SALES_TICKS = series.leftTicks;
+  const ORDER_TICKS = series.rightTicks;
   const maxSales = SALES_TICKS[0];
-  const maxOrders = ORDER_TICKS[0];
+  const singleAxis = !!series.singleAxis;
+  const hasThird = !!series.thirdGradient;
+  const maxOrders = singleAxis ? maxSales : ORDER_TICKS[0];
 
   const handleEnter = (i: number, el: HTMLElement) => {
     // Anchor at the top-center of the tallest inner bar
@@ -655,7 +712,10 @@ function BarChart({ data, dateLabel, period }: { data: BarPoint[]; dateLabel: st
   return (
     <div className="w-full">
       <div className="relative">
-        <div className="grid grid-cols-[46px_1fr_46px] gap-2 items-start">
+        <div
+          className="grid gap-2 items-start"
+          style={{ gridTemplateColumns: singleAxis ? "46px 1fr" : "46px 1fr 46px" }}
+        >
           {/* Left axis labels (sales ฿) */}
           <div className="relative h-[297px]">
             {SALES_TICKS.map((t, i) => (
@@ -671,7 +731,7 @@ function BarChart({ data, dateLabel, period }: { data: BarPoint[]; dateLabel: st
 
           {/* Plot area (horizontally scrollable when many bars) */}
           <div className="overflow-x-auto">
-            <div style={{ minWidth: `${data.length * 125}px` }}>
+            <div style={{ minWidth: `${data.length * (hasThird ? 209 : 125)}px` }}>
             <div className="relative h-[297px]">
             {/* Horizontal gridlines */}
             {SALES_TICKS.map((_, i) => (
@@ -688,6 +748,7 @@ function BarChart({ data, dateLabel, period }: { data: BarPoint[]; dateLabel: st
               {data.map((d, i) => {
                 const salesPct = (d.sales / maxSales) * 100;
                 const ordersPct = (d.orders / maxOrders) * 100;
+                const extraPct = ((d.extra ?? 0) / maxSales) * 100;
                 const isHover = hover?.index === i;
                 return (
                   <button
@@ -702,18 +763,26 @@ function BarChart({ data, dateLabel, period }: { data: BarPoint[]; dateLabel: st
                     }}
                     className="relative flex items-end justify-center gap-2 h-full focus:outline-none"
                   >
-                    {/* Sales bar (blue) */}
+                    {/* Left series bar */}
                     <span
                       data-bar
-                      className="block w-[39px] rounded-t bg-gradient-to-b from-[#0485f7] via-[#21bdff] to-[#cdedff] transition-opacity"
+                      className={`block w-[39px] rounded-t transition-opacity ${series.leftGradient}`}
                       style={{ height: `${salesPct}%`, opacity: isHover ? 1 : 0.95 }}
                     />
-                    {/* Orders bar (green) */}
+                    {/* Right series bar */}
                     <span
                       data-bar
-                      className="block w-[39px] rounded-t bg-gradient-to-b from-[#5dbf36] via-[#a5e36a] to-[#e6f8d0] transition-opacity"
+                      className={`block w-[39px] rounded-t transition-opacity ${series.rightGradient}`}
                       style={{ height: `${ordersPct}%`, opacity: isHover ? 1 : 0.95 }}
                     />
+                    {/* Third series bar */}
+                    {hasThird && (
+                      <span
+                        data-bar
+                        className={`block w-[39px] rounded-t transition-opacity ${series.thirdGradient}`}
+                        style={{ height: `${extraPct}%`, opacity: isHover ? 1 : 0.95 }}
+                      />
+                    )}
                   </button>
                 );
               })}
@@ -734,6 +803,7 @@ function BarChart({ data, dateLabel, period }: { data: BarPoint[]; dateLabel: st
           </div>
 
           {/* Right axis labels (orders) */}
+          {!singleAxis && (
           <div className="relative h-[297px]">
             {ORDER_TICKS.map((t, i) => (
               <span
@@ -745,6 +815,7 @@ function BarChart({ data, dateLabel, period }: { data: BarPoint[]; dateLabel: st
               </span>
             ))}
           </div>
+          )}
         </div>
 
       </div>
@@ -772,12 +843,17 @@ function BarChart({ data, dateLabel, period }: { data: BarPoint[]; dateLabel: st
                 )}
               </div>
               <div className="mt-2 pt-2 border-t border-white/10 flex flex-col gap-1">
-                <p className="text-[13px] text-[#7cd2ff]">
-                  ยอดขาย : <span className="tabular-nums">{thousands(data[hover.index].sales)}</span> บาท
+                <p className="text-[13px]" style={{ color: series.leftTipColor }}>
+                  {series.leftTipLabel} : <span className="tabular-nums">{thousands(data[hover.index].sales)}</span> {series.leftTipUnit}
                 </p>
-                <p className="text-[13px] text-[#6ACE13]">
-                  จำนวนคำสั่งซื้อ : <span className="tabular-nums">{thousands(data[hover.index].orders)}</span> รายการ
+                <p className="text-[13px]" style={{ color: series.rightTipColor }}>
+                  {series.rightTipLabel} : <span className="tabular-nums">{thousands(data[hover.index].orders)}</span> {series.rightTipUnit}
                 </p>
+                {hasThird && (
+                  <p className="text-[13px]" style={{ color: series.thirdTipColor }}>
+                    {series.thirdTipLabel} : <span className="tabular-nums">{thousands(data[hover.index].extra ?? 0)}</span> {series.thirdTipUnit}
+                  </p>
+                )}
               </div>
               <span
                 className="absolute left-1/2 -bottom-2 -translate-x-1/2 w-0 h-0"
@@ -795,15 +871,23 @@ function BarChart({ data, dateLabel, period }: { data: BarPoint[]; dateLabel: st
       {/* Legend */}
       <div className="flex items-center justify-center gap-8 mt-4">
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[#0485f7]" />
-          <span className="text-[14px] text-[var(--color-neutral-700)]">ยอดขาย (฿)</span>
+          <span className="w-2 h-2 rounded-full" style={{ backgroundColor: series.leftLegendColor }} />
+          <span className="text-[14px] text-[var(--color-neutral-700)]">{series.leftLegendLabel}</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[#5dbf36]" />
+          <span className="w-2 h-2 rounded-full" style={{ backgroundColor: series.rightLegendColor }} />
           <span className="text-[14px] text-[var(--color-neutral-700)]">
-            จำนวนคำสั่งซื้อ (รายการ)
+            {series.rightLegendLabel}
           </span>
         </div>
+        {hasThird && (
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: series.thirdLegendColor }} />
+            <span className="text-[14px] text-[var(--color-neutral-700)]">
+              {series.thirdLegendLabel}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -811,7 +895,7 @@ function BarChart({ data, dateLabel, period }: { data: BarPoint[]; dateLabel: st
 
 /* ---------- Stat mini card ---------- */
 
-function StatMini({
+export function StatMini({
   title,
   period,
   value,
@@ -819,7 +903,7 @@ function StatMini({
   tone,
 }: {
   title: string;
-  period: string;
+  period?: string;
   value: string;
   change: string;
   tone: "positive" | "critical" | "neutral";
@@ -829,7 +913,9 @@ function StatMini({
       <div className="flex items-center gap-2">
         <FontAwesomeIcon icon={faCircleInfo} className="text-[var(--color-neutral-500)] text-[14px]" />
         <p className="text-[12px] text-[var(--color-neutral-900)] whitespace-nowrap">{title}</p>
-        <p className="text-[12px] text-[var(--color-neutral-900)] whitespace-nowrap tabular-nums">{period}</p>
+        {period && (
+          <p className="text-[12px] text-[var(--color-neutral-900)] whitespace-nowrap tabular-nums">{period}</p>
+        )}
       </div>
       <div className="flex items-center justify-between gap-2">
         <p className="text-[24px] font-bold text-[var(--color-primary)] tabular-nums">
@@ -1023,7 +1109,7 @@ const REPORT_ROWS: ReportRow[] = Array.from({ length: 9 }, (_, i) => ({
   amount: 578.0,
 }));
 
-function PaginationFooter({
+export function PaginationFooter({
   total,
   page,
   pages,
@@ -1242,7 +1328,7 @@ export default function SellerRevenueAnalysis() {
             {/* Section header */}
             <div className="flex items-center justify-between gap-3 px-4 py-4 border-b border-[var(--color-neutral-200)]">
               <h2 className="text-[20px] font-semibold text-[var(--color-primary-700)]">
-                รายงานผลโดยรวม
+                รายงานการสั่งซื้อสินค้า
               </h2>
               <button
                 type="button"
